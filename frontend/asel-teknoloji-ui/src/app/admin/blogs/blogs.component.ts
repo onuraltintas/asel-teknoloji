@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { ToastService } from '../../core/services/toast.service';
 import { BlogPost } from '../../core/models/models';
@@ -11,23 +12,43 @@ import { BlogPost } from '../../core/models/models';
   imports: [CommonModule, ReactiveFormsModule],
   template: `
     <div>
-      <div class="flex justify-between items-center mb-6">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
         <h2 class="text-2xl font-bold text-gray-800">Blog Yazıları</h2>
-        <button (click)="openForm()" class="btn-primary">+ Yeni Yazı</button>
+        <div class="flex items-center gap-3">
+          @if (selected.size > 0) {
+            <button (click)="deleteSelected()"
+                    class="flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-3 py-1.5 rounded-lg transition-colors">
+              🗑 Seçilenleri Sil ({{ selected.size }})
+            </button>
+          }
+          <button (click)="openForm()" class="btn-primary">+ Yeni Yazı</button>
+        </div>
       </div>
+
       <div class="card overflow-x-auto">
         <table class="w-full text-sm">
           <thead class="bg-gray-50">
             <tr>
+              <th class="p-3 w-10">
+                <input type="checkbox" class="w-4 h-4 cursor-pointer"
+                       [checked]="allPageSelected" [indeterminate]="somePageSelected"
+                       (change)="toggleAll($event)" />
+              </th>
               <th class="p-3 w-16"></th>
-              <th class="text-left p-3">Başlık</th><th class="text-left p-3">Slug</th>
-              <th class="text-left p-3">Tarih</th><th class="text-left p-3">Güncelleme</th>
-              <th class="text-left p-3">Durum</th><th class="text-left p-3">İşlem</th>
+              <th class="text-left p-3">Başlık</th>
+              <th class="text-left p-3">Slug</th>
+              <th class="text-left p-3">Tarih</th>
+              <th class="text-left p-3">Durum</th>
+              <th class="text-left p-3">İşlem</th>
             </tr>
           </thead>
           <tbody>
-            @for (item of items; track item.id) {
-              <tr class="border-t hover:bg-gray-50">
+            @for (item of paged; track item.id) {
+              <tr class="border-t hover:bg-gray-50" [class.bg-blue-50]="selected.has(item.id)">
+                <td class="p-3">
+                  <input type="checkbox" class="w-4 h-4 cursor-pointer"
+                         [checked]="selected.has(item.id)" (change)="toggleSelect(item.id)" />
+                </td>
                 <td class="p-2">
                   @if (item.imageUrl) {
                     <img [src]="item.imageUrl" [alt]="item.title"
@@ -40,7 +61,6 @@ import { BlogPost } from '../../core/models/models';
                 <td class="p-3 font-medium max-w-xs truncate">{{ item.title }}</td>
                 <td class="p-3 text-gray-400 font-mono text-xs">{{ item.slug }}</td>
                 <td class="p-3 text-gray-500 text-xs">{{ formatDate(item.createdAt) }}</td>
-                <td class="p-3 text-gray-400 text-xs">{{ item.updatedAt ? formatDate(item.updatedAt) : '-' }}</td>
                 <td class="p-3"><span [class]="item.isActive ? 'text-green-600 font-medium' : 'text-red-500'">{{ item.isActive ? 'Aktif' : 'Pasif' }}</span></td>
                 <td class="p-3 flex gap-3">
                   <button (click)="openForm(item)" class="text-blue-600 hover:underline">Düzenle</button>
@@ -53,6 +73,30 @@ import { BlogPost } from '../../core/models/models';
             }
           </tbody>
         </table>
+      </div>
+
+      <div class="flex items-center justify-between mt-4 flex-wrap gap-2">
+        <div class="flex items-center gap-2 text-sm text-gray-500">
+          @if (items.length > 0) {
+            <span>{{ (page - 1) * pageSize + 1 }}–{{ min(page * pageSize, items.length) }} / {{ items.length }}</span>
+          } @else { <span>0 kayıt</span> }
+          <select (change)="changePageSize($event)"
+                  class="border border-gray-300 rounded px-2 py-1 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            @for (s of pageSizeOptions; track s) { <option [value]="s" [selected]="s === pageSize">{{ s }}</option> }
+          </select>
+          <span>/ sayfa</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <button (click)="goTo(page - 1)" [disabled]="page === 1 || totalPages === 0"
+                  class="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-40 hover:bg-gray-50 transition-colors">‹ Önceki</button>
+          @for (p of pageNumbers; track p) {
+            <button (click)="goTo(p)" class="w-8 h-8 rounded-lg text-sm transition-colors"
+                    [class.bg-blue-600]="p === page" [class.text-white]="p === page"
+                    [class.hover:bg-gray-100]="p !== page">{{ p }}</button>
+          }
+          <button (click)="goTo(page + 1)" [disabled]="page === totalPages || totalPages === 0"
+                  class="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-40 hover:bg-gray-50 transition-colors">Sonraki ›</button>
+        </div>
       </div>
 
       @if (showForm) {
@@ -69,11 +113,8 @@ import { BlogPost } from '../../core/models/models';
                   }
                 </div>
                 <div class="col-span-2">
-                  <label class="label">Slug (URL)</label>
+                  <label class="label">Slug <span class="text-gray-400 font-normal text-xs">(otomatik, düzenlenebilir)</span></label>
                   <input formControlName="slug" class="input font-mono" placeholder="blog-yazi-slug" />
-                  @if (form.get('slug')?.invalid && form.get('slug')?.touched) {
-                    <p class="text-red-500 text-xs mt-1">Slug zorunludur.</p>
-                  }
                 </div>
                 <div class="col-span-2">
                   <label class="label">Kapak Görseli <span class="text-gray-400 font-normal text-xs">(1200×630 — otomatik kırpılır)</span></label>
@@ -132,13 +173,56 @@ export class BlogsComponent implements OnInit {
   saving = false;
   uploading = signal(false);
 
+  page            = 1;
+  pageSize        = 10;
+  pageSizeOptions = [5, 10, 25, 50, 100];
+  selected        = new Set<number>();
+
+  get totalPages()  { return Math.ceil(this.items.length / this.pageSize); }
+  get paged()       { return this.items.slice((this.page - 1) * this.pageSize, this.page * this.pageSize); }
+  get pageNumbers() {
+    const total = this.totalPages;
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    const pages = new Set([1, total, this.page, this.page - 1, this.page + 1].filter(p => p >= 1 && p <= total));
+    return [...pages].sort((a, b) => a - b);
+  }
+  get allPageSelected()  { return this.paged.length > 0 && this.paged.every(m => this.selected.has(m.id)); }
+  get somePageSelected() { return this.paged.some(m => this.selected.has(m.id)) && !this.allPageSelected; }
+  min(a: number, b: number) { return Math.min(a, b); }
+
   form = this.fb.group({
     title: ['', Validators.required], slug: ['', Validators.required],
     content: ['', Validators.required], imageUrl: [''], isActive: [true]
   });
 
   ngOnInit() { this.load(); }
-  load() { this.api.getBlogPostsAdmin().subscribe(d => { this.items = d; this.cdr.markForCheck(); }); }
+
+  load() {
+    this.api.getBlogPostsAdmin().subscribe(d => {
+      this.items = d;
+      this.selected.clear();
+      if (this.page > this.totalPages) this.page = Math.max(1, this.totalPages);
+      this.cdr.markForCheck();
+    });
+  }
+
+  changePageSize(event: Event) { this.pageSize = +(event.target as HTMLSelectElement).value; this.page = 1; this.selected = new Set(); }
+  goTo(p: number) { if (p < 1 || p > this.totalPages) return; this.page = p; this.selected.clear(); }
+  toggleSelect(id: number) { this.selected.has(id) ? this.selected.delete(id) : this.selected.add(id); this.selected = new Set(this.selected); }
+  toggleAll(event: Event) {
+    if ((event.target as HTMLInputElement).checked) this.paged.forEach(m => this.selected.add(m.id));
+    else this.paged.forEach(m => this.selected.delete(m.id));
+    this.selected = new Set(this.selected);
+  }
+  deleteSelected() {
+    const ids = [...this.selected];
+    this.toast.confirm(`${ids.length} blog yazısı silinsin mi?`, () => {
+      forkJoin(ids.map(id => this.api.deleteBlogPost(id))).subscribe({
+        next: () => { this.load(); this.toast.success(`${ids.length} blog yazısı silindi.`); },
+        error: () => { this.load(); this.toast.error('Bazı kayıtlar silinemedi.'); }
+      });
+    }, 'Sil');
+  }
 
   openForm(item?: BlogPost) {
     this.editing = item ?? null; this.showForm = true; this.saving = false;

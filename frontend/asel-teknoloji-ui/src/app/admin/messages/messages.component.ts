@@ -92,34 +92,41 @@ const PAGE_SIZE = 10;
       </div>
 
       <!-- Sayfalama -->
-      @if (messages.length > 0) {
-        <div class="flex items-center justify-between mt-4 flex-wrap gap-2">
-          <span class="text-sm text-gray-500">
-            {{ (page - 1) * pageSize + 1 }}–{{ min(page * pageSize, messages.length) }} / {{ messages.length }} mesaj
-          </span>
-          @if (totalPages > 1) {
-            <div class="flex items-center gap-1">
-              <button (click)="goTo(page - 1)" [disabled]="page === 1"
-                      class="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-40 hover:bg-gray-50 transition-colors">
-                ‹ Önceki
-              </button>
-              @for (p of pageNumbers; track p) {
-                <button (click)="goTo(p)"
-                        class="w-8 h-8 rounded-lg text-sm transition-colors"
-                        [class.bg-blue-600]="p === page"
-                        [class.text-white]="p === page"
-                        [class.hover:bg-gray-100]="p !== page">
-                  {{ p }}
-                </button>
-              }
-              <button (click)="goTo(page + 1)" [disabled]="page === totalPages"
-                      class="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-40 hover:bg-gray-50 transition-colors">
-                Sonraki ›
-              </button>
-            </div>
+      <div class="flex items-center justify-between mt-4 flex-wrap gap-2">
+        <div class="flex items-center gap-2 text-sm text-gray-500">
+          @if (messages.length > 0) {
+            <span>{{ (page - 1) * pageSize + 1 }}–{{ min(page * pageSize, messages.length) }} / {{ messages.length }} mesaj</span>
+          } @else {
+            <span>0 mesaj</span>
           }
+          <select (change)="changePageSize($event)"
+                  class="border border-gray-300 rounded px-2 py-1 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            @for (s of pageSizeOptions; track s) {
+              <option [value]="s" [selected]="s === pageSize">{{ s }}</option>
+            }
+          </select>
+          <span>/ sayfa</span>
         </div>
-      }
+        <div class="flex items-center gap-1">
+          <button (click)="goTo(page - 1)" [disabled]="page === 1 || totalPages === 0"
+                  class="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-40 hover:bg-gray-50 transition-colors">
+            ‹ Önceki
+          </button>
+          @for (p of pageNumbers; track p) {
+            <button (click)="goTo(p)"
+                    class="w-8 h-8 rounded-lg text-sm transition-colors"
+                    [class.bg-blue-600]="p === page"
+                    [class.text-white]="p === page"
+                    [class.hover:bg-gray-100]="p !== page">
+              {{ p }}
+            </button>
+          }
+          <button (click)="goTo(page + 1)" [disabled]="page === totalPages || totalPages === 0"
+                  class="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-40 hover:bg-gray-50 transition-colors">
+            Sonraki ›
+          </button>
+        </div>
+      </div>
     </div>
   `
 })
@@ -129,9 +136,10 @@ export class MessagesComponent implements OnInit {
   private toast = inject(ToastService);
 
   messages: Message[] = [];
-  selected = new Set<number>();
-  page     = 1;
-  pageSize = PAGE_SIZE;
+  selected     = new Set<number>();
+  page         = 1;
+  pageSize     = PAGE_SIZE;
+  pageSizeOptions = [5, 10, 25, 50, 100];
 
   get unread()      { return this.messages.filter(m => !m.isRead).length; }
   get totalPages()  { return Math.ceil(this.messages.length / this.pageSize); }
@@ -158,6 +166,12 @@ export class MessagesComponent implements OnInit {
       if (this.page > this.totalPages) this.page = Math.max(1, this.totalPages);
       this.cdr.markForCheck();
     });
+  }
+
+  changePageSize(event: Event) {
+    this.pageSize = +(event.target as HTMLSelectElement).value;
+    this.page = 1;
+    this.selected = new Set();
   }
 
   goTo(p: number) {
