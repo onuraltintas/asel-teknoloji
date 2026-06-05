@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="AselTeknoloji.Application/AselTeknoloji.Application.csproj" />
+  <Project Path="AselTeknoloji.Domain/AselTeknoloji.Domain.csproj" />
+  <Project Path="AselTeknoloji.Infrastructure/AselTeknoloji.Infrastructure.csproj" />
+  <Project Path="AselTeknoloji.WebAPI/AselTeknoloji.WebAPI.csproj" />
+</Solution>

@@ -1,0 +1,165 @@
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink, ActivatedRoute } from '@angular/router';
+import { Title, Meta } from '@angular/platform-browser';
+import { ApiService } from '../../core/services/api.service';
+import { JsonLdService } from '../../core/services/json-ld.service';
+import { Service } from '../../core/models/models';
+import { environment } from '../../../environments/environment';
+
+@Component({
+  selector: 'app-service-detail',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
+  template: `
+    @if (loading) {
+      <div class="flex items-center justify-center py-40">
+        <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    } @else if (!service) {
+      <div class="max-w-3xl mx-auto px-4 py-32 text-center">
+        <div class="text-6xl mb-6">🔍</div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-3">Sayfa Bulunamadı</h2>
+        <p class="text-gray-500 mb-8">Aradığınız hizmet sayfası mevcut değil veya kaldırılmış olabilir.</p>
+        <a routerLink="/" class="bg-blue-700 hover:bg-blue-800 text-white px-8 py-3 rounded-full font-semibold transition-colors inline-block">
+          Ana Sayfaya Dön
+        </a>
+      </div>
+    } @else {
+
+      <!-- ─── Hero ─── -->
+      <div class="relative bg-blue-900 text-white overflow-hidden" style="min-height:320px">
+        @if (service.imageUrl) {
+          <img [src]="service.imageUrl" [alt]="service.title"
+               class="absolute inset-0 w-full h-full object-cover opacity-30"
+               onerror="this.style.display='none'" />
+        }
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-800/70"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 flex flex-col justify-end" style="min-height:320px">
+
+          <!-- Breadcrumb -->
+          <nav class="flex items-center gap-2 text-blue-300 text-sm mb-6">
+            <a routerLink="/" class="hover:text-white transition-colors">Ana Sayfa</a>
+            <span>/</span>
+            @if (service.categoryName) {
+              <span class="text-blue-300">{{ service.categoryName }}</span>
+              <span>/</span>
+            }
+            <span class="text-white font-medium">{{ service.title }}</span>
+          </nav>
+
+          @if (service.categoryName) {
+            <span class="text-orange-400 text-sm font-semibold uppercase tracking-widest mb-3">{{ service.categoryName }}</span>
+          }
+          <h1 class="text-3xl md:text-5xl font-extrabold leading-tight max-w-3xl">{{ service.title }}</h1>
+          @if (service.shortDescription) {
+            <p class="text-blue-100 text-lg mt-4 max-w-2xl">{{ service.shortDescription }}</p>
+          }
+        </div>
+      </div>
+
+      <!-- ─── Content ─── -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+
+          <!-- Main content -->
+          <div class="lg:col-span-2">
+            @if (service.description) {
+              <div class="prose prose-blue max-w-none text-gray-700 leading-relaxed
+                          [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-gray-900 [&_h2]:mt-8 [&_h2]:mb-4
+                          [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-gray-900 [&_h3]:mt-6 [&_h3]:mb-3
+                          [&_p]:mb-4 [&_ul]:mb-4 [&_ul]:pl-6 [&_li]:mb-1 [&_li]:list-disc
+                          [&_strong]:text-gray-900 [&_a]:text-blue-600 [&_a]:underline"
+                   [innerHTML]="service.description">
+              </div>
+            } @else {
+              <p class="text-gray-400 italic">Bu hizmet için henüz içerik eklenmemiş.</p>
+            }
+          </div>
+
+          <!-- Sidebar -->
+          <aside class="space-y-6">
+            <!-- CTA card -->
+            <div class="bg-blue-900 text-white rounded-2xl p-7 text-center">
+              <div class="text-4xl mb-4">💬</div>
+              <h3 class="font-bold text-xl mb-2">Teklif Alın</h3>
+              <p class="text-blue-200 text-sm mb-6 leading-relaxed">Bu hizmet hakkında detaylı bilgi ve fiyat teklifi almak için iletişime geçin.</p>
+              <a routerLink="/iletisim"
+                 class="block bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-xl transition-colors">
+                İletişime Geç
+              </a>
+            </div>
+
+            <!-- Service status card -->
+            <div class="bg-gray-50 border border-gray-200 rounded-2xl p-7 text-center">
+              <div class="text-4xl mb-4">🔍</div>
+              <h3 class="font-bold text-gray-900 text-lg mb-2">Servis Takip</h3>
+              <p class="text-gray-500 text-sm mb-5">Cihazınızın servis durumunu takip kodunuzla öğrenin.</p>
+              <a routerLink="/servis-takip"
+                 class="block bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors">
+                Sorgula
+              </a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    }
+  `
+})
+export class ServiceDetailComponent implements OnInit {
+  private api      = inject(ApiService);
+  private route    = inject(ActivatedRoute);
+  private titleSvc = inject(Title);
+  private metaSvc  = inject(Meta);
+  private jsonLd   = inject(JsonLdService);
+  private cdr      = inject(ChangeDetectorRef);
+
+  service: Service | null = null;
+  loading = true;
+
+  ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      const slug = params.get('slug') ?? '';
+      this.loading = true;
+      this.api.getServiceBySlug(slug).subscribe({
+        next: s => {
+          this.service = s;
+          this.loading = false;
+          const title = s.metaTitle || `${s.title} | Asel Teknoloji`;
+          const desc  = s.metaDescription || s.shortDescription || '';
+          this.titleSvc.setTitle(title);
+          this.metaSvc.updateTag({ name: 'description',        content: desc });
+          this.metaSvc.updateTag({ property: 'og:title',       content: title });
+          this.metaSvc.updateTag({ property: 'og:description', content: desc });
+          this.metaSvc.updateTag({ property: 'og:type',        content: 'website' });
+          if (s.imageUrl) this.metaSvc.updateTag({ property: 'og:image', content: s.imageUrl });
+
+          const pageUrl = `${environment.siteUrl}/hizmet/${s.slug}`;
+          this.jsonLd.set({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'Service',
+                'name': s.title,
+                'description': desc,
+                'url': pageUrl,
+                'provider': { '@type': 'LocalBusiness', 'name': 'Asel Teknoloji', 'url': environment.siteUrl },
+                ...(s.imageUrl && { 'image': s.imageUrl })
+              },
+              {
+                '@type': 'BreadcrumbList',
+                'itemListElement': [
+                  { '@type': 'ListItem', 'position': 1, 'name': 'Ana Sayfa', 'item': environment.siteUrl },
+                  { '@type': 'ListItem', 'position': 2, 'name': s.categoryName || 'Hizmetler', 'item': `${environment.siteUrl}/#hizmetler` },
+                  { '@type': 'ListItem', 'position': 3, 'name': s.title, 'item': pageUrl }
+                ]
+              }
+            ]
+          });
+          this.cdr.markForCheck();
+        },
+        error: () => { this.service = null; this.loading = false; this.cdr.markForCheck(); }
+      });
+    });
+  }
+}

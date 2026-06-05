@@ -1,0 +1,26 @@
+# ── Frontend ──────────────────────────────────────
+frontend/asel-teknoloji-ui/node_modules/
+frontend/asel-teknoloji-ui/dist/
+frontend/asel-teknoloji-ui/.angular/
+frontend/asel-teknoloji-ui/.env
+frontend/asel-teknoloji-ui/.env.local
+
+# ── Backend ───────────────────────────────────────
+backend/**/bin/
+backend/**/obj/
+backend/**/.vs/
+backend/**/*.user
+backend/**/*.suo
+backend/**/appsettings.Development.json
+backend/**/appsettings.Production.json
+
+# Gerçek şifreler burada — asla commit etme
+backend/**/appsettings.json
+backend/**/appsettings.*.json
+
+# ── Genel ─────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+.vscode/settings.json

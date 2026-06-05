@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"D:\\\\Calismalar\\\\AselTeknoloji\\\\backend\" -Recurse -Force | Select-Object -Property FullName, @{Name=\"Type\";Expression={if\\($_.PSIsContainer\\){\"Dir\"}else{\"File\"}}} | Sort-Object FullName)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\Calismalar\\\\AselTeknoloji\\\\frontend\" -Recurse -Force | Select-Object -Property FullName, @{Name=\"Type\";Expression={if\\($_.PSIsContainer\\){\"Dir\"}else{\"File\"}}} | Sort-Object FullName)",
+      "PowerShell(Get-ChildItem \"D:\\\\Calismalar\\\\AselTeknoloji\\\\frontend\\\\asel-teknoloji-ui\\\\src\\\\app\\\\admin\" -Recurse | ForEach-Object { $_.FullName })",
+      "PowerShell(Get-ChildItem \"D:\\\\Calismalar\\\\AselTeknoloji\\\\backend\\\\AselTeknoloji.WebAPI\\\\Controllers\" | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem \"D:\\\\Calismalar\\\\AselTeknoloji\\\\backend\\\\AselTeknoloji.Application\\\\DTOs\" | ForEach-Object { $_.Name })",
+      "PowerShell(New-Item *)",
+      "PowerShell(Get-ChildItem \"D:\\\\Calismalar\\\\AselTeknoloji\\\\backend\\\\AselTeknoloji.WebAPI\" -Recurse | Where-Object { !$_.PSIsContainer } | Select-Object FullName)",
+      "PowerShell(Get-ChildItem \"D:\\\\Calismalar\\\\AselTeknoloji\\\\backend\\\\AselTeknoloji.Infrastructure\" -Recurse | Where-Object { !$_.PSIsContainer } | Select-Object FullName)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\Calismalar\\\\AselTeknoloji\\\\backend\\\\AselTeknoloji.WebAPI\" -Recurse -File | ForEach-Object { $_.FullName })",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\Calismalar\\\\AselTeknoloji\\\\backend\\\\AselTeknoloji.Infrastructure\" -Recurse -File | ForEach-Object { $_.FullName })",
+      "PowerShell(Get-ChildItem D:\\\\Calismalar\\\\AselTeknoloji\\\\frontend\\\\asel-teknoloji-ui -Filter \"angular.json\" | ForEach-Object { Get-Content $_.FullName } | ConvertFrom-Json | Select-Object -ExpandProperty projects | Select-Object -ExpandProperty PSObject | Select-Object -ExpandProperty Properties | Select-Object Name)",
+      "PowerShell(pg_isready *)",
+      "PowerShell(Get-Service *)",
+      "PowerShell(& \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\bin\\\\pg_isready.exe\" -h localhost -p 5432)",
+      "PowerShell(& \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\bin\\\\pg_ctl.exe\" start -D \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\data\" 2>&1)",
+      "PowerShell(Start-Sleep -Seconds 3; & \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\bin\\\\pg_isready.exe\" -h localhost -p 5432)",
+      "PowerShell(Start-Sleep -Seconds 5; Invoke-RestMethod -Uri \"http://localhost:5013/openapi/v1.json\" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty info | Select-Object title, version)",
+      "PowerShell(Start-Sleep -Seconds 12; \\(Invoke-WebRequest -Uri \"http://localhost:4200\" -UseBasicParsing -TimeoutSec 10 -ErrorAction SilentlyContinue\\).StatusCode)",
+      "PowerShell(Invoke-RestMethod -Uri \"http://localhost:5013/api/setting\" -TimeoutSec 5 -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Command *)",
+      "PowerShell(npx playwright install chromium --with-deps 2>&1 | Select-Object -Last 5)",
+      "PowerShell(& \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\bin\\\\psql.exe\" -U postgres -d asel_teknoloji -c \"SELECT username, email FROM \\\\\"Users\\\\\" LIMIT 5;\" 2>&1)",
+      "PowerShell(Stop-Process *)",
+      "PowerShell(Start-Sleep -Seconds 3; try { $r = Invoke-WebRequest -Uri \"http://localhost:5013/api/settings\" -UseBasicParsing -TimeoutSec 5; \"HTTP $\\($r.StatusCode\\)\" } catch { $_.Exception.Message })",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:5013/api/setting\" -UseBasicParsing -TimeoutSec 5; \"HTTP $\\($r.StatusCode\\) - OK\" } catch { \"Error: $\\($_.Exception.Message\\)\" })",
+      "PowerShell(where.exe npx 2>$null; node --version; npx playwright --version 2>$null)",
+      "PowerShell(Get-Process *)",
+      "Skill(claude-api)",
+      "WebSearch",
+      "PowerShell($r = Invoke-RestMethod -Uri \"http://localhost:5013/api/blogpost\" -Method GET; Write-Host \"Toplam blog yazısı: $\\($r.Count\\)\"; $r | ForEach-Object { Write-Host \"[$\\($_.id\\)] $\\($_.title\\)\" })",
+      "PowerShell(Get-Content \"D:\\\\Calismalar\\\\AselTeknoloji\\\\frontend\\\\asel-teknoloji-ui\\\\src\\\\app\\\\core\\\\services\\\\api.service.ts\" | Select-Object -Last 10 | ForEach-Object { Write-Host \"[$_]\" })",
+      "PowerShell(Get-NetTCPConnection *)",
+      "PowerShell(Invoke-RestMethod \"http://localhost:5013/api/setting\" | ConvertTo-Json)",
+      "PowerShell(node \"C:\\\\Users\\\\onura\\\\AppData\\\\Local\\\\Temp\\\\asel-pw-test\\\\servis-debug.mjs\" 2>&1)",
+      "PowerShell(node \"C:\\\\Users\\\\onura\\\\AppData\\\\Local\\\\Temp\\\\asel-pw-test\\\\servis-dbg2.mjs\" 2>&1)",
+      "PowerShell(Remove-Item *)"
+    ]
+  }
+}
