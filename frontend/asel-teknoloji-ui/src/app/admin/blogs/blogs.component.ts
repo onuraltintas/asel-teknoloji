@@ -19,6 +19,7 @@ import { BlogPost } from '../../core/models/models';
         <table class="w-full text-sm">
           <thead class="bg-gray-50">
             <tr>
+              <th class="p-3 w-16"></th>
               <th class="text-left p-3">Başlık</th><th class="text-left p-3">Slug</th>
               <th class="text-left p-3">Tarih</th><th class="text-left p-3">Güncelleme</th>
               <th class="text-left p-3">Durum</th><th class="text-left p-3">İşlem</th>
@@ -27,6 +28,15 @@ import { BlogPost } from '../../core/models/models';
           <tbody>
             @for (item of items; track item.id) {
               <tr class="border-t hover:bg-gray-50">
+                <td class="p-2">
+                  @if (item.imageUrl) {
+                    <img [src]="item.imageUrl" [alt]="item.title"
+                         class="w-14 h-10 object-cover rounded border border-gray-100"
+                         onerror="this.style.display='none'" />
+                  } @else {
+                    <div class="w-14 h-10 bg-gray-100 rounded flex items-center justify-center text-gray-300 text-lg">🖼</div>
+                  }
+                </td>
                 <td class="p-3 font-medium max-w-xs truncate">{{ item.title }}</td>
                 <td class="p-3 text-gray-400 font-mono text-xs">{{ item.slug }}</td>
                 <td class="p-3 text-gray-500 text-xs">{{ formatDate(item.createdAt) }}</td>
@@ -39,7 +49,7 @@ import { BlogPost } from '../../core/models/models';
               </tr>
             }
             @empty {
-              <tr><td colspan="6" class="p-6 text-center text-gray-400">Henüz blog yazısı yok.</td></tr>
+              <tr><td colspan="7" class="p-6 text-center text-gray-400">Henüz blog yazısı yok.</td></tr>
             }
           </tbody>
         </table>
