@@ -52,4 +52,10 @@ export class ApiService {
   createReference(dto: CreateReferenceDto)                 { return this.http.post<number>(`${this.url}/reference`, dto); }
   updateReference(id: number, dto: any)                    { return this.http.put(`${this.url}/reference/${id}`, dto); }
   deleteReference(id: number)                              { return this.http.delete(`${this.url}/reference/${id}`); }
+
+  uploadImage(file: File, type: 'slider' | 'service' | 'blog' | 'reference' | 'logo') {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<{ url: string }>(`${this.url}/upload/${type}`, form);
+  }
 }

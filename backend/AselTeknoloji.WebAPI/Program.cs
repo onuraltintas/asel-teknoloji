@@ -49,6 +49,12 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+// Dosya yükleme - max 10 MB
+builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(o =>
+{
+    o.MultipartBodyLengthLimit = 10 * 1024 * 1024;
+});
+
 var app = builder.Build();
 
 // OpenAPI / Swagger UI (.NET 10 native)
@@ -60,6 +66,7 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseCors("AllowAngular");
 app.UseAuthentication();
 app.UseAuthorization();
