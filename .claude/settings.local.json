@@ -36,7 +36,11 @@
       "PowerShell(Invoke-RestMethod \"http://localhost:5013/api/setting\" | ConvertTo-Json)",
       "PowerShell(node \"C:\\\\Users\\\\onura\\\\AppData\\\\Local\\\\Temp\\\\asel-pw-test\\\\servis-debug.mjs\" 2>&1)",
       "PowerShell(node \"C:\\\\Users\\\\onura\\\\AppData\\\\Local\\\\Temp\\\\asel-pw-test\\\\servis-dbg2.mjs\" 2>&1)",
-      "PowerShell(Remove-Item *)"
+      "PowerShell(Remove-Item *)",
+      "PowerShell(cd \"D:\\\\Calismalar\\\\AselTeknoloji\\\\frontend\\\\asel-teknoloji-ui\" && Start-Process -NoNewWindow pwsh -ArgumentList '-c', 'npx ng serve --port 4200 2>&1 | Tee-Object -FilePath \"C:\\\\Users\\\\onura\\\\AppData\\\\Local\\\\Temp\\\\ng-serve.log\"')",
+      "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd \"D:\\\\Calismalar\\\\AselTeknoloji\" && git status)",
+      "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd \"D:\\\\Calismalar\\\\AselTeknoloji\" && git push origin main)",
+      "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd \"D:\\\\Calismalar\\\\AselTeknoloji\" && git add -A && git status)"
     ]
   }
 }

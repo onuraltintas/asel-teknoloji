@@ -19,7 +19,18 @@ export interface CreateTechnicalServiceDto { customerName: string; customerPhone
 export interface UpdateTechnicalServiceDto { status: number; adminNote?: string; }
 
 export interface Message { id: number; fullName: string; email: string; phone?: string; subject: string; body: string; isRead: boolean; createdAt: string; }
-export interface Setting { id: number; title: string; description?: string; keywords?: string; logoUrl?: string; faviconUrl?: string; phone?: string; email?: string; address?: string; mapsEmbedCode?: string; facebook?: string; instagram?: string; linkedin?: string; }
+export interface Setting {
+  id: number; title: string; description?: string; keywords?: string;
+  logoUrl?: string; faviconUrl?: string;
+  phone?: string; email?: string; address?: string; mapsEmbedCode?: string;
+  facebook?: string; instagram?: string; linkedin?: string;
+  whatsapp?: string; youtube?: string; twitter?: string;
+  tagline?: string; taglineSubtitle?: string;
+  stat1Value?: string; stat1Label?: string;
+  stat2Value?: string; stat2Label?: string;
+  stat3Value?: string; stat3Label?: string;
+  stat4Value?: string; stat4Label?: string;
+}
 
 export interface BlogPost { id: number; title: string; slug: string; content: string; imageUrl?: string; isActive: boolean; createdAt: string; updatedAt?: string; }
 export interface CreateBlogPostDto { title: string; slug: string; content: string; imageUrl?: string; isActive: boolean; }

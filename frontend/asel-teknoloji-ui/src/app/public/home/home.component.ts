@@ -5,7 +5,7 @@ import { Title, Meta } from '@angular/platform-browser';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { JsonLdService } from '../../core/services/json-ld.service';
-import { Slider, Service, BlogPost, Reference } from '../../core/models/models';
+import { Slider, Service, BlogPost, Reference, Setting } from '../../core/models/models';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -21,9 +21,9 @@ import { environment } from '../../../environments/environment';
         <div class="absolute inset-0 bg-gradient-to-br from-blue-900 to-blue-950 flex items-center justify-center">
           <div class="text-center text-white px-6 max-w-3xl">
             <h1 class="text-4xl md:text-6xl font-extrabold mb-5 leading-tight">
-              Teknoloji <span class="text-orange-400">Güvenilir</span> Ellerde
+              {{ setting?.tagline || 'Teknoloji Güvenilir Ellerde' }}
             </h1>
-            <p class="text-blue-200 text-lg md:text-xl mb-8">Güvenlik kamera, yangın alarm, teknik servis ve bilişim çözümlerinde güvenilir adresiniz.</p>
+            <p class="text-blue-200 text-lg md:text-xl mb-8">{{ setting?.taglineSubtitle || 'Güvenlik kamera, yangın alarm, teknik servis ve bilişim çözümlerinde güvenilir adresiniz.' }}</p>
             <div class="flex gap-4 justify-center flex-wrap">
               <a routerLink="/iletisim" class="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full font-semibold transition-colors shadow-lg">
                 Teklif Al
@@ -151,12 +151,22 @@ import { environment } from '../../../environments/environment';
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-14 border-t border-white/20 pt-12">
-          @for (stat of stats; track stat.label) {
-            <div class="text-center">
-              <div class="text-4xl font-extrabold text-orange-400">{{ stat.value }}</div>
-              <div class="text-blue-200 text-sm mt-1">{{ stat.label }}</div>
-            </div>
-          }
+          <div class="text-center">
+            <div class="text-4xl font-extrabold text-orange-400">{{ setting?.stat1Value || '500+' }}</div>
+            <div class="text-blue-200 text-sm mt-1">{{ setting?.stat1Label || 'Tamamlanan Proje' }}</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-extrabold text-orange-400">{{ setting?.stat2Value || '10+' }}</div>
+            <div class="text-blue-200 text-sm mt-1">{{ setting?.stat2Label || 'Yıllık Deneyim' }}</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-extrabold text-orange-400">{{ setting?.stat3Value || '98%' }}</div>
+            <div class="text-blue-200 text-sm mt-1">{{ setting?.stat3Label || 'Müşteri Memnuniyeti' }}</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-extrabold text-orange-400">{{ setting?.stat4Value || '24/7' }}</div>
+            <div class="text-blue-200 text-sm mt-1">{{ setting?.stat4Label || 'Teknik Destek' }}</div>
+          </div>
         </div>
       </div>
     </section>
@@ -265,6 +275,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   services: Service[] = [];
   recentBlogs: BlogPost[] = [];
   references: Reference[] = [];
+  setting: Setting | null = null;
   loading = true;
   currentSlide = 0;
   private timer: any;
@@ -274,13 +285,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     { icon: '⚡', title: 'Hızlı Çözüm',        desc: 'Arıza ve teknik servis taleplerinize en kısa sürede müdahale ediyoruz.' },
     { icon: '🔧', title: 'Uzman Ekip',          desc: 'Alanında uzman teknisyen kadromuz en karmaşık sorunları çözmeye hazır.' },
     { icon: '📞', title: '7/24 Destek',         desc: 'Acil durumlarda 7 gün 24 saat ulaşabileceğiniz destek hattımız hizmetinizde.' },
-  ];
-
-  stats = [
-    { value: '500+', label: 'Tamamlanan Proje' },
-    { value: '10+',  label: 'Yıllık Deneyim' },
-    { value: '98%',  label: 'Müşteri Memnuniyeti' },
-    { value: '24/7', label: 'Teknik Destek' },
   ];
 
   ngOnInit() {
@@ -296,6 +300,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.services    = data.services;
         this.recentBlogs = data.blogs.slice(0, 3);
         this.references  = data.references;
+        this.setting     = data.setting;
         this.loading     = false;
         if (this.sliders.length > 1 && isPlatformBrowser(this.platformId)) this.startTimer();
         this.cdr.markForCheck();

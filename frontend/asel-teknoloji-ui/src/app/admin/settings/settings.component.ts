@@ -60,23 +60,40 @@ export class SettingsComponent implements OnInit {
   uploading = signal<Record<string, boolean>>({});
 
   fields = [
-    { key: 'title',         label: 'Site Başlığı',           full: true },
-    { key: 'description',   label: 'Açıklama',               full: true, textarea: true },
-    { key: 'keywords',      label: 'Anahtar Kelimeler',       full: true },
-    { key: 'phone',         label: 'Telefon' },
-    { key: 'email',         label: 'E-posta',                 type: 'email' },
-    { key: 'address',       label: 'Adres',                   full: true, textarea: true },
-    { key: 'facebook',      label: 'Facebook URL' },
-    { key: 'instagram',     label: 'Instagram URL' },
-    { key: 'linkedin',      label: 'LinkedIn URL' },
-    { key: 'logoUrl',       label: 'Logo (400×200)',          full: true },
-    { key: 'faviconUrl',    label: 'Favicon (64×64)',         full: true },
-    { key: 'mapsEmbedCode', label: 'Google Maps Embed Kodu', full: true, textarea: true },
+    { key: 'title',            label: 'Site Başlığı / Firma Adı',  full: true },
+    { key: 'tagline',          label: 'Hero Slogan',                full: true },
+    { key: 'taglineSubtitle',  label: 'Hero Alt Metin',             full: true },
+    { key: 'description',      label: 'Genel Açıklama (SEO & Footer)', full: true, textarea: true },
+    { key: 'keywords',         label: 'Anahtar Kelimeler',          full: true },
+    { key: 'phone',            label: 'Telefon' },
+    { key: 'email',            label: 'E-posta',                    type: 'email' },
+    { key: 'address',          label: 'Adres',                      full: true, textarea: true },
+    { key: 'facebook',         label: 'Facebook URL' },
+    { key: 'instagram',        label: 'Instagram URL' },
+    { key: 'linkedin',         label: 'LinkedIn URL' },
+    { key: 'whatsapp',         label: 'WhatsApp URL' },
+    { key: 'youtube',          label: 'YouTube URL' },
+    { key: 'twitter',          label: 'Twitter / X URL' },
+    { key: 'stat1Value',       label: 'İstatistik 1 — Değer',       section: 'stats' },
+    { key: 'stat1Label',       label: 'İstatistik 1 — Açıklama',    section: 'stats' },
+    { key: 'stat2Value',       label: 'İstatistik 2 — Değer',       section: 'stats' },
+    { key: 'stat2Label',       label: 'İstatistik 2 — Açıklama',    section: 'stats' },
+    { key: 'stat3Value',       label: 'İstatistik 3 — Değer',       section: 'stats' },
+    { key: 'stat3Label',       label: 'İstatistik 3 — Açıklama',    section: 'stats' },
+    { key: 'stat4Value',       label: 'İstatistik 4 — Değer',       section: 'stats' },
+    { key: 'stat4Label',       label: 'İstatistik 4 — Açıklama',    section: 'stats' },
+    { key: 'logoUrl',          label: 'Logo (400×200)',              full: true },
+    { key: 'faviconUrl',       label: 'Favicon (64×64)',             full: true },
+    { key: 'mapsEmbedCode',    label: 'Google Maps Embed Kodu',      full: true, textarea: true },
   ];
 
   form = this.fb.group({
-    title: [''], description: [''], keywords: [''], phone: [''], email: [''],
+    title: [''], tagline: [''], taglineSubtitle: [''],
+    description: [''], keywords: [''], phone: [''], email: [''],
     address: [''], facebook: [''], instagram: [''], linkedin: [''],
+    whatsapp: [''], youtube: [''], twitter: [''],
+    stat1Value: [''], stat1Label: [''], stat2Value: [''], stat2Label: [''],
+    stat3Value: [''], stat3Label: [''], stat4Value: [''], stat4Label: [''],
     logoUrl: [''], faviconUrl: [''], mapsEmbedCode: ['']
   });
 

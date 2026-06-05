@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
-import { Setting } from '../../core/models/models';
+import { Setting, Service } from '../../core/models/models';
 
 @Component({
   selector: 'app-public-layout',
@@ -91,11 +91,11 @@ import { Setting } from '../../core/models/models';
 
           <!-- Brand -->
           <div>
-            <h3 class="text-white font-bold text-lg mb-3">Asel Teknoloji</h3>
+            <h3 class="text-white font-bold text-lg mb-3">{{ setting?.title || 'Asel Teknoloji' }}</h3>
             <p class="text-sm leading-relaxed mb-4">
               {{ setting?.description || 'Güvenlik kamera, yangın alarm, internet altyapı ve teknik servis hizmetleri.' }}
             </p>
-            <div class="flex gap-3">
+            <div class="flex gap-3 flex-wrap">
               @if (setting?.facebook) {
                 <a [href]="setting!.facebook" target="_blank" rel="noopener"
                    class="w-8 h-8 bg-blue-700 hover:bg-blue-600 rounded-full flex items-center justify-center text-white text-xs transition-colors">f</a>
@@ -107,6 +107,18 @@ import { Setting } from '../../core/models/models';
               @if (setting?.linkedin) {
                 <a [href]="setting!.linkedin" target="_blank" rel="noopener"
                    class="w-8 h-8 bg-blue-600 hover:bg-blue-500 rounded-full flex items-center justify-center text-white text-xs transition-colors">in</a>
+              }
+              @if (setting?.whatsapp) {
+                <a [href]="setting!.whatsapp" target="_blank" rel="noopener"
+                   class="w-8 h-8 bg-green-600 hover:bg-green-500 rounded-full flex items-center justify-center text-white text-xs transition-colors">wa</a>
+              }
+              @if (setting?.youtube) {
+                <a [href]="setting!.youtube" target="_blank" rel="noopener"
+                   class="w-8 h-8 bg-red-600 hover:bg-red-500 rounded-full flex items-center justify-center text-white text-xs transition-colors">yt</a>
+              }
+              @if (setting?.twitter) {
+                <a [href]="setting!.twitter" target="_blank" rel="noopener"
+                   class="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center text-white text-xs transition-colors">𝕏</a>
               }
             </div>
           </div>
@@ -127,11 +139,11 @@ import { Setting } from '../../core/models/models';
           <div>
             <h4 class="text-white font-semibold mb-4">Hizmetlerimiz</h4>
             <ul class="space-y-2 text-sm">
-              <li class="hover:text-white transition-colors">Güvenlik Kamera Sistemleri</li>
-              <li class="hover:text-white transition-colors">Yangın Alarm Sistemleri</li>
-              <li class="hover:text-white transition-colors">İnternet Altyapı Sistemleri</li>
-              <li class="hover:text-white transition-colors">Teknik Servis & Onarım</li>
-              <li class="hover:text-white transition-colors">Bilgisayar & Yazıcı Hizmetleri</li>
+              @for (svc of footerServices; track svc.id) {
+                <li>
+                  <a [routerLink]="['/hizmet', svc.slug]" class="hover:text-white transition-colors">{{ svc.title }}</a>
+                </li>
+              }
             </ul>
           </div>
 
@@ -162,7 +174,7 @@ import { Setting } from '../../core/models/models';
         </div>
 
         <div class="border-t border-gray-800 py-5 text-center text-xs text-gray-600">
-          © {{ year }} Asel Teknoloji. Tüm hakları saklıdır.
+          © {{ year }} {{ setting?.title || 'Asel Teknoloji' }}. Tüm hakları saklıdır.
         </div>
       </footer>
     </div>
@@ -172,6 +184,7 @@ export class PublicLayoutComponent implements OnInit {
   private api      = inject(ApiService);
   private document = inject(DOCUMENT);
   setting: Setting | null = null;
+  footerServices: Service[] = [];
   menuOpen = false;
   year = new Date().getFullYear();
 
@@ -189,6 +202,10 @@ export class PublicLayoutComponent implements OnInit {
           link.href = s.faviconUrl;
         }
       },
+      error: () => {}
+    });
+    this.api.getServices().subscribe({
+      next: services => { this.footerServices = services.filter(s => s.isActive).slice(0, 6); },
       error: () => {}
     });
   }

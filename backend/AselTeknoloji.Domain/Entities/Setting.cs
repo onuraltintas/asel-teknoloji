@@ -15,4 +15,17 @@ public class Setting
     public string? Facebook { get; set; }
     public string? Instagram { get; set; }
     public string? Linkedin { get; set; }
+    public string? Whatsapp { get; set; }
+    public string? Youtube { get; set; }
+    public string? Twitter { get; set; }
+    public string? Tagline { get; set; }
+    public string? TaglineSubtitle { get; set; }
+    public string? Stat1Value { get; set; }
+    public string? Stat1Label { get; set; }
+    public string? Stat2Value { get; set; }
+    public string? Stat2Label { get; set; }
+    public string? Stat3Value { get; set; }
+    public string? Stat3Label { get; set; }
+    public string? Stat4Value { get; set; }
+    public string? Stat4Label { get; set; }
 }
