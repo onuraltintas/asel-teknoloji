@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
@@ -62,11 +62,22 @@ import { Reference } from '../../core/models/models';
                             placeholder="Kısa açıklama (opsiyonel)"></textarea>
                 </div>
                 <div>
-                  <label class="label">Logo URL</label>
-                  <input formControlName="imageUrl" class="input" placeholder="https://..." />
+                  <label class="label">Logo <span class="text-gray-400 font-normal text-xs">(400×300 — otomatik kırpılır)</span></label>
+                  <div class="flex gap-2">
+                    <input formControlName="imageUrl" class="input flex-1" placeholder="https://... veya dosya yükle" />
+                    <label class="flex items-center gap-1.5 cursor-pointer bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 text-sm font-medium px-3 py-2 rounded-lg transition-colors whitespace-nowrap"
+                           [class.opacity-50]="uploading()" [class.cursor-not-allowed]="uploading()">
+                      @if (uploading()) {
+                        <span class="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></span>Yükleniyor...
+                      } @else { 📁 Dosya Seç }
+                      <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden"
+                             [attr.disabled]="uploading() ? true : null" (change)="onFileSelect($event)" />
+                    </label>
+                  </div>
+                  @if (uploadError()) { <p class="text-red-600 text-xs mt-1">{{ uploadError() }}</p> }
                   @if (form.get('imageUrl')?.value) {
                     <img [src]="form.get('imageUrl')?.value" alt="Önizleme"
-                         class="mt-2 h-12 object-contain border border-gray-200 rounded p-1"
+                         class="mt-2 h-16 object-contain border border-gray-200 rounded p-1"
                          onerror="this.style.display='none'" />
                   }
                 </div>
@@ -104,6 +115,8 @@ export class ReferencesComponent implements OnInit {
   items: Reference[] = [];
   showForm = false;
   editing: Reference | null = null;
+  uploading   = signal(false);
+  uploadError = signal('');
 
   form = this.fb.group({
     name:         ['', Validators.required],
@@ -123,11 +136,24 @@ export class ReferencesComponent implements OnInit {
   openForm(item?: Reference) {
     this.editing = item ?? null;
     this.showForm = true;
+    this.uploadError.set('');
     this.form.patchValue(item ?? { name: '', description: '', imageUrl: '', website: '', displayOrder: 1, isActive: true });
   }
 
+  onFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file  = input.files?.[0];
+    if (!file) return;
+    this.uploading.set(true);
+    this.uploadError.set('');
+    this.api.uploadImage(file, 'reference').subscribe({
+      next: res => { this.form.patchValue({ imageUrl: res.url }); this.uploading.set(false); input.value = ''; },
+      error: err => { this.uploadError.set(err?.error?.error ?? 'Yükleme başarısız.'); this.uploading.set(false); input.value = ''; }
+    });
+  }
+
   save() {
-    if (this.form.invalid) return;
+    if (this.form.invalid || this.uploading()) return;
     const dto = this.form.value as any;
     const obs = this.editing
       ? this.api.updateReference(this.editing.id, { ...dto, id: this.editing.id })
