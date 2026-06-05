@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { ToastComponent } from '../../shared/toast.component';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, ToastComponent],
   template: `
     <div class="flex h-screen bg-gray-100">
       <aside class="w-64 bg-blue-900 text-white flex flex-col">
@@ -35,6 +36,7 @@ import { AuthService } from '../../core/services/auth.service';
         <main class="flex-1 overflow-y-auto p-6"><router-outlet /></main>
       </div>
     </div>
+    <app-toast />
   `
 })
 export class AdminLayoutComponent {

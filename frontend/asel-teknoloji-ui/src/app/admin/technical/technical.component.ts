@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { ToastService } from '../../core/services/toast.service';
 import { TechnicalService, SERVICE_STATUS_LABELS } from '../../core/models/models';
 
 @Component({
@@ -67,8 +68,10 @@ import { TechnicalService, SERVICE_STATUS_LABELS } from '../../core/models/model
   `
 })
 export class TechnicalComponent implements OnInit {
-  private api = inject(ApiService);
-  private cdr = inject(ChangeDetectorRef);
+  private api   = inject(ApiService);
+  private cdr   = inject(ChangeDetectorRef);
+  private toast = inject(ToastService);
+
   items: TechnicalService[] = [];
   filtered: TechnicalService[] = [];
   filterStatus: number | null = null;
@@ -81,10 +84,15 @@ export class TechnicalComponent implements OnInit {
   load() { this.api.getTechnicalServices().subscribe(d => { this.items = d; this.applyFilter(); this.cdr.markForCheck(); }); }
   applyFilter() { this.filtered = this.filterStatus === null ? this.items : this.items.filter(i => i.status === this.filterStatus); }
   openEdit(item: TechnicalService) { this.editing = item; this.editStatus = item.status; this.editNote = item.adminNote ?? ''; }
+
   saveEdit() {
     if (!this.editing) return;
-    this.api.updateTechnicalService(this.editing.id, { status: this.editStatus, adminNote: this.editNote }).subscribe(() => { this.editing = null; this.load(); });
+    this.api.updateTechnicalService(this.editing.id, { status: this.editStatus, adminNote: this.editNote }).subscribe({
+      next: () => { this.editing = null; this.load(); this.toast.success('Servis kaydı güncellendi.'); },
+      error: () => this.toast.error('Güncelleme başarısız.')
+    });
   }
+
   statusClass(s: number) {
     const m: Record<number,string> = { 0:'bg-yellow-100 text-yellow-700', 1:'bg-blue-100 text-blue-700', 2:'bg-orange-100 text-orange-700', 3:'bg-green-100 text-green-700', 4:'bg-red-100 text-red-700' };
     return m[s] ?? 'bg-gray-100 text-gray-700';

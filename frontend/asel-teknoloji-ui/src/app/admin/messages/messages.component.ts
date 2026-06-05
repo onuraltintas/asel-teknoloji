@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
+import { ToastService } from '../../core/services/toast.service';
 import { Message } from '../../core/models/models';
 
 @Component({
@@ -40,15 +41,29 @@ import { Message } from '../../core/models/models';
   `
 })
 export class MessagesComponent implements OnInit {
-  private api = inject(ApiService);
-  private cdr = inject(ChangeDetectorRef);
+  private api   = inject(ApiService);
+  private cdr   = inject(ChangeDetectorRef);
+  private toast = inject(ToastService);
+
   messages: Message[] = [];
   get unread() { return this.messages.filter(m => !m.isRead).length; }
+
   ngOnInit() { this.load(); }
   load() { this.api.getMessages().subscribe(d => { this.messages = d; this.cdr.markForCheck(); }); }
-  markRead(msg: Message) { this.api.markMessageRead(msg.id).subscribe(() => { msg.isRead = true; this.cdr.markForCheck(); }); }
+
+  markRead(msg: Message) {
+    this.api.markMessageRead(msg.id).subscribe({
+      next: () => { msg.isRead = true; this.cdr.markForCheck(); },
+      error: () => this.toast.error('İşlem başarısız.')
+    });
+  }
+
   del(msg: Message) {
-    if (!confirm('Bu mesajı silmek istediğinize emin misiniz?')) return;
-    this.api.deleteMessage(msg.id).subscribe(() => this.load());
+    this.toast.confirm(`"${msg.subject}" mesajı silinsin mi?`, () => {
+      this.api.deleteMessage(msg.id).subscribe({
+        next: () => { this.load(); this.toast.success('Mesaj silindi.'); },
+        error: () => this.toast.error('Silme işlemi başarısız.')
+      });
+    }, 'Sil');
   }
 }

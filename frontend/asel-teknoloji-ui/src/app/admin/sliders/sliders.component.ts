@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/c
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { ToastService } from '../../core/services/toast.service';
 import { Slider } from '../../core/models/models';
 
 @Component({
@@ -41,38 +42,22 @@ import { Slider } from '../../core/models/models';
             <h3 class="font-bold text-lg mb-4">{{ editing ? 'Slider Düzenle' : 'Yeni Slider' }}</h3>
             <form [formGroup]="form" (ngSubmit)="save()">
               <div class="grid grid-cols-2 gap-3">
-                <div class="col-span-2">
-                  <label class="label">Başlık</label>
-                  <input formControlName="title" class="input" />
-                </div>
-                <div class="col-span-2">
-                  <label class="label">Alt Başlık</label>
-                  <input formControlName="subTitle" class="input" />
-                </div>
+                <div class="col-span-2"><label class="label">Başlık</label><input formControlName="title" class="input" /></div>
+                <div class="col-span-2"><label class="label">Alt Başlık</label><input formControlName="subTitle" class="input" /></div>
 
-                <!-- Görsel URL + Dosya Yükle -->
                 <div class="col-span-2">
-                  <label class="label">Görsel <span class="text-gray-400 font-normal text-xs">(1920×580 — farklı boyutlar otomatik kırpılır)</span></label>
+                  <label class="label">Görsel <span class="text-gray-400 font-normal text-xs">(1920×580 — otomatik kırpılır)</span></label>
                   <div class="flex gap-2">
                     <input formControlName="imageUrl" class="input flex-1" placeholder="https://... veya dosya yükle" />
                     <label class="flex items-center gap-1.5 cursor-pointer bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 text-sm font-medium px-3 py-2 rounded-lg transition-colors whitespace-nowrap"
-                           [class.opacity-50]="uploading()"
-                           [class.cursor-not-allowed]="uploading()">
+                           [class.opacity-50]="uploading()" [class.cursor-not-allowed]="uploading()">
                       @if (uploading()) {
-                        <span class="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></span>
-                        Yükleniyor...
-                      } @else {
-                        📁 Dosya Seç
-                      }
-                      <input type="file" accept="image/jpeg,image/png,image/webp,image/gif"
-                             class="hidden"
-                             [attr.disabled]="uploading() ? true : null"
-                             (change)="onFileSelect($event)" />
+                        <span class="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></span>Yükleniyor...
+                      } @else { 📁 Dosya Seç }
+                      <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden"
+                             [attr.disabled]="uploading() ? true : null" (change)="onFileSelect($event)" />
                     </label>
                   </div>
-                  @if (uploadError()) {
-                    <p class="text-red-600 text-xs mt-1">{{ uploadError() }}</p>
-                  }
                   @if (form.get('imageUrl')?.value) {
                     <img [src]="form.get('imageUrl')?.value" alt="Önizleme"
                          class="mt-2 h-24 w-full object-cover rounded-lg border border-gray-200"
@@ -80,18 +65,9 @@ import { Slider } from '../../core/models/models';
                   }
                 </div>
 
-                <div class="col-span-2">
-                  <label class="label">Hedef URL</label>
-                  <input formControlName="targetUrl" class="input" placeholder="/hizmetler veya https://..." />
-                </div>
-                <div>
-                  <label class="label">Sıra</label>
-                  <input formControlName="displayOrder" type="number" class="input" />
-                </div>
-                <div class="flex items-end pb-2 gap-2">
-                  <input formControlName="isActive" type="checkbox" class="w-4 h-4" />
-                  <label class="text-sm">Aktif</label>
-                </div>
+                <div class="col-span-2"><label class="label">Hedef URL</label><input formControlName="targetUrl" class="input" placeholder="/hizmetler veya https://..." /></div>
+                <div><label class="label">Sıra</label><input formControlName="displayOrder" type="number" class="input" /></div>
+                <div class="flex items-end pb-2 gap-2"><input formControlName="isActive" type="checkbox" class="w-4 h-4" /><label class="text-sm">Aktif</label></div>
               </div>
               <div class="flex gap-3 mt-4">
                 <button type="submit" [disabled]="uploading()" class="btn-primary disabled:opacity-50">Kaydet</button>
@@ -105,35 +81,26 @@ import { Slider } from '../../core/models/models';
   `
 })
 export class SlidersComponent implements OnInit {
-  private api = inject(ApiService);
-  private fb  = inject(FormBuilder);
-  private cdr = inject(ChangeDetectorRef);
+  private api   = inject(ApiService);
+  private fb    = inject(FormBuilder);
+  private cdr   = inject(ChangeDetectorRef);
+  private toast = inject(ToastService);
 
   items: Slider[] = [];
   showForm = false;
   editing: Slider | null = null;
-  uploading   = signal(false);
-  uploadError = signal('');
+  uploading = signal(false);
 
   form = this.fb.group({
-    title:        ['', Validators.required],
-    subTitle:     [''],
-    imageUrl:     ['', Validators.required],
-    targetUrl:    [''],
-    displayOrder: [1],
-    isActive:     [true]
+    title: ['', Validators.required], subTitle: [''], imageUrl: ['', Validators.required],
+    targetUrl: [''], displayOrder: [1], isActive: [true]
   });
 
   ngOnInit() { this.load(); }
-
-  load() {
-    this.api.getSlidersAdmin().subscribe(d => { this.items = d; this.cdr.markForCheck(); });
-  }
+  load() { this.api.getSlidersAdmin().subscribe(d => { this.items = d; this.cdr.markForCheck(); }); }
 
   openForm(item?: Slider) {
-    this.editing = item ?? null;
-    this.showForm = true;
-    this.uploadError.set('');
+    this.editing = item ?? null; this.showForm = true;
     this.form.patchValue(item ?? { title: '', subTitle: '', imageUrl: '', targetUrl: '', displayOrder: 1, isActive: true });
   }
 
@@ -141,22 +108,10 @@ export class SlidersComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const file  = input.files?.[0];
     if (!file) return;
-
     this.uploading.set(true);
-    this.uploadError.set('');
-
     this.api.uploadImage(file, 'slider').subscribe({
-      next: res => {
-        this.form.patchValue({ imageUrl: res.url });
-        this.uploading.set(false);
-        input.value = '';
-      },
-      error: err => {
-        const msg = err?.error?.error ?? 'Yükleme başarısız, tekrar deneyin.';
-        this.uploadError.set(msg);
-        this.uploading.set(false);
-        input.value = '';
-      }
+      next: res => { this.form.patchValue({ imageUrl: res.url }); this.uploading.set(false); input.value = ''; },
+      error: err => { this.toast.error(err?.error?.error ?? 'Görsel yükleme başarısız.'); this.uploading.set(false); input.value = ''; }
     });
   }
 
@@ -166,11 +121,18 @@ export class SlidersComponent implements OnInit {
     const obs = this.editing
       ? this.api.updateSlider(this.editing.id, { ...dto, id: this.editing.id })
       : this.api.createSlider(dto);
-    obs.subscribe(() => { this.showForm = false; this.load(); });
+    obs.subscribe({
+      next: () => { this.showForm = false; this.load(); this.toast.success(this.editing ? 'Slider güncellendi.' : 'Slider oluşturuldu.'); },
+      error: () => this.toast.error('Kayıt sırasında hata oluştu.')
+    });
   }
 
   delete(item: Slider) {
-    if (!confirm(`"${item.title}" silinsin mi?`)) return;
-    this.api.deleteSlider(item.id).subscribe(() => this.load());
+    this.toast.confirm(`"${item.title}" silinsin mi?`, () => {
+      this.api.deleteSlider(item.id).subscribe({
+        next: () => { this.load(); this.toast.success('Slider silindi.'); },
+        error: () => this.toast.error('Silme işlemi başarısız.')
+      });
+    }, 'Sil');
   }
 }

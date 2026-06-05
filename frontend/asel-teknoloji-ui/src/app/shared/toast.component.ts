@@ -1,0 +1,67 @@
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ToastService } from '../core/services/toast.service';
+
+@Component({
+  selector: 'app-toast',
+  standalone: true,
+  imports: [CommonModule],
+  styles: [`
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(calc(100% + 1rem)); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .toast-enter { animation: slideIn 0.22s ease-out; }
+  `],
+  template: `
+    <!-- Toast yığını -->
+    <div class="fixed top-4 right-4 z-[9999] flex flex-col gap-2 pointer-events-none w-80">
+      @for (t of svc.toasts(); track t.id) {
+        <div class="toast-enter pointer-events-auto flex items-start gap-3 px-4 py-3 rounded-xl shadow-xl text-sm"
+             [ngClass]="cls(t.type)">
+          <span class="text-base leading-none mt-0.5 shrink-0">{{ icon(t.type) }}</span>
+          <p class="flex-1 leading-snug">{{ t.message }}</p>
+          <button (click)="svc.dismiss(t.id)"
+                  class="shrink-0 opacity-60 hover:opacity-100 text-xl leading-none -mt-0.5">×</button>
+        </div>
+      }
+    </div>
+
+    <!-- Onay diyaloğu -->
+    @if (svc.confirmDialog(); as d) {
+      <div class="fixed inset-0 z-[9998] bg-black/40 flex items-center justify-center"
+           (click)="svc.confirmNo()">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4"
+             (click)="$event.stopPropagation()">
+          <p class="text-gray-800 font-medium leading-relaxed mb-5">{{ d.message }}</p>
+          <div class="flex gap-3 justify-end">
+            <button (click)="svc.confirmNo()"
+                    class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm font-medium transition-colors">
+              İptal
+            </button>
+            <button (click)="svc.confirmYes()"
+                    class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors">
+              {{ d.confirmLabel }}
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  `
+})
+export class ToastComponent {
+  svc = inject(ToastService);
+
+  cls(type: string) {
+    return {
+      success: 'bg-green-600 text-white',
+      error:   'bg-red-600 text-white',
+      warning: 'bg-orange-500 text-white',
+      info:    'bg-blue-600 text-white',
+    }[type] ?? '';
+  }
+
+  icon(type: string) {
+    return { success: '✓', error: '✕', warning: '⚠', info: 'ℹ' }[type] ?? '';
+  }
+}

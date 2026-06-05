@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/c
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { ToastService } from '../../core/services/toast.service';
 import { Service, Category } from '../../core/models/models';
 
 @Component({
@@ -65,7 +66,6 @@ import { Service, Category } from '../../core/models/models';
                              [attr.disabled]="uploading() ? true : null" (change)="onFileSelect($event)" />
                     </label>
                   </div>
-                  @if (uploadError()) { <p class="text-red-600 text-xs mt-1">{{ uploadError() }}</p> }
                   @if (form.get('imageUrl')?.value) {
                     <img [src]="form.get('imageUrl')?.value" alt="Önizleme"
                          class="mt-2 h-24 w-full object-cover rounded-lg border border-gray-200"
@@ -87,48 +87,60 @@ import { Service, Category } from '../../core/models/models';
   `
 })
 export class ServicesComponent implements OnInit {
-  private api = inject(ApiService);
-  private fb  = inject(FormBuilder);
-  private cdr = inject(ChangeDetectorRef);
+  private api   = inject(ApiService);
+  private fb    = inject(FormBuilder);
+  private cdr   = inject(ChangeDetectorRef);
+  private toast = inject(ToastService);
+
   items: Service[] = [];
   categories: Category[] = [];
   showForm = false;
   editing: Service | null = null;
-  uploading   = signal(false);
-  uploadError = signal('');
-  form = this.fb.group({ categoryId: [0, Validators.required], title: ['', Validators.required], slug: ['', Validators.required], shortDescription: [''], description: [''], imageUrl: [''], metaTitle: [''], metaDescription: [''], isActive: [true] });
+  uploading = signal(false);
+
+  form = this.fb.group({
+    categoryId: [0, Validators.required], title: ['', Validators.required], slug: ['', Validators.required],
+    shortDescription: [''], description: [''], imageUrl: [''], metaTitle: [''], metaDescription: [''], isActive: [true]
+  });
 
   ngOnInit() { this.load(); this.api.getCategoriesAdmin().subscribe(d => { this.categories = d; this.cdr.markForCheck(); }); }
   load() { this.api.getServicesAdmin().subscribe(d => { this.items = d; this.cdr.markForCheck(); }); }
+
   openForm(item?: Service) {
     this.editing = item ?? null; this.showForm = true;
-    this.uploadError.set('');
-    if (item) {
-      this.form.patchValue(item);
-    } else {
-      this.form.reset({ categoryId: 0, title:'', slug:'', shortDescription:'', description:'', imageUrl:'', metaTitle:'', metaDescription:'', isActive:true });
-    }
+    if (item) { this.form.patchValue(item); }
+    else { this.form.reset({ categoryId: 0, title: '', slug: '', shortDescription: '', description: '', imageUrl: '', metaTitle: '', metaDescription: '', isActive: true }); }
   }
+
   onFileSelect(event: Event) {
     const input = event.target as HTMLInputElement;
     const file  = input.files?.[0];
     if (!file) return;
     this.uploading.set(true);
-    this.uploadError.set('');
     this.api.uploadImage(file, 'service').subscribe({
       next: res => { this.form.patchValue({ imageUrl: res.url }); this.uploading.set(false); input.value = ''; },
-      error: err => { this.uploadError.set(err?.error?.error ?? 'Yükleme başarısız.'); this.uploading.set(false); input.value = ''; }
+      error: err => { this.toast.error(err?.error?.error ?? 'Görsel yükleme başarısız.'); this.uploading.set(false); input.value = ''; }
     });
   }
 
   save() {
     if (this.form.invalid || this.uploading()) return;
     const dto = this.form.value as any;
-    const obs = this.editing ? this.api.updateService(this.editing.id, { ...dto, id: this.editing.id }) : this.api.createService(dto);
-    obs.subscribe(() => { this.showForm = false; this.load(); });
+    const obs = this.editing
+      ? this.api.updateService(this.editing.id, { ...dto, id: this.editing.id })
+      : this.api.createService(dto);
+    obs.subscribe({
+      next: () => { this.showForm = false; this.load(); this.toast.success(this.editing ? 'Hizmet güncellendi.' : 'Hizmet oluşturuldu.'); },
+      error: () => this.toast.error('Kayıt sırasında hata oluştu.')
+    });
   }
+
   delete(item: Service) {
-    if (!confirm(`"${item.title}" silinsin mi?`)) return;
-    this.api.deleteService(item.id).subscribe(() => this.load());
+    this.toast.confirm(`"${item.title}" hizmeti silinsin mi?`, () => {
+      this.api.deleteService(item.id).subscribe({
+        next: () => { this.load(); this.toast.success('Hizmet silindi.'); },
+        error: () => this.toast.error('Silme işlemi başarısız.')
+      });
+    }, 'Sil');
   }
 }

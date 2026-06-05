@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/c
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { ToastService } from '../../core/services/toast.service';
 import { BlogPost } from '../../core/models/models';
 
 @Component({
@@ -14,17 +15,13 @@ import { BlogPost } from '../../core/models/models';
         <h2 class="text-2xl font-bold text-gray-800">Blog Yazıları</h2>
         <button (click)="openForm()" class="btn-primary">+ Yeni Yazı</button>
       </div>
-
       <div class="card overflow-x-auto">
         <table class="w-full text-sm">
           <thead class="bg-gray-50">
             <tr>
-              <th class="text-left p-3">Başlık</th>
-              <th class="text-left p-3">Slug</th>
-              <th class="text-left p-3">Tarih</th>
-              <th class="text-left p-3">Güncelleme</th>
-              <th class="text-left p-3">Durum</th>
-              <th class="text-left p-3">İşlem</th>
+              <th class="text-left p-3">Başlık</th><th class="text-left p-3">Slug</th>
+              <th class="text-left p-3">Tarih</th><th class="text-left p-3">Güncelleme</th>
+              <th class="text-left p-3">Durum</th><th class="text-left p-3">İşlem</th>
             </tr>
           </thead>
           <tbody>
@@ -34,11 +31,7 @@ import { BlogPost } from '../../core/models/models';
                 <td class="p-3 text-gray-400 font-mono text-xs">{{ item.slug }}</td>
                 <td class="p-3 text-gray-500 text-xs">{{ formatDate(item.createdAt) }}</td>
                 <td class="p-3 text-gray-400 text-xs">{{ item.updatedAt ? formatDate(item.updatedAt) : '-' }}</td>
-                <td class="p-3">
-                  <span [class]="item.isActive ? 'text-green-600 font-medium' : 'text-red-500'">
-                    {{ item.isActive ? 'Aktif' : 'Pasif' }}
-                  </span>
-                </td>
+                <td class="p-3"><span [class]="item.isActive ? 'text-green-600 font-medium' : 'text-red-500'">{{ item.isActive ? 'Aktif' : 'Pasif' }}</span></td>
                 <td class="p-3 flex gap-3">
                   <button (click)="openForm(item)" class="text-blue-600 hover:underline">Düzenle</button>
                   <button (click)="delete(item)" class="text-red-500 hover:underline">Sil</button>
@@ -85,7 +78,6 @@ import { BlogPost } from '../../core/models/models';
                              [attr.disabled]="uploading() ? true : null" (change)="onFileSelect($event)" />
                     </label>
                   </div>
-                  @if (uploadError()) { <p class="text-red-600 text-xs mt-1">{{ uploadError() }}</p> }
                   @if (form.get('imageUrl')?.value) {
                     <img [src]="form.get('imageUrl')?.value" alt="Önizleme"
                          class="mt-2 h-24 w-full object-cover rounded-lg border border-gray-200"
@@ -95,7 +87,7 @@ import { BlogPost } from '../../core/models/models';
                 <div class="col-span-2">
                   <label class="label">İçerik (HTML destekli)</label>
                   <textarea formControlName="content" class="input font-mono text-xs" rows="12"
-                    placeholder="<p>Blog içeriği buraya...</p>"></textarea>
+                            placeholder="<p>Blog içeriği buraya...</p>"></textarea>
                   @if (form.get('content')?.invalid && form.get('content')?.touched) {
                     <p class="text-red-500 text-xs mt-1">İçerik zorunludur.</p>
                   }
@@ -105,11 +97,8 @@ import { BlogPost } from '../../core/models/models';
                   <label for="isActive" class="text-sm cursor-pointer">Aktif (yayında)</label>
                 </div>
               </div>
-              @if (errorMsg) {
-                <p class="text-red-500 text-sm mt-3 bg-red-50 px-3 py-2 rounded">{{ errorMsg }}</p>
-              }
               <div class="flex gap-3 mt-5">
-                <button type="submit" [disabled]="saving" class="btn-primary disabled:opacity-60">
+                <button type="submit" [disabled]="saving || uploading()" class="btn-primary disabled:opacity-60">
                   {{ saving ? 'Kaydediliyor...' : 'Kaydet' }}
                 </button>
                 <button type="button" (click)="closeForm()" class="btn-secondary">İptal</button>
@@ -122,44 +111,32 @@ import { BlogPost } from '../../core/models/models';
   `
 })
 export class BlogsComponent implements OnInit {
-  private api = inject(ApiService);
-  private cdr = inject(ChangeDetectorRef);
-  private fb  = inject(FormBuilder);
+  private api   = inject(ApiService);
+  private cdr   = inject(ChangeDetectorRef);
+  private fb    = inject(FormBuilder);
+  private toast = inject(ToastService);
 
   items: BlogPost[] = [];
   showForm = false;
   editing: BlogPost | null = null;
   saving = false;
-  errorMsg = '';
-  uploading   = signal(false);
-  uploadError = signal('');
+  uploading = signal(false);
 
   form = this.fb.group({
-    title:    ['', Validators.required],
-    slug:     ['', Validators.required],
-    content:  ['', Validators.required],
-    imageUrl: [''],
-    isActive: [true]
+    title: ['', Validators.required], slug: ['', Validators.required],
+    content: ['', Validators.required], imageUrl: [''], isActive: [true]
   });
 
   ngOnInit() { this.load(); }
-
   load() { this.api.getBlogPostsAdmin().subscribe(d => { this.items = d; this.cdr.markForCheck(); }); }
 
   openForm(item?: BlogPost) {
-    this.editing  = item ?? null;
-    this.showForm = true;
-    this.errorMsg = '';
-    this.saving   = false;
-    this.uploadError.set('');
-    if (item) {
-      this.form.patchValue(item);
-    } else {
-      this.form.reset({ title: '', slug: '', content: '', imageUrl: '', isActive: true });
-    }
+    this.editing = item ?? null; this.showForm = true; this.saving = false;
+    if (item) { this.form.patchValue(item); }
+    else { this.form.reset({ title: '', slug: '', content: '', imageUrl: '', isActive: true }); }
   }
 
-  closeForm() { this.showForm = false; this.editing = null; this.errorMsg = ''; }
+  closeForm() { this.showForm = false; this.editing = null; }
 
   autoSlug() {
     if (this.editing) return;
@@ -168,9 +145,7 @@ export class BlogsComponent implements OnInit {
       .toLowerCase()
       .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
       .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
-      .replace(/[^a-z0-9\s-]/g, '')
-      .trim()
-      .replace(/\s+/g, '-');
+      .replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
     this.form.get('slug')?.setValue(slug, { emitEvent: false });
   }
 
@@ -179,33 +154,35 @@ export class BlogsComponent implements OnInit {
     const file  = input.files?.[0];
     if (!file) return;
     this.uploading.set(true);
-    this.uploadError.set('');
     this.api.uploadImage(file, 'blog').subscribe({
       next: res => { this.form.patchValue({ imageUrl: res.url }); this.uploading.set(false); input.value = ''; },
-      error: err => { this.uploadError.set(err?.error?.error ?? 'Yükleme başarısız.'); this.uploading.set(false); input.value = ''; }
+      error: err => { this.toast.error(err?.error?.error ?? 'Görsel yükleme başarısız.'); this.uploading.set(false); input.value = ''; }
     });
   }
 
   save() {
     if (this.form.invalid || this.uploading()) { this.form.markAllAsTouched(); return; }
     this.saving = true;
-    this.errorMsg = '';
     const dto = this.form.value as any;
     const obs = this.editing
       ? this.api.updateBlogPost(this.editing.id, { ...dto, id: this.editing.id })
       : this.api.createBlogPost(dto);
     obs.subscribe({
-      next: () => { this.closeForm(); this.load(); },
-      error: () => { this.saving = false; this.errorMsg = 'Kayıt sırasında hata oluştu. Slug benzersiz olmalıdır.'; }
+      next: () => { this.closeForm(); this.load(); this.toast.success(this.editing ? 'Blog yazısı güncellendi.' : 'Blog yazısı oluşturuldu.'); },
+      error: () => { this.saving = false; this.toast.error('Kayıt başarısız. Slug benzersiz olmalıdır.'); }
     });
   }
 
   delete(item: BlogPost) {
-    if (!confirm(`"${item.title}" yazısı kalıcı olarak silinsin mi?`)) return;
-    this.api.deleteBlogPost(item.id).subscribe(() => this.load());
+    this.toast.confirm(`"${item.title}" yazısı silinsin mi?`, () => {
+      this.api.deleteBlogPost(item.id).subscribe({
+        next: () => { this.load(); this.toast.success('Blog yazısı silindi.'); },
+        error: () => this.toast.error('Silme işlemi başarısız.')
+      });
+    }, 'Sil');
   }
 
-  formatDate(dateStr: string): string {
+  formatDate(dateStr: string) {
     return new Date(dateStr).toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
   }
 }

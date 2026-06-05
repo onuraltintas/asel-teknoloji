@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { ToastService } from '../../core/services/toast.service';
 import { Category } from '../../core/models/models';
 
 @Component({
@@ -55,9 +56,11 @@ import { Category } from '../../core/models/models';
   `
 })
 export class CategoriesComponent implements OnInit {
-  private api = inject(ApiService);
-  private fb  = inject(FormBuilder);
-  private cdr = inject(ChangeDetectorRef);
+  private api   = inject(ApiService);
+  private fb    = inject(FormBuilder);
+  private cdr   = inject(ChangeDetectorRef);
+  private toast = inject(ToastService);
+
   items: Category[] = [];
   showForm = false;
   editing: Category | null = null;
@@ -65,18 +68,30 @@ export class CategoriesComponent implements OnInit {
 
   ngOnInit() { this.load(); }
   load() { this.api.getCategoriesAdmin().subscribe(d => { this.items = d; this.cdr.markForCheck(); }); }
+
   openForm(item?: Category) {
     this.editing = item ?? null; this.showForm = true;
     this.form.patchValue(item ?? { name: '', slug: '', isActive: true });
   }
+
   save() {
     if (this.form.invalid) return;
     const dto = this.form.value as any;
-    const obs = this.editing ? this.api.updateCategory(this.editing.id, { ...dto, id: this.editing.id }) : this.api.createCategory(dto);
-    obs.subscribe(() => { this.showForm = false; this.load(); });
+    const obs = this.editing
+      ? this.api.updateCategory(this.editing.id, { ...dto, id: this.editing.id })
+      : this.api.createCategory(dto);
+    obs.subscribe({
+      next: () => { this.showForm = false; this.load(); this.toast.success(this.editing ? 'Kategori güncellendi.' : 'Kategori oluşturuldu.'); },
+      error: () => this.toast.error('Kayıt sırasında hata oluştu.')
+    });
   }
+
   delete(item: Category) {
-    if (!confirm(`"${item.name}" silinsin mi?`)) return;
-    this.api.deleteCategory(item.id).subscribe(() => this.load());
+    this.toast.confirm(`"${item.name}" kategorisi silinsin mi?`, () => {
+      this.api.deleteCategory(item.id).subscribe({
+        next: () => { this.load(); this.toast.success('Kategori silindi.'); },
+        error: () => this.toast.error('Silme işlemi başarısız.')
+      });
+    }, 'Sil');
   }
 }

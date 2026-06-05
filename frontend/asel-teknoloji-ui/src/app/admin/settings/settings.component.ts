@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-settings',
@@ -18,13 +19,10 @@ import { ApiService } from '../../core/services/api.service';
                 <label class="label">{{ field.label }}</label>
 
                 @if (field.key === 'logoUrl' || field.key === 'faviconUrl') {
-                  <!-- Upload widget -->
                   <div class="flex gap-2">
-                    <input [formControlName]="field.key" class="input flex-1"
-                           [placeholder]="'https://... veya dosya yükle'" />
+                    <input [formControlName]="field.key" class="input flex-1" placeholder="https://... veya dosya yükle" />
                     <label class="flex items-center gap-1.5 cursor-pointer bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 text-sm font-medium px-3 py-2 rounded-lg transition-colors whitespace-nowrap"
-                           [class.opacity-50]="uploading()[field.key]"
-                           [class.cursor-not-allowed]="uploading()[field.key]">
+                           [class.opacity-50]="uploading()[field.key]" [class.cursor-not-allowed]="uploading()[field.key]">
                       @if (uploading()[field.key]) {
                         <span class="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></span>Yükleniyor...
                       } @else { 📁 Dosya Seç }
@@ -33,9 +31,6 @@ import { ApiService } from '../../core/services/api.service';
                              (change)="onFileSelect($event, field.key)" />
                     </label>
                   </div>
-                  @if (uploadError()[field.key]) {
-                    <p class="text-red-600 text-xs mt-1">{{ uploadError()[field.key] }}</p>
-                  }
                   @if (form.get(field.key)?.value) {
                     <img [src]="form.get(field.key)?.value" [alt]="field.label"
                          class="mt-2 h-14 object-contain border border-gray-200 rounded p-1 bg-gray-50"
@@ -46,13 +41,11 @@ import { ApiService } from '../../core/services/api.service';
                 } @else {
                   <input [formControlName]="field.key" [type]="field.type || 'text'" class="input" />
                 }
-
               </div>
             }
           </div>
-          <div class="mt-6 flex items-center gap-3">
+          <div class="mt-6">
             <button type="submit" [disabled]="anyUploading()" class="btn-primary disabled:opacity-50">Kaydet</button>
-            @if (saved) { <span class="text-green-600 text-sm">✓ Kaydedildi</span> }
           </div>
         </form>
       </div>
@@ -60,12 +53,11 @@ import { ApiService } from '../../core/services/api.service';
   `
 })
 export class SettingsComponent implements OnInit {
-  private api = inject(ApiService);
-  private fb  = inject(FormBuilder);
+  private api   = inject(ApiService);
+  private fb    = inject(FormBuilder);
+  private toast = inject(ToastService);
 
-  saved = false;
-  uploading   = signal<Record<string, boolean>>({});
-  uploadError = signal<Record<string, string>>({});
+  uploading = signal<Record<string, boolean>>({});
 
   fields = [
     { key: 'title',         label: 'Site Başlığı',           full: true },
@@ -94,12 +86,8 @@ export class SettingsComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const file  = input.files?.[0];
     if (!file) return;
-
     const type = fieldKey === 'faviconUrl' ? 'favicon' : 'logo';
-
     this.uploading.set({ ...this.uploading(), [fieldKey]: true });
-    this.uploadError.set({ ...this.uploadError(), [fieldKey]: '' });
-
     this.api.uploadImage(file, type as any).subscribe({
       next: res => {
         this.form.patchValue({ [fieldKey]: res.url });
@@ -107,21 +95,19 @@ export class SettingsComponent implements OnInit {
         input.value = '';
       },
       error: err => {
-        this.uploadError.set({ ...this.uploadError(), [fieldKey]: err?.error?.error ?? 'Yükleme başarısız.' });
+        this.toast.error(err?.error?.error ?? 'Görsel yükleme başarısız.');
         this.uploading.set({ ...this.uploading(), [fieldKey]: false });
         input.value = '';
       }
     });
   }
 
-  anyUploading() {
-    return Object.values(this.uploading()).some(v => v);
-  }
+  anyUploading() { return Object.values(this.uploading()).some(v => v); }
 
   save() {
-    this.api.updateSetting(this.form.value).subscribe(() => {
-      this.saved = true;
-      setTimeout(() => this.saved = false, 3000);
+    this.api.updateSetting(this.form.value).subscribe({
+      next: () => this.toast.success('Site ayarları kaydedildi.'),
+      error: () => this.toast.error('Kayıt sırasında hata oluştu.')
     });
   }
 }

@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/c
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { ToastService } from '../../core/services/toast.service';
 import { Reference } from '../../core/models/models';
 
 @Component({
@@ -14,7 +15,6 @@ import { Reference } from '../../core/models/models';
         <h2 class="text-2xl font-bold text-gray-800">Referanslar</h2>
         <button (click)="openForm()" class="btn-primary">+ Yeni Referans</button>
       </div>
-
       <div class="grid gap-4">
         @for (item of items; track item.id) {
           <div class="card flex items-center gap-4">
@@ -27,12 +27,8 @@ import { Reference } from '../../core/models/models';
             }
             <div class="flex-1 min-w-0">
               <div class="font-semibold text-gray-800">{{ item.name }}</div>
-              @if (item.description) {
-                <div class="text-gray-500 text-sm truncate">{{ item.description }}</div>
-              }
-              @if (item.website) {
-                <a [href]="item.website" target="_blank" class="text-blue-600 text-xs hover:underline">{{ item.website }}</a>
-              }
+              @if (item.description) { <div class="text-gray-500 text-sm truncate">{{ item.description }}</div> }
+              @if (item.website) { <a [href]="item.website" target="_blank" class="text-blue-600 text-xs hover:underline">{{ item.website }}</a> }
               <div class="text-xs text-gray-400 mt-1">Sıra: {{ item.displayOrder }} · {{ item.isActive ? 'Aktif' : 'Pasif' }}</div>
             </div>
             <div class="flex gap-3 shrink-0">
@@ -58,8 +54,7 @@ import { Reference } from '../../core/models/models';
                 </div>
                 <div>
                   <label class="label">Açıklama</label>
-                  <textarea formControlName="description" class="input" rows="2"
-                            placeholder="Kısa açıklama (opsiyonel)"></textarea>
+                  <textarea formControlName="description" class="input" rows="2" placeholder="Kısa açıklama (opsiyonel)"></textarea>
                 </div>
                 <div>
                   <label class="label">Logo <span class="text-gray-400 font-normal text-xs">(400×300 — otomatik kırpılır)</span></label>
@@ -74,7 +69,6 @@ import { Reference } from '../../core/models/models';
                              [attr.disabled]="uploading() ? true : null" (change)="onFileSelect($event)" />
                     </label>
                   </div>
-                  @if (uploadError()) { <p class="text-red-600 text-xs mt-1">{{ uploadError() }}</p> }
                   @if (form.get('imageUrl')?.value) {
                     <img [src]="form.get('imageUrl')?.value" alt="Önizleme"
                          class="mt-2 h-16 object-contain border border-gray-200 rounded p-1"
@@ -86,10 +80,7 @@ import { Reference } from '../../core/models/models';
                   <input formControlName="website" class="input" placeholder="https://firma.com" />
                 </div>
                 <div class="grid grid-cols-2 gap-3">
-                  <div>
-                    <label class="label">Sıra</label>
-                    <input formControlName="displayOrder" type="number" class="input" min="1" />
-                  </div>
+                  <div><label class="label">Sıra</label><input formControlName="displayOrder" type="number" class="input" min="1" /></div>
                   <div class="flex items-end pb-2 gap-2">
                     <input formControlName="isActive" type="checkbox" class="w-4 h-4" id="refActive" />
                     <label for="refActive" class="text-sm cursor-pointer">Aktif</label>
@@ -97,7 +88,7 @@ import { Reference } from '../../core/models/models';
                 </div>
               </div>
               <div class="flex gap-3 mt-5">
-                <button type="submit" [disabled]="form.invalid" class="btn-primary disabled:opacity-50">Kaydet</button>
+                <button type="submit" [disabled]="form.invalid || uploading()" class="btn-primary disabled:opacity-50">Kaydet</button>
                 <button type="button" (click)="showForm = false" class="btn-secondary">İptal</button>
               </div>
             </form>
@@ -108,35 +99,26 @@ import { Reference } from '../../core/models/models';
   `
 })
 export class ReferencesComponent implements OnInit {
-  private api = inject(ApiService);
-  private fb  = inject(FormBuilder);
-  private cdr = inject(ChangeDetectorRef);
+  private api   = inject(ApiService);
+  private fb    = inject(FormBuilder);
+  private cdr   = inject(ChangeDetectorRef);
+  private toast = inject(ToastService);
 
   items: Reference[] = [];
   showForm = false;
   editing: Reference | null = null;
-  uploading   = signal(false);
-  uploadError = signal('');
+  uploading = signal(false);
 
   form = this.fb.group({
-    name:         ['', Validators.required],
-    description:  [''],
-    imageUrl:     [''],
-    website:      [''],
-    displayOrder: [1],
-    isActive:     [true]
+    name: ['', Validators.required], description: [''], imageUrl: [''],
+    website: [''], displayOrder: [1], isActive: [true]
   });
 
   ngOnInit() { this.load(); }
-
-  load() {
-    this.api.getReferencesAdmin().subscribe(d => { this.items = d; this.cdr.markForCheck(); });
-  }
+  load() { this.api.getReferencesAdmin().subscribe(d => { this.items = d; this.cdr.markForCheck(); }); }
 
   openForm(item?: Reference) {
-    this.editing = item ?? null;
-    this.showForm = true;
-    this.uploadError.set('');
+    this.editing = item ?? null; this.showForm = true;
     this.form.patchValue(item ?? { name: '', description: '', imageUrl: '', website: '', displayOrder: 1, isActive: true });
   }
 
@@ -145,10 +127,9 @@ export class ReferencesComponent implements OnInit {
     const file  = input.files?.[0];
     if (!file) return;
     this.uploading.set(true);
-    this.uploadError.set('');
     this.api.uploadImage(file, 'reference').subscribe({
       next: res => { this.form.patchValue({ imageUrl: res.url }); this.uploading.set(false); input.value = ''; },
-      error: err => { this.uploadError.set(err?.error?.error ?? 'Yükleme başarısız.'); this.uploading.set(false); input.value = ''; }
+      error: err => { this.toast.error(err?.error?.error ?? 'Görsel yükleme başarısız.'); this.uploading.set(false); input.value = ''; }
     });
   }
 
@@ -158,11 +139,18 @@ export class ReferencesComponent implements OnInit {
     const obs = this.editing
       ? this.api.updateReference(this.editing.id, { ...dto, id: this.editing.id })
       : this.api.createReference(dto);
-    obs.subscribe(() => { this.showForm = false; this.load(); });
+    obs.subscribe({
+      next: () => { this.showForm = false; this.load(); this.toast.success(this.editing ? 'Referans güncellendi.' : 'Referans oluşturuldu.'); },
+      error: () => this.toast.error('Kayıt sırasında hata oluştu.')
+    });
   }
 
   delete(item: Reference) {
-    if (!confirm(`"${item.name}" silinsin mi?`)) return;
-    this.api.deleteReference(item.id).subscribe(() => this.load());
+    this.toast.confirm(`"${item.name}" referansı silinsin mi?`, () => {
+      this.api.deleteReference(item.id).subscribe({
+        next: () => { this.load(); this.toast.success('Referans silindi.'); },
+        error: () => this.toast.error('Silme işlemi başarısız.')
+      });
+    }, 'Sil');
   }
 }
