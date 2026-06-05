@@ -41,8 +41,8 @@ import { Category } from '../../core/models/models';
           <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
             <h3 class="font-bold text-lg mb-4">{{ editing ? 'Düzenle' : 'Yeni Kategori' }}</h3>
             <form [formGroup]="form" (ngSubmit)="save()">
-              <div class="mb-3"><label class="label">Ad</label><input formControlName="name" class="input" /></div>
-              <div class="mb-3"><label class="label">Slug</label><input formControlName="slug" class="input" /></div>
+              <div class="mb-3"><label class="label">Ad</label><input formControlName="name" class="input" (input)="autoSlug()" /></div>
+              <div class="mb-3"><label class="label">Slug <span class="text-gray-400 font-normal text-xs">(otomatik, düzenlenebilir)</span></label><input formControlName="slug" class="input font-mono" /></div>
               <div class="mb-4 flex items-center gap-2"><input formControlName="isActive" type="checkbox" class="w-4 h-4" /><label class="text-sm">Aktif</label></div>
               <div class="flex gap-3">
                 <button type="submit" class="btn-primary">Kaydet</button>
@@ -72,6 +72,17 @@ export class CategoriesComponent implements OnInit {
   openForm(item?: Category) {
     this.editing = item ?? null; this.showForm = true;
     this.form.patchValue(item ?? { name: '', slug: '', isActive: true });
+  }
+
+  autoSlug() {
+    if (this.editing) return;
+    const name = this.form.get('name')?.value ?? '';
+    const slug = name
+      .toLowerCase()
+      .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+      .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+      .replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
+    this.form.get('slug')?.setValue(slug, { emitEvent: false });
   }
 
   save() {
