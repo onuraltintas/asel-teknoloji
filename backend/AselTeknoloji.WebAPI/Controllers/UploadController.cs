@@ -65,9 +65,8 @@ public class UploadController : ControllerBase
         }));
         await image.SaveAsWebpAsync(filePath);
 
-        var siteUrl = _config["SiteUrl"]?.TrimEnd('/')
-                      ?? $"{Request.Scheme}://{Request.Host}";
+        var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
-        return Ok(new { url = $"{siteUrl}/uploads/{type}/{fileName}" });
+        return Ok(new { url = $"{baseUrl}/uploads/{type}/{fileName}" });
     }
 }
