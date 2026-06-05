@@ -70,8 +70,8 @@ import { Service, Category } from '../../core/models/models';
                     <input formControlName="isActive" type="checkbox" class="w-4 h-4" />
                     <label class="text-sm">Aktif</label>
                   </div>
-                  <div class="col-span-2"><label class="label">Başlık</label><input formControlName="title" class="input" /></div>
-                  <div class="col-span-2"><label class="label">Slug</label><input formControlName="slug" class="input" /></div>
+                  <div class="col-span-2"><label class="label">Başlık</label><input formControlName="title" class="input" (input)="autoSlug()" /></div>
+                  <div class="col-span-2"><label class="label">Slug <span class="text-gray-400 font-normal text-xs">(otomatik, düzenlenebilir)</span></label><input formControlName="slug" class="input font-mono" /></div>
                   <div class="col-span-2"><label class="label">Kısa Açıklama</label><textarea formControlName="shortDescription" class="input" rows="2"></textarea></div>
                   <div class="col-span-2"><label class="label">Açıklama (HTML)</label><textarea formControlName="description" class="input" rows="4"></textarea></div>
                   <div class="col-span-2">
@@ -135,6 +135,17 @@ export class ServicesComponent implements OnInit {
     this.editing = item ?? null; this.showForm = true;
     if (item) { this.form.patchValue(item); }
     else { this.form.reset({ categoryId: 0, title: '', slug: '', shortDescription: '', description: '', imageUrl: '', metaTitle: '', metaDescription: '', isActive: true }); }
+  }
+
+  autoSlug() {
+    if (this.editing) return;
+    const title = this.form.get('title')?.value ?? '';
+    const slug = title
+      .toLowerCase()
+      .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+      .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+      .replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
+    this.form.get('slug')?.setValue(slug, { emitEvent: false });
   }
 
   onFileSelect(event: Event) {
