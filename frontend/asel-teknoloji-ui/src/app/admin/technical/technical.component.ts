@@ -154,7 +154,7 @@ export class TechnicalComponent implements OnInit {
 
   saveEdit() {
     if (!this.editing) return;
-    this.api.updateTechnicalService(this.editing.id, { status: this.editStatus, adminNote: this.editNote }).subscribe({
+    this.api.updateTechnicalService(this.editing.id, { status: +this.editStatus, adminNote: this.editNote }).subscribe({
       next: () => { this.editing = null; this.load(); this.toast.success('Servis kaydı güncellendi.'); },
       error: () => this.toast.error('Güncelleme başarısız.')
     });

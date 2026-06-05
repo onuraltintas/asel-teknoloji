@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
 import { Setting } from '../../core/models/models';
 
@@ -38,7 +39,7 @@ import { Setting } from '../../core/models/models';
               <a routerLink="/referanslar" routerLinkActive="bg-blue-800 text-orange-400"
                  class="px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-orange-400 transition-colors">Referanslar</a>
               <a routerLink="/servis-takip" routerLinkActive="bg-blue-800 text-orange-400"
-                 class="px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-orange-400 transition-colors">Servis Takip</a>
+                 class="px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-orange-400 transition-colors">Servis</a>
               <a routerLink="/iletisim" routerLinkActive="bg-blue-800 text-orange-400"
                  class="px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-orange-400 transition-colors">İletişim</a>
             </div>
@@ -69,7 +70,7 @@ import { Setting } from '../../core/models/models';
               <a routerLink="/" (click)="menuOpen=false" class="block px-3 py-2 rounded-lg hover:bg-blue-800">Ana Sayfa</a>
               <a routerLink="/blog" (click)="menuOpen=false" class="block px-3 py-2 rounded-lg hover:bg-blue-800">Blog</a>
               <a routerLink="/referanslar" (click)="menuOpen=false" class="block px-3 py-2 rounded-lg hover:bg-blue-800">Referanslar</a>
-              <a routerLink="/servis-takip" (click)="menuOpen=false" class="block px-3 py-2 rounded-lg hover:bg-blue-800">Servis Takip</a>
+              <a routerLink="/servis-takip" (click)="menuOpen=false" class="block px-3 py-2 rounded-lg hover:bg-blue-800">Servis</a>
               <a routerLink="/iletisim" (click)="menuOpen=false" class="block px-3 py-2 rounded-lg hover:bg-blue-800">İletişim</a>
               @if (setting?.phone) {
                 <a [href]="'tel:' + setting!.phone" class="block px-3 py-2 text-orange-400 font-semibold">📞 {{ setting!.phone }}</a>
@@ -117,7 +118,7 @@ import { Setting } from '../../core/models/models';
               <li><a routerLink="/" class="hover:text-white transition-colors">Ana Sayfa</a></li>
               <li><a routerLink="/blog" class="hover:text-white transition-colors">Blog</a></li>
               <li><a routerLink="/referanslar" class="hover:text-white transition-colors">Referanslar</a></li>
-              <li><a routerLink="/servis-takip" class="hover:text-white transition-colors">Servis Takip</a></li>
+              <li><a routerLink="/servis-takip" class="hover:text-white transition-colors">Servis</a></li>
               <li><a routerLink="/iletisim" class="hover:text-white transition-colors">İletişim</a></li>
             </ul>
           </div>
@@ -168,12 +169,27 @@ import { Setting } from '../../core/models/models';
   `
 })
 export class PublicLayoutComponent implements OnInit {
-  private api = inject(ApiService);
+  private api      = inject(ApiService);
+  private document = inject(DOCUMENT);
   setting: Setting | null = null;
   menuOpen = false;
   year = new Date().getFullYear();
 
   ngOnInit() {
-    this.api.getSetting().subscribe({ next: s => this.setting = s, error: () => {} });
+    this.api.getSetting().subscribe({
+      next: s => {
+        this.setting = s;
+        if (s.faviconUrl) {
+          let link = this.document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+          if (!link) {
+            link = this.document.createElement('link');
+            link.rel = 'icon';
+            this.document.head.appendChild(link);
+          }
+          link.href = s.faviconUrl;
+        }
+      },
+      error: () => {}
+    });
   }
 }

@@ -93,7 +93,7 @@ import { environment } from '../../../environments/environment';
             <!-- Service status card -->
             <div class="bg-gray-50 border border-gray-200 rounded-2xl p-7 text-center">
               <div class="text-4xl mb-4">🔍</div>
-              <h3 class="font-bold text-gray-900 text-lg mb-2">Servis Takip</h3>
+              <h3 class="font-bold text-gray-900 text-lg mb-2">Servis</h3>
               <p class="text-gray-500 text-sm mb-5">Cihazınızın servis durumunu takip kodunuzla öğrenin.</p>
               <a routerLink="/servis-takip"
                  class="block bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors">

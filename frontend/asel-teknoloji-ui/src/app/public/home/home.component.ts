@@ -29,7 +29,7 @@ import { environment } from '../../../environments/environment';
                 Teklif Al
               </a>
               <a routerLink="/servis-takip" class="border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-3 rounded-full font-semibold transition-all">
-                Servis Takip
+                Servis
               </a>
             </div>
           </div>
