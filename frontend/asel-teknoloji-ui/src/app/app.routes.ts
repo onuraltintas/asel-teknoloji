@@ -31,6 +31,7 @@ export const routes: Routes = [
       { path: 'technical',  loadComponent: () => import('./admin/technical/technical.component').then(m => m.TechnicalComponent) },
       { path: 'blogs',      loadComponent: () => import('./admin/blogs/blogs.component').then(m => m.BlogsComponent) },
       { path: 'references', loadComponent: () => import('./admin/references/references.component').then(m => m.ReferencesComponent) },
+      { path: 'features',   loadComponent: () => import('./admin/features/features.component').then(m => m.FeaturesComponent) },
       { path: 'messages',   loadComponent: () => import('./admin/messages/messages.component').then(m => m.MessagesComponent) },
       { path: 'settings',   loadComponent: () => import('./admin/settings/settings.component').then(m => m.SettingsComponent) },
     ]

@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
     public DbSet<Message> Messages => Set<Message>();
     public DbSet<Setting> Settings => Set<Setting>();
     public DbSet<Reference> References => Set<Reference>();
+    public DbSet<Feature> Features => Set<Feature>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -108,6 +109,15 @@ public class AppDbContext : DbContext
             e.Property(x => x.Name).HasMaxLength(200).IsRequired();
             e.Property(x => x.Description).HasMaxLength(500);
             e.Property(x => x.Website).HasMaxLength(300);
+        });
+
+        // Feature
+        modelBuilder.Entity<Feature>(e =>
+        {
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Icon).HasMaxLength(20).IsRequired();
+            e.Property(x => x.Title).HasMaxLength(200).IsRequired();
+            e.Property(x => x.Description).HasMaxLength(500).IsRequired();
         });
     }
 }

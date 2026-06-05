@@ -1,0 +1,62 @@
+❯ Building...
+✔ Building...
+Browser bundles     
+Initial chunk files  | Names                    |  Raw size
+styles.css           | styles                   |  44.95 kB | 
+main.js              | main                     |   7.65 kB | 
+chunk-3OIEPTAV.js    | -                        |   1.86 kB | 
+chunk-IFBQNUTN.js    | -                        |   1.13 kB | 
+
+                     | Initial total            |  55.60 kB
+
+Lazy chunk files     | Names                    |  Raw size
+chunk-CCQJSK22.js    | service-status-component |  55.23 kB | 
+chunk-FDACU36K.js    | home-component           |  48.05 kB | 
+chunk-63GDHGJU.js    | services-component       |  40.42 kB | 
+chunk-N3F2E2BI.js    | blogs-component          |  39.13 kB | 
+chunk-CF2BAQ53.js    | references-component     |  37.60 kB | 
+chunk-N4335G46.js    | sliders-component        |  35.74 kB | 
+chunk-6LJNFVQW.js    | public-layout-component  |  33.38 kB | 
+chunk-QMWGRDDP.js    | contact-component        |  31.67 kB | 
+chunk-QD7PNIOZ.js    | categories-component     |  27.65 kB | 
+chunk-ETWETELQ.js    | technical-component      |  26.68 kB | 
+chunk-DNLL5HFF.js    | messages-component       |  25.89 kB | 
+chunk-SJOXGNC3.js    | blog-detail-component    |  21.68 kB | 
+chunk-KII5Q6KW.js    | service-detail-component |  19.34 kB | 
+chunk-LZ7EWXAU.js    | admin-layout-component   |  17.28 kB | 
+chunk-EZ23ZZYE.js    | settings-component       |  15.81 kB | 
+...and 7 more lazy chunks files. Use "--verbose" to show all the files.
+
+
+Server bundles      
+Initial chunk files  | Names                    |  Raw size
+main.server.mjs      | main.server              |   9.02 kB | 
+chunk-35VQ54FU.mjs   | -                        |   1.90 kB | 
+server.mjs           | server                   |   1.84 kB | 
+chunk-WWSPUXG5.mjs   | -                        |   1.17 kB | 
+polyfills.server.mjs | polyfills.server         | 268 bytes | 
+
+Lazy chunk files     | Names                    |  Raw size
+chunk-OKND3J5Y.mjs   | service-status-component |  55.27 kB | 
+chunk-OGADVIXX.mjs   | home-component           |  48.08 kB | 
+chunk-FVNJ4G56.mjs   | services-component       |  40.45 kB | 
+chunk-I7N4NQF7.mjs   | blogs-component          |  39.17 kB | 
+chunk-C5BIF6YK.mjs   | references-component     |  37.64 kB | 
+chunk-J2O7XRL5.mjs   | sliders-component        |  35.77 kB | 
+chunk-E2PZZWSC.mjs   | public-layout-component  |  33.42 kB | 
+chunk-LEFLALA3.mjs   | contact-component        |  31.71 kB | 
+chunk-CL3LSLZQ.mjs   | categories-component     |  27.69 kB | 
+chunk-5USUKE2M.mjs   | technical-component      |  26.72 kB | 
+chunk-7OF6SGPV.mjs   | messages-component       |  25.93 kB | 
+chunk-JBAZUPUJ.mjs   | blog-detail-component    |  21.71 kB | 
+chunk-ASIYTR2Z.mjs   | service-detail-component |  19.38 kB | 
+chunk-WKOEZIFR.mjs   | admin-layout-component   |  17.32 kB | 
+chunk-M2QREZRJ.mjs   | settings-component       |  15.85 kB | 
+...and 7 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [1.981 seconds] - 2026-06-05T22:12:42.361Z
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m4200[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m

@@ -40,7 +40,10 @@
       "PowerShell(cd \"D:\\\\Calismalar\\\\AselTeknoloji\\\\frontend\\\\asel-teknoloji-ui\" && Start-Process -NoNewWindow pwsh -ArgumentList '-c', 'npx ng serve --port 4200 2>&1 | Tee-Object -FilePath \"C:\\\\Users\\\\onura\\\\AppData\\\\Local\\\\Temp\\\\ng-serve.log\"')",
       "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd \"D:\\\\Calismalar\\\\AselTeknoloji\" && git status)",
       "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd \"D:\\\\Calismalar\\\\AselTeknoloji\" && git push origin main)",
-      "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd \"D:\\\\Calismalar\\\\AselTeknoloji\" && git add -A && git status)"
+      "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd \"D:\\\\Calismalar\\\\AselTeknoloji\" && git add -A && git status)",
+      "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd \"D:\\\\Calismalar\\\\AselTeknoloji\" && git commit -m \"feat: fully dynamic site settings — stats, social links, footer services, company name\" && git push origin main)",
+      "PowerShell(Start-Process -FilePath \"cmd.exe\" -ArgumentList \"/c cd /d D:\\\\Calismalar\\\\AselTeknoloji\\\\backend\\\\AselTeknoloji.WebAPI && dotnet run > D:\\\\Calismalar\\\\AselTeknoloji\\\\backend-log.txt 2>&1\" -WindowStyle Hidden; Write-Host \"Backend starting...\")",
+      "PowerShell(Start-Process -FilePath \"cmd.exe\" -ArgumentList \"/c cd /d D:\\\\Calismalar\\\\AselTeknoloji\\\\frontend\\\\asel-teknoloji-ui && npx ng serve > D:\\\\Calismalar\\\\AselTeknoloji\\\\frontend-log.txt 2>&1\" -WindowStyle Hidden; Write-Host \"Frontend starting...\")"
     ]
   }
 }

@@ -5,7 +5,7 @@ import { Title, Meta } from '@angular/platform-browser';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { JsonLdService } from '../../core/services/json-ld.service';
-import { Slider, Service, BlogPost, Reference, Setting } from '../../core/models/models';
+import { Slider, Service, BlogPost, Reference, Setting, Feature } from '../../core/models/models';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -136,16 +136,16 @@ import { environment } from '../../../environments/environment';
       <div class="max-w-7xl mx-auto px-4 sm:px-6">
         <div class="text-center mb-14">
           <span class="text-orange-400 font-semibold text-sm uppercase tracking-widest">Fark Yaratan Özelliklerimiz</span>
-          <h2 class="text-3xl md:text-4xl font-extrabold mt-2">Neden Asel Teknoloji?</h2>
+          <h2 class="text-3xl md:text-4xl font-extrabold mt-2">Neden {{ setting?.title || 'Asel Teknoloji' }}?</h2>
           <div class="w-16 h-1 bg-orange-400 mx-auto mt-4 rounded-full"></div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          @for (feature of features; track feature.icon) {
+          @for (feature of features; track feature.id) {
             <div class="bg-white/10 hover:bg-white/15 transition-colors rounded-2xl p-7 text-center">
               <div class="text-5xl mb-4">{{ feature.icon }}</div>
               <h3 class="font-bold text-lg mb-2">{{ feature.title }}</h3>
-              <p class="text-blue-200 text-sm leading-relaxed">{{ feature.desc }}</p>
+              <p class="text-blue-200 text-sm leading-relaxed">{{ feature.description }}</p>
             </div>
           }
         </div>
@@ -275,17 +275,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   services: Service[] = [];
   recentBlogs: BlogPost[] = [];
   references: Reference[] = [];
+  features: Feature[] = [];
   setting: Setting | null = null;
   loading = true;
   currentSlide = 0;
   private timer: any;
-
-  features = [
-    { icon: '🛡️', title: 'Güvenilir Hizmet',   desc: 'Yıllarca süren tecrübemiz ve müşteri memnuniyeti odaklı yaklaşımımızla yanınızdayız.' },
-    { icon: '⚡', title: 'Hızlı Çözüm',        desc: 'Arıza ve teknik servis taleplerinize en kısa sürede müdahale ediyoruz.' },
-    { icon: '🔧', title: 'Uzman Ekip',          desc: 'Alanında uzman teknisyen kadromuz en karmaşık sorunları çözmeye hazır.' },
-    { icon: '📞', title: '7/24 Destek',         desc: 'Acil durumlarda 7 gün 24 saat ulaşabileceğiniz destek hattımız hizmetinizde.' },
-  ];
 
   ngOnInit() {
     forkJoin({
@@ -293,13 +287,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       services:   this.api.getServices(),
       blogs:      this.api.getBlogPosts(),
       setting:    this.api.getSetting(),
-      references: this.api.getReferences()
+      references: this.api.getReferences(),
+      features:   this.api.getFeatures()
     }).subscribe({
       next: data => {
         this.sliders     = data.sliders;
         this.services    = data.services;
         this.recentBlogs = data.blogs.slice(0, 3);
         this.references  = data.references;
+        this.features    = data.features;
         this.setting     = data.setting;
         this.loading     = false;
         if (this.sliders.length > 1 && isPlatformBrowser(this.platformId)) this.startTimer();

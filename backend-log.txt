@@ -1,0 +1,742 @@
+D:\Calismalar\AselTeknoloji\backend\AselTeknoloji.WebAPI\Properties\launchSettings.json içindeki başlatma ayarları kullanılıyor...
+Derleniyor...
+D:\Calismalar\AselTeknoloji\backend\AselTeknoloji.WebAPI\AselTeknoloji.WebAPI.csproj : warning NU1902: 'SixLabors.ImageSharp' 3.1.10 paketinde önem derecesi orta olan bilinen bir https://github.com/advisories/GHSA-rxmq-m78w-7wmc güvenlik açığı var
+D:\Calismalar\AselTeknoloji\backend\AselTeknoloji.WebAPI\AselTeknoloji.WebAPI.csproj : warning NU1902: 'SixLabors.ImageSharp' 3.1.10 paketinde önem derecesi orta olan bilinen bir https://github.com/advisories/GHSA-rxmq-m78w-7wmc güvenlik açığı var
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (10ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "MigrationId", "ProductVersion"
+      FROM "__EFMigrationsHistory"
+      ORDER BY "MigrationId";
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE IF NOT EXISTS "__EFMigrationsHistory" (
+          "MigrationId" character varying(150) NOT NULL,
+          "ProductVersion" character varying(32) NOT NULL,
+          CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY ("MigrationId")
+      );
+info: Microsoft.EntityFrameworkCore.Migrations[20411]
+      Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      LOCK TABLE "__EFMigrationsHistory" IN ACCESS EXCLUSIVE MODE
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "MigrationId", "ProductVersion"
+      FROM "__EFMigrationsHistory"
+      ORDER BY "MigrationId";
+info: Microsoft.EntityFrameworkCore.Migrations[20405]
+      No migrations were applied. The database is already up to date.
+[OK] Veritabani migration tamamlandi.
+========================================
+ Asel Teknoloji API hazir
+ Swagger: /swagger
+ OpenAPI JSON: /openapi/v1.json
+========================================
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5013
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\Calismalar\AselTeknoloji\backend\AselTeknoloji.WebAPI
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (8ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT f."Id", f."CreatedAt", f."Description", f."DisplayOrder", f."Icon", f."IsActive", f."Title"
+      FROM "Features" AS f
+      WHERE f."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT f."Id", f."CreatedAt", f."Description", f."DisplayOrder", f."Icon", f."IsActive", f."Title"
+      FROM "Features" AS f
+      WHERE f."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Address", s."Description", s."Email", s."Facebook", s."FaviconUrl", s."Instagram", s."Keywords", s."Linkedin", s."LogoUrl", s."MapsEmbedCode", s."Phone", s."Stat1Label", s."Stat1Value", s."Stat2Label", s."Stat2Value", s."Stat3Label", s."Stat3Value", s."Stat4Label", s."Stat4Value", s."Tagline", s."TaglineSubtitle", s."Title", s."Twitter", s."Whatsapp", s."Youtube"
+      FROM "Settings" AS s
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CreatedAt", s."DisplayOrder", s."ImageUrl", s."IsActive", s."SubTitle", s."TargetUrl", s."Title"
+      FROM "Sliders" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."CreatedAt", r."Description", r."DisplayOrder", r."ImageUrl", r."IsActive", r."Name", r."Website"
+      FROM "References" AS r
+      WHERE r."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."Content", b."CreatedAt", b."ImageUrl", b."IsActive", b."Slug", b."Title", b."UpdatedAt"
+      FROM "BlogPosts" AS b
+      WHERE b."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."CategoryId", s."CreatedAt", s."Description", s."ImageUrl", s."IsActive", s."MetaDescription", s."MetaTitle", s."ShortDescription", s."Slug", s."Title"
+      FROM "Services" AS s
+      WHERE s."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT f."Id", f."CreatedAt", f."Description", f."DisplayOrder", f."Icon", f."IsActive", f."Title"
+      FROM "Features" AS f
+      WHERE f."IsActive"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c."CreatedAt", c."IsActive", c."Name", c."Slug"
+      FROM "Categories" AS c

@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Slider, CreateSliderDto, Category, CreateCategoryDto, Service, CreateServiceDto, TechnicalService, CreateTechnicalServiceDto, UpdateTechnicalServiceDto, Message, Setting, BlogPost, CreateBlogPostDto, Reference, CreateReferenceDto } from '../models/models';
+import { Slider, CreateSliderDto, Category, CreateCategoryDto, Service, CreateServiceDto, TechnicalService, CreateTechnicalServiceDto, UpdateTechnicalServiceDto, Message, Setting, BlogPost, CreateBlogPostDto, Reference, CreateReferenceDto, Feature, CreateFeatureDto } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -52,6 +52,12 @@ export class ApiService {
   createReference(dto: CreateReferenceDto)                 { return this.http.post<number>(`${this.url}/reference`, dto); }
   updateReference(id: number, dto: any)                    { return this.http.put(`${this.url}/reference/${id}`, dto); }
   deleteReference(id: number)                              { return this.http.delete(`${this.url}/reference/${id}`); }
+
+  getFeatures()                                            { return this.http.get<Feature[]>(`${this.url}/feature`); }
+  getFeaturesAdmin()                                       { return this.http.get<Feature[]>(`${this.url}/feature/admin`); }
+  createFeature(dto: CreateFeatureDto)                     { return this.http.post<number>(`${this.url}/feature`, dto); }
+  updateFeature(id: number, dto: any)                      { return this.http.put(`${this.url}/feature/${id}`, dto); }
+  deleteFeature(id: number)                                { return this.http.delete(`${this.url}/feature/${id}`); }
 
   uploadImage(file: File, type: 'slider' | 'service' | 'blog' | 'reference' | 'logo' | 'favicon') {
     const form = new FormData();
