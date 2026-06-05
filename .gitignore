@@ -5,6 +5,9 @@ frontend/asel-teknoloji-ui/.angular/
 frontend/asel-teknoloji-ui/.env
 frontend/asel-teknoloji-ui/.env.local
 
+# ── Yüklenen görseller ────────────────────────────
+backend/**/wwwroot/uploads/
+
 # ── Backend ───────────────────────────────────────
 backend/**/bin/
 backend/**/obj/
