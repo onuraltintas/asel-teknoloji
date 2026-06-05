@@ -92,30 +92,32 @@ const PAGE_SIZE = 10;
       </div>
 
       <!-- Sayfalama -->
-      @if (totalPages > 1) {
-        <div class="flex items-center justify-between mt-4">
+      @if (messages.length > 0) {
+        <div class="flex items-center justify-between mt-4 flex-wrap gap-2">
           <span class="text-sm text-gray-500">
-            {{ (page - 1) * pageSize + 1 }}–{{ min(page * pageSize, messages.length) }} / {{ messages.length }}
+            {{ (page - 1) * pageSize + 1 }}–{{ min(page * pageSize, messages.length) }} / {{ messages.length }} mesaj
           </span>
-          <div class="flex items-center gap-1">
-            <button (click)="goTo(page - 1)" [disabled]="page === 1"
-                    class="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-40 hover:bg-gray-50 transition-colors">
-              ‹ Önceki
-            </button>
-            @for (p of pageNumbers; track p) {
-              <button (click)="goTo(p)"
-                      class="w-8 h-8 rounded-lg text-sm transition-colors"
-                      [class.bg-blue-600]="p === page"
-                      [class.text-white]="p === page"
-                      [class.hover:bg-gray-100]="p !== page">
-                {{ p }}
+          @if (totalPages > 1) {
+            <div class="flex items-center gap-1">
+              <button (click)="goTo(page - 1)" [disabled]="page === 1"
+                      class="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-40 hover:bg-gray-50 transition-colors">
+                ‹ Önceki
               </button>
-            }
-            <button (click)="goTo(page + 1)" [disabled]="page === totalPages"
-                    class="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-40 hover:bg-gray-50 transition-colors">
-              Sonraki ›
-            </button>
-          </div>
+              @for (p of pageNumbers; track p) {
+                <button (click)="goTo(p)"
+                        class="w-8 h-8 rounded-lg text-sm transition-colors"
+                        [class.bg-blue-600]="p === page"
+                        [class.text-white]="p === page"
+                        [class.hover:bg-gray-100]="p !== page">
+                  {{ p }}
+                </button>
+              }
+              <button (click)="goTo(page + 1)" [disabled]="page === totalPages"
+                      class="px-3 py-1.5 rounded-lg border text-sm disabled:opacity-40 hover:bg-gray-50 transition-colors">
+                Sonraki ›
+              </button>
+            </div>
+          }
         </div>
       }
     </div>
