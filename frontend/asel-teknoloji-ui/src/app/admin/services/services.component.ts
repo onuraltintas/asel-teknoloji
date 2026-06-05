@@ -48,50 +48,63 @@ import { Service, Category } from '../../core/models/models';
         </table>
       </div>
       @if (showForm) {
-        <div class="fixed inset-0 bg-black/50 z-50 overflow-y-auto">
-          <div class="min-h-full flex items-start justify-center py-8 px-4">
-          <div class="bg-white rounded-xl p-6 w-full max-w-2xl shadow-xl">
-            <h3 class="font-bold text-lg mb-4">{{ editing ? 'Hizmet Düzenle' : 'Yeni Hizmet' }}</h3>
-            <form [formGroup]="form" (ngSubmit)="save()">
-              <div class="grid grid-cols-2 gap-3">
-                <div><label class="label">Kategori</label>
-                  <select formControlName="categoryId" class="input">
-                    @for (c of categories; track c.id) { <option [value]="c.id">{{ c.name }}</option> }
-                  </select>
-                </div>
-                <div class="flex items-end pb-2 gap-2"><input formControlName="isActive" type="checkbox" class="w-4 h-4" /><label class="text-sm">Aktif</label></div>
-                <div class="col-span-2"><label class="label">Başlık</label><input formControlName="title" class="input" /></div>
-                <div class="col-span-2"><label class="label">Slug</label><input formControlName="slug" class="input" /></div>
-                <div class="col-span-2"><label class="label">Kısa Açıklama</label><textarea formControlName="shortDescription" class="input" rows="2"></textarea></div>
-                <div class="col-span-2"><label class="label">Açıklama (HTML)</label><textarea formControlName="description" class="input" rows="5"></textarea></div>
-                <div class="col-span-2">
-                  <label class="label">Görsel <span class="text-gray-400 font-normal text-xs">(1200×630 — otomatik kırpılır)</span></label>
-                  <div class="flex gap-2">
-                    <input formControlName="imageUrl" class="input flex-1" placeholder="https://... veya dosya yükle" />
-                    <label class="flex items-center gap-1.5 cursor-pointer bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 text-sm font-medium px-3 py-2 rounded-lg transition-colors whitespace-nowrap"
-                           [class.opacity-50]="uploading()" [class.cursor-not-allowed]="uploading()">
-                      @if (uploading()) {
-                        <span class="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></span>Yükleniyor...
-                      } @else { 📁 Dosya Seç }
-                      <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden"
-                             [attr.disabled]="uploading() ? true : null" (change)="onFileSelect($event)" />
-                    </label>
+        <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl flex flex-col" style="max-height:90vh">
+
+            <!-- Sabit başlık -->
+            <div class="px-5 pt-5 pb-3 border-b border-gray-100 shrink-0">
+              <h3 class="font-bold text-lg">{{ editing ? 'Hizmet Düzenle' : 'Yeni Hizmet' }}</h3>
+            </div>
+
+            <!-- Kaydırılabilir form alanları -->
+            <div class="overflow-y-auto flex-1 px-5 py-4">
+              <form [formGroup]="form" (ngSubmit)="save()" id="serviceForm">
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="label">Kategori</label>
+                    <select formControlName="categoryId" class="input">
+                      @for (c of categories; track c.id) { <option [value]="c.id">{{ c.name }}</option> }
+                    </select>
                   </div>
-                  @if (form.get('imageUrl')?.value) {
-                    <img [src]="form.get('imageUrl')?.value" alt="Önizleme"
-                         class="mt-2 h-24 w-full object-cover rounded-lg border border-gray-200"
-                         onerror="this.style.display='none'" />
-                  }
+                  <div class="flex items-end pb-1.5 gap-2">
+                    <input formControlName="isActive" type="checkbox" class="w-4 h-4" />
+                    <label class="text-sm">Aktif</label>
+                  </div>
+                  <div class="col-span-2"><label class="label">Başlık</label><input formControlName="title" class="input" /></div>
+                  <div class="col-span-2"><label class="label">Slug</label><input formControlName="slug" class="input" /></div>
+                  <div class="col-span-2"><label class="label">Kısa Açıklama</label><textarea formControlName="shortDescription" class="input" rows="2"></textarea></div>
+                  <div class="col-span-2"><label class="label">Açıklama (HTML)</label><textarea formControlName="description" class="input" rows="4"></textarea></div>
+                  <div class="col-span-2">
+                    <label class="label">Görsel <span class="text-gray-400 font-normal text-xs">(1200×630 — otomatik kırpılır)</span></label>
+                    <div class="flex gap-2">
+                      <input formControlName="imageUrl" class="input flex-1" placeholder="https://... veya dosya yükle" />
+                      <label class="flex items-center gap-1.5 cursor-pointer bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 text-sm font-medium px-3 py-2 rounded-lg transition-colors whitespace-nowrap"
+                             [class.opacity-50]="uploading()" [class.cursor-not-allowed]="uploading()">
+                        @if (uploading()) {
+                          <span class="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></span>Yükleniyor...
+                        } @else { 📁 Dosya Seç }
+                        <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden"
+                               [attr.disabled]="uploading() ? true : null" (change)="onFileSelect($event)" />
+                      </label>
+                    </div>
+                    @if (form.get('imageUrl')?.value) {
+                      <img [src]="form.get('imageUrl')?.value" alt="Önizleme"
+                           class="mt-2 h-20 w-full object-cover rounded-lg border border-gray-200"
+                           onerror="this.style.display='none'" />
+                    }
+                  </div>
+                  <div><label class="label">Meta Başlık <span class="text-gray-400 font-normal">(max 70)</span></label><input formControlName="metaTitle" class="input" /></div>
+                  <div><label class="label">Meta Açıklama <span class="text-gray-400 font-normal">(max 160)</span></label><input formControlName="metaDescription" class="input" /></div>
                 </div>
-                <div><label class="label">Meta Başlık (max 70)</label><input formControlName="metaTitle" class="input" /></div>
-                <div><label class="label">Meta Açıklama (max 160)</label><input formControlName="metaDescription" class="input" /></div>
-              </div>
-              <div class="flex gap-3 mt-4">
-                <button type="submit" [disabled]="uploading()" class="btn-primary disabled:opacity-50">Kaydet</button>
-                <button type="button" (click)="showForm=false" class="btn-secondary">İptal</button>
-              </div>
-            </form>
-          </div>
+              </form>
+            </div>
+
+            <!-- Sabit alt butonlar -->
+            <div class="px-5 py-3 border-t border-gray-100 shrink-0 flex gap-3">
+              <button type="submit" form="serviceForm" [disabled]="uploading()" class="btn-primary disabled:opacity-50">Kaydet</button>
+              <button type="button" (click)="showForm=false" class="btn-secondary">İptal</button>
+            </div>
+
           </div>
         </div>
       }
