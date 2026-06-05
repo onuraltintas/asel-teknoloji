@@ -17,6 +17,7 @@ public class UploadController : ControllerBase
         ["blog"]      = (1200, 630),
         ["reference"] = (400,  300),
         ["logo"]      = (400,  200),
+        ["favicon"]   = (64,   64),
     };
 
     private static readonly HashSet<string> AllowedMime = new(StringComparer.OrdinalIgnoreCase)
