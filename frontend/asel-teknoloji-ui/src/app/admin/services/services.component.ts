@@ -18,12 +18,22 @@ import { Service, Category } from '../../core/models/models';
       <div class="card overflow-x-auto">
         <table class="w-full text-sm">
           <thead class="bg-gray-50"><tr>
+            <th class="p-3 w-16"></th>
             <th class="text-left p-3">Başlık</th><th class="text-left p-3">Kategori</th>
             <th class="text-left p-3">Slug</th><th class="text-left p-3">Durum</th><th class="text-left p-3">İşlem</th>
           </tr></thead>
           <tbody>
             @for (item of items; track item.id) {
               <tr class="border-t hover:bg-gray-50">
+                <td class="p-2">
+                  @if (item.imageUrl) {
+                    <img [src]="item.imageUrl" [alt]="item.title"
+                         class="w-14 h-10 object-cover rounded border border-gray-100"
+                         onerror="this.style.display='none'" />
+                  } @else {
+                    <div class="w-14 h-10 bg-gray-100 rounded flex items-center justify-center text-gray-300 text-lg">🖼</div>
+                  }
+                </td>
                 <td class="p-3 font-medium">{{ item.title }}</td>
                 <td class="p-3 text-gray-500">{{ item.categoryName }}</td>
                 <td class="p-3 text-gray-400 font-mono text-xs">{{ item.slug }}</td>
@@ -38,7 +48,8 @@ import { Service, Category } from '../../core/models/models';
         </table>
       </div>
       @if (showForm) {
-        <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto py-8">
+        <div class="fixed inset-0 bg-black/50 z-50 overflow-y-auto">
+          <div class="min-h-full flex items-start justify-center py-8 px-4">
           <div class="bg-white rounded-xl p-6 w-full max-w-2xl shadow-xl">
             <h3 class="font-bold text-lg mb-4">{{ editing ? 'Hizmet Düzenle' : 'Yeni Hizmet' }}</h3>
             <form [formGroup]="form" (ngSubmit)="save()">
@@ -80,6 +91,7 @@ import { Service, Category } from '../../core/models/models';
                 <button type="button" (click)="showForm=false" class="btn-secondary">İptal</button>
               </div>
             </form>
+          </div>
           </div>
         </div>
       }
