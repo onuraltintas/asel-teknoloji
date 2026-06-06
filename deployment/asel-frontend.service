@@ -1,0 +1,24 @@
+[Unit]
+Description=Asel Teknoloji Angular SSR
+After=network.target
+
+[Service]
+Type=simple
+User=asel
+Group=asel
+WorkingDirectory=/opt/asel-teknoloji/frontend/asel-teknoloji-ui
+ExecStart=/usr/bin/node dist/asel-teknoloji-ui/server/server.mjs
+Restart=always
+RestartSec=5
+KillSignal=SIGTERM
+TimeoutStopSec=30
+
+Environment=NODE_ENV=production
+Environment=PORT=4000
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=asel-frontend
+
+[Install]
+WantedBy=multi-user.target

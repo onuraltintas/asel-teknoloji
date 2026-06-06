@@ -1,0 +1,26 @@
+[Unit]
+Description=Asel Teknoloji .NET API
+After=network.target postgresql-16.service
+Wants=postgresql-16.service
+
+[Service]
+Type=simple
+User=asel
+Group=asel
+WorkingDirectory=/var/www/asel-backend
+ExecStart=/usr/bin/dotnet AselTeknoloji.WebAPI.dll
+Restart=always
+RestartSec=5
+KillSignal=SIGTERM
+TimeoutStopSec=30
+
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://127.0.0.1:5013
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=asel-backend
+
+[Install]
+WantedBy=multi-user.target
