@@ -1,0 +1,41 @@
+<div>
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Site Ayarları</h2>
+  <div class="card max-w-2xl">
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="grid grid-cols-2 gap-4">
+        @for (field of fields; track field.key) {
+          <div [class.col-span-2]="field.full">
+            <label class="label">{{ field.label }}</label>
+
+            @if (field.key === 'logoUrl' || field.key === 'faviconUrl') {
+              <div class="flex gap-2">
+                <input [formControlName]="field.key" class="input flex-1" placeholder="https://... veya dosya yükle" />
+                <label class="flex items-center gap-1.5 cursor-pointer bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 text-sm font-medium px-3 py-2 rounded-lg transition-colors whitespace-nowrap"
+                       [class.opacity-50]="uploading()[field.key]" [class.cursor-not-allowed]="uploading()[field.key]">
+                  @if (uploading()[field.key]) {
+                    <span class="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></span>Yükleniyor...
+                  } @else { 📁 Dosya Seç }
+                  <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden"
+                         [attr.disabled]="uploading()[field.key] ? true : null"
+                         (change)="onFileSelect($event, field.key)" />
+                </label>
+              </div>
+              @if (form.get(field.key)?.value) {
+                <img [src]="form.get(field.key)?.value" [alt]="field.label"
+                     class="mt-2 h-14 object-contain border border-gray-200 rounded p-1 bg-gray-50"
+                     onerror="this.style.display='none'" />
+              }
+            } @else if (field.textarea) {
+              <textarea [formControlName]="field.key" class="input" rows="3"></textarea>
+            } @else {
+              <input [formControlName]="field.key" [type]="field.type || 'text'" class="input" />
+            }
+          </div>
+        }
+      </div>
+      <div class="mt-6">
+        <button type="submit" [disabled]="anyUploading()" class="btn-primary disabled:opacity-50">Kaydet</button>
+      </div>
+    </form>
+  </div>
+</div>

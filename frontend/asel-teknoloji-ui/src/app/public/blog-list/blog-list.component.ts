@@ -10,68 +10,7 @@ import { BlogPost } from '../../core/models/models';
   selector: 'app-blog-list',
   standalone: true,
   imports: [CommonModule, RouterLink],
-  template: `
-    <!-- Hero -->
-    <div class="bg-blue-900 text-white py-16">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-        <span class="text-orange-400 font-semibold text-sm uppercase tracking-widest">Haberler & İpuçları</span>
-        <h1 class="text-4xl md:text-5xl font-extrabold mt-3">Blog</h1>
-        <p class="text-blue-200 mt-4 max-w-xl mx-auto">Teknoloji haberleri, ürün incelemeleri ve teknik ipuçları.</p>
-      </div>
-    </div>
-
-    <!-- Content -->
-    <section class="py-16 bg-gray-50 min-h-screen">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6">
-
-        @if (loading) {
-          <div class="flex justify-center py-20">
-            <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        } @else if (posts.length === 0) {
-          <div class="text-center py-24">
-            <div class="text-6xl mb-6">📝</div>
-            <h2 class="text-2xl font-bold text-gray-700 mb-2">Henüz Blog Yazısı Yok</h2>
-            <p class="text-gray-400">Yakında burada içerikler yayınlanacak.</p>
-          </div>
-        } @else {
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @for (post of posts; track post.id) {
-              <a [routerLink]="['/blog', post.slug]"
-                 class="group bg-white rounded-2xl overflow-hidden border border-gray-100
-                        hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col">
-                @if (post.imageUrl) {
-                  <div class="overflow-hidden h-52 shrink-0">
-                    <img [src]="post.imageUrl" [alt]="post.title"
-                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                         loading="lazy" onerror="this.parentElement.style.display='none'" />
-                  </div>
-                } @else {
-                  <div class="h-52 shrink-0 bg-gradient-to-br from-blue-50 to-blue-100
-                              flex items-center justify-center">
-                    <span class="text-5xl">📰</span>
-                  </div>
-                }
-                <div class="p-6 flex flex-col flex-1">
-                  <p class="text-xs text-gray-400 mb-2">{{ formatDate(post.createdAt) }}</p>
-                  <h2 class="font-bold text-gray-900 text-lg leading-snug mb-3 group-hover:text-blue-700
-                             transition-colors line-clamp-2 flex-1">
-                    {{ post.title }}
-                  </h2>
-                  <div class="mt-auto pt-4 border-t border-gray-100 flex items-center
-                              text-blue-700 text-sm font-semibold gap-1">
-                    Devamını Oku
-                    <span class="group-hover:translate-x-1 transition-transform">→</span>
-                  </div>
-                </div>
-              </a>
-            }
-          </div>
-        }
-
-      </div>
-    </section>
-  `
+  templateUrl: './blog-list.component.html'
 })
 export class BlogListComponent implements OnInit {
   private api      = inject(ApiService);
