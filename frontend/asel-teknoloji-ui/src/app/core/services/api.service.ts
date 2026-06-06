@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Slider, CreateSliderDto, Category, CreateCategoryDto, Service, CreateServiceDto, TechnicalService, CreateTechnicalServiceDto, UpdateTechnicalServiceDto, Message, Setting, BlogPost, CreateBlogPostDto, Reference, CreateReferenceDto, Feature, CreateFeatureDto } from '../models/models';
+import { Slider, CreateSliderDto, Category, CreateCategoryDto, Service, CreateServiceDto, TechnicalService, CreateTechnicalServiceDto, UpdateTechnicalServiceDto, Message, Setting, BlogPost, CreateBlogPostDto, Reference, CreateReferenceDto, Feature, CreateFeatureDto, PageContent, CreatePageContentDto } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -58,6 +58,12 @@ export class ApiService {
   createFeature(dto: CreateFeatureDto)                     { return this.http.post<number>(`${this.url}/feature`, dto); }
   updateFeature(id: number, dto: any)                      { return this.http.put(`${this.url}/feature/${id}`, dto); }
   deleteFeature(id: number)                                { return this.http.delete(`${this.url}/feature/${id}`); }
+
+  getPageContent(type: string)                                    { return this.http.get<PageContent>(`${this.url}/pagecontent/${type}`); }
+  getPageContentsAdmin()                                          { return this.http.get<PageContent[]>(`${this.url}/pagecontent/admin/all`); }
+  createPageContent(dto: CreatePageContentDto)                    { return this.http.post<number>(`${this.url}/pagecontent`, dto); }
+  updatePageContent(id: number, dto: any)                         { return this.http.put(`${this.url}/pagecontent/${id}`, dto); }
+  deletePageContent(id: number)                                   { return this.http.delete(`${this.url}/pagecontent/${id}`); }
 
   uploadImage(file: File, type: 'slider' | 'service' | 'blog' | 'reference' | 'logo' | 'favicon') {
     const form = new FormData();

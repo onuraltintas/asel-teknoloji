@@ -34,10 +34,34 @@ import { Setting, Service } from '../../core/models/models';
               <a routerLink="/" routerLinkActive="bg-blue-800 text-orange-400"
                  [routerLinkActiveOptions]="{exact:true}"
                  class="px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-orange-400 transition-colors">Ana Sayfa</a>
-              <a routerLink="/blog" routerLinkActive="bg-blue-800 text-orange-400"
-                 class="px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-orange-400 transition-colors">Blog</a>
+
+              <!-- Kurumsal dropdown -->
+              <div class="relative" (mouseenter)="openKurumsal()" (mouseleave)="closeKurumsal()">
+                <button class="flex items-center gap-1 px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-orange-400 transition-colors"
+                        [class.bg-blue-800]="kurumsalOpen" [class.text-orange-400]="kurumsalOpen">
+                  Kurumsal
+                  <svg class="w-3.5 h-3.5 transition-transform" [class.rotate-180]="kurumsalOpen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+                @if (kurumsalOpen) {
+                  <div class="absolute top-full left-0 mt-1 w-44 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50">
+                    <a routerLink="/vizyon" (click)="kurumsalOpen=false"
+                       class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors text-sm">
+                      🔭 Vizyonumuz
+                    </a>
+                    <a routerLink="/misyon" (click)="kurumsalOpen=false"
+                       class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors text-sm">
+                      🎯 Misyonumuz
+                    </a>
+                  </div>
+                }
+              </div>
+
               <a routerLink="/referanslar" routerLinkActive="bg-blue-800 text-orange-400"
                  class="px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-orange-400 transition-colors">Referanslar</a>
+              <a routerLink="/blog" routerLinkActive="bg-blue-800 text-orange-400"
+                 class="px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-orange-400 transition-colors">Blog</a>
               <a routerLink="/servis-takip" routerLinkActive="bg-blue-800 text-orange-400"
                  class="px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-orange-400 transition-colors">Servis</a>
               <a routerLink="/iletisim" routerLinkActive="bg-blue-800 text-orange-400"
@@ -68,8 +92,26 @@ import { Setting, Service } from '../../core/models/models';
           <div class="md:hidden border-t border-blue-800 bg-blue-900">
             <div class="px-4 py-3 space-y-1 text-sm">
               <a routerLink="/" (click)="menuOpen=false" class="block px-3 py-2 rounded-lg hover:bg-blue-800">Ana Sayfa</a>
-              <a routerLink="/blog" (click)="menuOpen=false" class="block px-3 py-2 rounded-lg hover:bg-blue-800">Blog</a>
+              <!-- Kurumsal accordion -->
+              <div>
+                <button (click)="kurumsalOpen=!kurumsalOpen"
+                        class="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-blue-800 transition-colors">
+                  <span>Kurumsal</span>
+                  <svg class="w-3.5 h-3.5 transition-transform" [class.rotate-180]="kurumsalOpen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+                @if (kurumsalOpen) {
+                  <div class="ml-4 mt-1 space-y-1 border-l border-blue-700 pl-3">
+                    <a routerLink="/vizyon" (click)="menuOpen=false; kurumsalOpen=false"
+                       class="block px-3 py-2 rounded-lg hover:bg-blue-800 text-blue-200 hover:text-white transition-colors">🔭 Vizyonumuz</a>
+                    <a routerLink="/misyon" (click)="menuOpen=false; kurumsalOpen=false"
+                       class="block px-3 py-2 rounded-lg hover:bg-blue-800 text-blue-200 hover:text-white transition-colors">🎯 Misyonumuz</a>
+                  </div>
+                }
+              </div>
               <a routerLink="/referanslar" (click)="menuOpen=false" class="block px-3 py-2 rounded-lg hover:bg-blue-800">Referanslar</a>
+              <a routerLink="/blog" (click)="menuOpen=false" class="block px-3 py-2 rounded-lg hover:bg-blue-800">Blog</a>
               <a routerLink="/servis-takip" (click)="menuOpen=false" class="block px-3 py-2 rounded-lg hover:bg-blue-800">Servis</a>
               <a routerLink="/iletisim" (click)="menuOpen=false" class="block px-3 py-2 rounded-lg hover:bg-blue-800">İletişim</a>
               @if (setting?.phone) {
@@ -91,7 +133,7 @@ import { Setting, Service } from '../../core/models/models';
 
           <!-- Brand -->
           <div>
-            <h3 class="text-white font-bold text-lg mb-3">{{ setting?.title || 'Asel Teknoloji' }}</h3>
+            <h3 class="text-white font-bold text-lg mb-3">{{ companyName }}</h3>
             <p class="text-sm leading-relaxed mb-4">
               {{ setting?.description || 'Güvenlik kamera, yangın alarm, internet altyapı ve teknik servis hizmetleri.' }}
             </p>
@@ -130,6 +172,8 @@ import { Setting, Service } from '../../core/models/models';
               <li><a routerLink="/" class="hover:text-white transition-colors">Ana Sayfa</a></li>
               <li><a routerLink="/blog" class="hover:text-white transition-colors">Blog</a></li>
               <li><a routerLink="/referanslar" class="hover:text-white transition-colors">Referanslar</a></li>
+              <li><a routerLink="/vizyon" class="hover:text-white transition-colors">Vizyon</a></li>
+              <li><a routerLink="/misyon" class="hover:text-white transition-colors">Misyon</a></li>
               <li><a routerLink="/servis-takip" class="hover:text-white transition-colors">Servis</a></li>
               <li><a routerLink="/iletisim" class="hover:text-white transition-colors">İletişim</a></li>
             </ul>
@@ -174,7 +218,7 @@ import { Setting, Service } from '../../core/models/models';
         </div>
 
         <div class="border-t border-gray-800 py-5 text-center text-xs text-gray-600">
-          © {{ year }} {{ setting?.title || 'Asel Teknoloji' }}. Tüm hakları saklıdır.
+          © {{ year }} {{ companyName }}. Tüm hakları saklıdır.
         </div>
       </footer>
     </div>
@@ -185,8 +229,14 @@ export class PublicLayoutComponent implements OnInit {
   private document = inject(DOCUMENT);
   setting: Setting | null = null;
   footerServices: Service[] = [];
-  menuOpen = false;
+  get companyName() { return this.setting?.title?.split(' | ')[0] ?? 'Asel Teknoloji'; }
+  menuOpen     = false;
+  kurumsalOpen = false;
   year = new Date().getFullYear();
+  private _closeTimer: any;
+
+  openKurumsal()  { clearTimeout(this._closeTimer); this.kurumsalOpen = true; }
+  closeKurumsal() { this._closeTimer = setTimeout(() => this.kurumsalOpen = false, 150); }
 
   ngOnInit() {
     this.api.getSetting().subscribe({

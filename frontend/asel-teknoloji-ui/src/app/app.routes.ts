@@ -13,6 +13,8 @@ export const routes: Routes = [
       { path: 'blog', loadComponent: () => import('./public/blog-list/blog-list.component').then(m => m.BlogListComponent) },
       { path: 'blog/:slug', loadComponent: () => import('./public/blog-detail/blog-detail.component').then(m => m.BlogDetailComponent) },
       { path: 'referanslar', loadComponent: () => import('./public/references/references.component').then(m => m.ReferencesComponent) },
+      { path: 'vizyon',     loadComponent: () => import('./public/vision/vision.component').then(m => m.VisionComponent) },
+      { path: 'misyon',     loadComponent: () => import('./public/mission/mission.component').then(m => m.MissionComponent) },
     ]
   },
 
@@ -31,7 +33,8 @@ export const routes: Routes = [
       { path: 'technical',  loadComponent: () => import('./admin/technical/technical.component').then(m => m.TechnicalComponent) },
       { path: 'blogs',      loadComponent: () => import('./admin/blogs/blogs.component').then(m => m.BlogsComponent) },
       { path: 'references', loadComponent: () => import('./admin/references/references.component').then(m => m.ReferencesComponent) },
-      { path: 'features',   loadComponent: () => import('./admin/features/features.component').then(m => m.FeaturesComponent) },
+      { path: 'features',      loadComponent: () => import('./admin/features/features.component').then(m => m.FeaturesComponent) },
+      { path: 'page-content',  loadComponent: () => import('./admin/page-content/page-content.component').then(m => m.PageContentComponent) },
       { path: 'messages',   loadComponent: () => import('./admin/messages/messages.component').then(m => m.MessagesComponent) },
       { path: 'settings',   loadComponent: () => import('./admin/settings/settings.component').then(m => m.SettingsComponent) },
     ]

@@ -2,10 +2,11 @@ import { ChangeDetectorRef, Component, inject, OnInit, OnDestroy, PLATFORM_ID } 
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { ApiService } from '../../core/services/api.service';
 import { JsonLdService } from '../../core/services/json-ld.service';
-import { Slider, Service, BlogPost, Reference, Setting, Feature } from '../../core/models/models';
+import { Slider, Service, BlogPost, Reference, Setting, Feature, PageContent } from '../../core/models/models';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -136,7 +137,7 @@ import { environment } from '../../../environments/environment';
       <div class="max-w-7xl mx-auto px-4 sm:px-6">
         <div class="text-center mb-14">
           <span class="text-orange-400 font-semibold text-sm uppercase tracking-widest">Fark Yaratan Özelliklerimiz</span>
-          <h2 class="text-3xl md:text-4xl font-extrabold mt-2">Neden {{ setting?.title || 'Asel Teknoloji' }}?</h2>
+          <h2 class="text-3xl md:text-4xl font-extrabold mt-2">Neden {{ companyName }}?</h2>
           <div class="w-16 h-1 bg-orange-400 mx-auto mt-4 rounded-full"></div>
         </div>
 
@@ -218,6 +219,97 @@ import { environment } from '../../../environments/environment';
       </section>
     }
 
+    <!-- ═══════════════════════════════════ KURUMSAL ═══════════════════════════════════ -->
+    @if (vision || mission) {
+      <section class="py-20 bg-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+          <div class="text-center mb-12">
+            <span class="text-orange-500 font-semibold text-sm uppercase tracking-widest">Biz Kimiz?</span>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-2">Kurumsal</h2>
+            <div class="w-16 h-1 bg-orange-500 mx-auto mt-4 rounded-full"></div>
+          </div>
+
+          <!-- Sekmeler -->
+          <div class="flex justify-center mb-8">
+            <div class="inline-flex bg-gray-100 rounded-xl p-1 gap-1">
+              @if (vision) {
+                <button (click)="activeCorpTab='vision'"
+                        class="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200"
+                        [class.bg-blue-900]="activeCorpTab==='vision'"
+                        [class.text-white]="activeCorpTab==='vision'"
+                        [class.shadow]="activeCorpTab==='vision'"
+                        [class.text-gray-600]="activeCorpTab!=='vision'">
+                  🔭 Vizyonumuz
+                </button>
+              }
+              @if (mission) {
+                <button (click)="activeCorpTab='mission'"
+                        class="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200"
+                        [class.bg-blue-900]="activeCorpTab==='mission'"
+                        [class.text-white]="activeCorpTab==='mission'"
+                        [class.shadow]="activeCorpTab==='mission'"
+                        [class.text-gray-600]="activeCorpTab!=='mission'">
+                  🎯 Misyonumuz
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Vizyon içeriği -->
+          @if (activeCorpTab === 'vision' && vision) {
+            <div class="flex flex-col md:flex-row gap-10 items-start animate-fade">
+              @if (vision.imageUrl) {
+                <div class="md:w-2/5 shrink-0">
+                  <img [src]="vision.imageUrl" [alt]="vision.title"
+                       class="w-full rounded-2xl shadow-lg object-cover"
+                       onerror="this.style.display='none'" />
+                </div>
+              }
+              <div [class]="vision.imageUrl ? 'md:w-3/5' : 'w-full'">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="w-1 h-10 bg-orange-500 rounded-full"></div>
+                  <h3 class="text-2xl font-extrabold text-gray-900">{{ vision.title }}</h3>
+                </div>
+                @if (vision.subtitle) {
+                  <p class="text-blue-700 font-medium mb-4">{{ vision.subtitle }}</p>
+                }
+                <div class="text-gray-600 leading-relaxed whitespace-pre-line">{{ vision.content }}</div>
+                <a routerLink="/vizyon" class="inline-flex items-center gap-1 mt-6 text-blue-700 font-semibold hover:text-blue-900 transition-colors">
+                  Devamını Oku <span>→</span>
+                </a>
+              </div>
+            </div>
+          }
+
+          <!-- Misyon içeriği -->
+          @if (activeCorpTab === 'mission' && mission) {
+            <div class="flex flex-col md:flex-row gap-10 items-start animate-fade">
+              @if (mission.imageUrl) {
+                <div class="md:w-2/5 shrink-0">
+                  <img [src]="mission.imageUrl" [alt]="mission.title"
+                       class="w-full rounded-2xl shadow-lg object-cover"
+                       onerror="this.style.display='none'" />
+                </div>
+              }
+              <div [class]="mission.imageUrl ? 'md:w-3/5' : 'w-full'">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="w-1 h-10 bg-orange-500 rounded-full"></div>
+                  <h3 class="text-2xl font-extrabold text-gray-900">{{ mission.title }}</h3>
+                </div>
+                @if (mission.subtitle) {
+                  <p class="text-blue-700 font-medium mb-4">{{ mission.subtitle }}</p>
+                }
+                <div class="text-gray-600 leading-relaxed whitespace-pre-line">{{ mission.content }}</div>
+                <a routerLink="/misyon" class="inline-flex items-center gap-1 mt-6 text-blue-700 font-semibold hover:text-blue-900 transition-colors">
+                  Devamını Oku <span>→</span>
+                </a>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
     <!-- ═══════════════════════════════════ REFERANSLAR ═══════════════════════════════════ -->
     @if (references.length > 0) {
       <section class="py-16 bg-gray-50 border-t border-gray-100">
@@ -277,7 +369,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   references: Reference[] = [];
   features: Feature[] = [];
   setting: Setting | null = null;
+  vision:  PageContent | null = null;
+  mission: PageContent | null = null;
+  activeCorpTab: 'vision' | 'mission' = 'vision';
   loading = true;
+  get companyName() { return this.setting?.title?.split(' | ')[0] ?? 'Asel Teknoloji'; }
   currentSlide = 0;
   private timer: any;
 
@@ -288,7 +384,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       blogs:      this.api.getBlogPosts(),
       setting:    this.api.getSetting(),
       references: this.api.getReferences(),
-      features:   this.api.getFeatures()
+      features:   this.api.getFeatures(),
+      vision:     this.api.getPageContent('vision').pipe(catchError(() => of(null))),
+      mission:    this.api.getPageContent('mission').pipe(catchError(() => of(null)))
     }).subscribe({
       next: data => {
         this.sliders     = data.sliders;
@@ -297,6 +395,9 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.references  = data.references;
         this.features    = data.features;
         this.setting     = data.setting;
+        this.vision      = data.vision;
+        this.mission     = data.mission;
+        this.activeCorpTab = data.vision ? 'vision' : 'mission';
         this.loading     = false;
         if (this.sliders.length > 1 && isPlatformBrowser(this.platformId)) this.startTimer();
         this.cdr.markForCheck();

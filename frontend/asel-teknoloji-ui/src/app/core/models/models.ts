@@ -41,6 +41,9 @@ export interface CreateReferenceDto { name: string; description?: string; imageU
 export interface Feature { id: number; icon: string; title: string; description: string; displayOrder: number; isActive: boolean; }
 export interface CreateFeatureDto { icon: string; title: string; description: string; displayOrder: number; isActive: boolean; }
 
+export interface PageContent { id: number; type: string; title: string; subtitle: string; content: string; imageUrl?: string; isActive: boolean; }
+export interface CreatePageContentDto { type: string; title: string; subtitle: string; content: string; imageUrl?: string; isActive: boolean; }
+
 export const SERVICE_STATUS_LABELS: Record<number, string> = {
   0: 'Beklemede', 1: 'İşlemde', 2: 'Parça Bekleniyor', 3: 'Tamamlandı', 4: 'İptal'
 };

@@ -49,7 +49,8 @@ export class AdminLayoutComponent {
     { path: '/admin/technical',  icon: '🛠️', label: 'Teknik Servis' },
     { path: '/admin/blogs',      icon: '📝', label: 'Blog Yazıları' },
     { path: '/admin/references', icon: '🏢', label: 'Referanslar' },
-    { path: '/admin/features',   icon: '⭐', label: 'Özellikler' },
+    { path: '/admin/features',     icon: '⭐', label: 'Özellikler' },
+    { path: '/admin/page-content', icon: '📄', label: 'Vizyon & Misyon' },
     { path: '/admin/messages',   icon: '✉️', label: 'Mesajlar' },
     { path: '/admin/settings',   icon: '⚙️', label: 'Site Ayarları' },
   ];
