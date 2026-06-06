@@ -36,7 +36,7 @@ public class ServiceController : ControllerBase
         return Ok(ToDto(s, catMap));
     }
 
-    [HttpGet("admin"), Authorize]
+    [HttpGet("admin"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> GetAllAdmin()
     {
         var items = await _repo.GetAllAsync();
@@ -50,7 +50,7 @@ public class ServiceController : ControllerBase
         return cats.ToDictionary(c => c.Id, c => c.Name);
     }
 
-    [HttpPost, Authorize]
+    [HttpPost, Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Create([FromBody] CreateServiceDto dto)
     {
         var entity = Map(dto);
@@ -59,7 +59,7 @@ public class ServiceController : ControllerBase
         return CreatedAtAction(nameof(GetBySlug), new { slug = entity.Slug }, entity.Id);
     }
 
-    [HttpPut("{id}"), Authorize]
+    [HttpPut("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateServiceDto dto)
     {
         if (id != dto.Id) return BadRequest();
@@ -81,7 +81,7 @@ public class ServiceController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}"), Authorize]
+    [HttpDelete("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var entity = await _repo.GetByIdAsync(id);

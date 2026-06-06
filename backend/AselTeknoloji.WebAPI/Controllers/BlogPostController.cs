@@ -28,14 +28,14 @@ public class BlogPostController : ControllerBase
         return Ok(ToDto(b));
     }
 
-    [HttpGet("admin"), Authorize]
+    [HttpGet("admin"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> GetAllAdmin()
     {
         var items = await _repo.GetAllAsync();
         return Ok(items.OrderByDescending(b => b.CreatedAt).Select(ToDto));
     }
 
-    [HttpPost, Authorize]
+    [HttpPost, Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Create([FromBody] CreateBlogPostDto dto)
     {
         var entity = new BlogPost
@@ -48,7 +48,7 @@ public class BlogPostController : ControllerBase
         return Ok(entity.Id);
     }
 
-    [HttpPut("{id}"), Authorize]
+    [HttpPut("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateBlogPostDto dto)
     {
         if (id != dto.Id) return BadRequest();
@@ -62,7 +62,7 @@ public class BlogPostController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}"), Authorize]
+    [HttpDelete("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var entity = await _repo.GetByIdAsync(id);

@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -50,10 +51,10 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     forkJoin({
-      services:  this.api.getServicesAdmin(),
-      blogs:     this.api.getBlogPostsAdmin(),
-      technical: this.api.getTechnicalServices(),
-      messages:  this.api.getMessages()
+      services:  this.api.getServicesAdmin().pipe(catchError(() => of([]))),
+      blogs:     this.api.getBlogPostsAdmin().pipe(catchError(() => of([]))),
+      technical: this.api.getTechnicalServices().pipe(catchError(() => of([]))),
+      messages:  this.api.getMessages().pipe(catchError(() => of([])))
     }).subscribe({
       next: data => {
         this.stats[0].value = data.services.length;

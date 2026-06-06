@@ -26,7 +26,7 @@ public class MessageController : ControllerBase
         return Ok(new { message = "Mesajınız alındı." });
     }
 
-    [HttpGet, Authorize]
+    [HttpGet, Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> GetAll()
     {
         var items = await _repo.GetAllAsync();
@@ -38,7 +38,7 @@ public class MessageController : ControllerBase
         }));
     }
 
-    [HttpPatch("{id}/read"), Authorize]
+    [HttpPatch("{id}/read"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> MarkAsRead(int id)
     {
         var entity = await _repo.GetByIdAsync(id);
@@ -49,7 +49,7 @@ public class MessageController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}"), Authorize]
+    [HttpDelete("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var entity = await _repo.GetByIdAsync(id);

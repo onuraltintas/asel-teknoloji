@@ -18,11 +18,15 @@ import { AuthService } from '../../core/services/auth.service';
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="mb-4">
             <label class="label">Kullanıcı Adı</label>
-            <input formControlName="username" type="text" class="input" placeholder="Kullanıcı adı" />
+            <input formControlName="username" type="text" class="input" placeholder="Kullanıcı adı" autocomplete="username" />
           </div>
-          <div class="mb-6">
+          <div class="mb-4">
             <label class="label">Şifre</label>
-            <input formControlName="password" type="password" class="input" placeholder="••••••••" />
+            <input formControlName="password" type="password" class="input" placeholder="••••••••" autocomplete="current-password" />
+          </div>
+          <div class="mb-6 flex items-center gap-2">
+            <input formControlName="rememberMe" id="rememberMe" type="checkbox" class="w-4 h-4 accent-blue-600 cursor-pointer" />
+            <label for="rememberMe" class="text-sm text-gray-600 cursor-pointer select-none">Beni hatırla</label>
           </div>
           @if (error) {
             <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 text-sm">{{ error }}</div>
@@ -41,15 +45,20 @@ export class LoginComponent {
   private router = inject(Router);
   private cdr    = inject(ChangeDetectorRef);
 
-  form = this.fb.group({ username: ['', Validators.required], password: ['', Validators.required] });
+  form = this.fb.group({
+    username:   ['', Validators.required],
+    password:   ['', Validators.required],
+    rememberMe: [false]
+  });
   loading = false;
   error   = '';
 
   onSubmit() {
     if (this.form.invalid) return;
     this.loading = true; this.error = '';
-    this.auth.login(this.form.value as any).subscribe({
-      next: () => this.router.navigate(['/admin/dashboard']),
+    const { username, password, rememberMe } = this.form.value;
+    this.auth.login({ username: username!, password: password! }, rememberMe ?? false).subscribe({
+      next:  () => this.router.navigate(['/admin/dashboard']),
       error: () => { this.error = 'Kullanıcı adı veya şifre hatalı.'; this.loading = false; this.cdr.markForCheck(); }
     });
   }

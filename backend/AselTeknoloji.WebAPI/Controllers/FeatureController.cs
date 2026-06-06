@@ -20,21 +20,21 @@ public class FeatureController : ControllerBase
         return Ok(items.OrderBy(f => f.DisplayOrder).Select(ToDto));
     }
 
-    [HttpGet("admin"), Authorize]
+    [HttpGet("admin"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> GetAllAdmin()
     {
         var items = await _repo.GetAllAsync();
         return Ok(items.OrderBy(f => f.DisplayOrder).Select(ToDto));
     }
 
-    [HttpGet("{id}"), Authorize]
+    [HttpGet("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> GetById(int id)
     {
         var f = await _repo.GetByIdAsync(id);
         return f is null ? NotFound() : Ok(ToDto(f));
     }
 
-    [HttpPost, Authorize]
+    [HttpPost, Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Create([FromBody] CreateFeatureDto dto)
     {
         var entity = new Feature
@@ -47,7 +47,7 @@ public class FeatureController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity.Id);
     }
 
-    [HttpPut("{id}"), Authorize]
+    [HttpPut("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateFeatureDto dto)
     {
         if (id != dto.Id) return BadRequest();
@@ -61,7 +61,7 @@ public class FeatureController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}"), Authorize]
+    [HttpDelete("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var entity = await _repo.GetByIdAsync(id);

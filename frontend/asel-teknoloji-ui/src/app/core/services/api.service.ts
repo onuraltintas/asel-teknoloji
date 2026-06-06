@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Slider, CreateSliderDto, Category, CreateCategoryDto, Service, CreateServiceDto, TechnicalService, CreateTechnicalServiceDto, UpdateTechnicalServiceDto, Message, Setting, BlogPost, CreateBlogPostDto, Reference, CreateReferenceDto, Feature, CreateFeatureDto, PageContent, CreatePageContentDto } from '../models/models';
+import { Slider, CreateSliderDto, Category, CreateCategoryDto, Service, CreateServiceDto, TechnicalService, CreateTechnicalServiceDto, UpdateTechnicalServiceDto, Message, Setting, BlogPost, CreateBlogPostDto, Reference, CreateReferenceDto, Feature, CreateFeatureDto, PageContent, CreatePageContentDto, AdminUser, CreateAdminUserDto, UpdateAdminUserDto } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -70,4 +70,10 @@ export class ApiService {
     form.append('file', file);
     return this.http.post<{ url: string }>(`${this.url}/upload/${type}`, form);
   }
+
+  getUsers()                                              { return this.http.get<AdminUser[]>(`${this.url}/user`); }
+  getUser(id: string)                                     { return this.http.get<AdminUser>(`${this.url}/user/${id}`); }
+  createUser(dto: CreateAdminUserDto)                     { return this.http.post<{ id: string }>(`${this.url}/user`, dto); }
+  updateUser(id: string, dto: UpdateAdminUserDto)         { return this.http.put(`${this.url}/user/${id}`, dto); }
+  deleteUser(id: string)                                  { return this.http.delete(`${this.url}/user/${id}`); }
 }

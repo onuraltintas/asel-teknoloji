@@ -21,7 +21,7 @@ public class SettingController : ControllerBase
         return Ok(ToDto(s));
     }
 
-    [HttpPut, Authorize]
+    [HttpPut, Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Update([FromBody] UpdateSettingDto dto)
     {
         var s = await _repo.SingleOrDefaultAsync(_ => true);

@@ -32,6 +32,8 @@ public class AppDbContext : DbContext
             e.Property(x => x.Username).HasMaxLength(100).IsRequired();
             e.Property(x => x.Email).HasMaxLength(200).IsRequired();
             e.Property(x => x.PasswordHash).IsRequired();
+            e.Property(x => x.Role).HasMaxLength(50).IsRequired().HasDefaultValue("Admin");
+            e.Property(x => x.IsActive).HasDefaultValue(true);
         });
 
         // Slider

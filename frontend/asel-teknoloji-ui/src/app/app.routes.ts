@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards/auth.guard';
+import { authGuard, authGuardChild } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -24,19 +24,21 @@ export const routes: Routes = [
     path: 'admin',
     loadComponent: () => import('./admin/layout/admin-layout.component').then(m => m.AdminLayoutComponent),
     canActivate: [authGuard],
+    canActivateChild: [authGuardChild],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard',  loadComponent: () => import('./admin/dashboard/dashboard.component').then(m => m.DashboardComponent) },
-      { path: 'sliders',    loadComponent: () => import('./admin/sliders/sliders.component').then(m => m.SlidersComponent) },
-      { path: 'categories', loadComponent: () => import('./admin/categories/categories.component').then(m => m.CategoriesComponent) },
-      { path: 'services',   loadComponent: () => import('./admin/services/services.component').then(m => m.ServicesComponent) },
-      { path: 'technical',  loadComponent: () => import('./admin/technical/technical.component').then(m => m.TechnicalComponent) },
-      { path: 'blogs',      loadComponent: () => import('./admin/blogs/blogs.component').then(m => m.BlogsComponent) },
-      { path: 'references', loadComponent: () => import('./admin/references/references.component').then(m => m.ReferencesComponent) },
-      { path: 'features',      loadComponent: () => import('./admin/features/features.component').then(m => m.FeaturesComponent) },
-      { path: 'page-content',  loadComponent: () => import('./admin/page-content/page-content.component').then(m => m.PageContentComponent) },
-      { path: 'messages',   loadComponent: () => import('./admin/messages/messages.component').then(m => m.MessagesComponent) },
-      { path: 'settings',   loadComponent: () => import('./admin/settings/settings.component').then(m => m.SettingsComponent) },
+      { path: 'dashboard',    loadComponent: () => import('./admin/dashboard/dashboard.component').then(m => m.DashboardComponent) },
+      { path: 'sliders',      loadComponent: () => import('./admin/sliders/sliders.component').then(m => m.SlidersComponent),         data: { roles: ['SuperAdmin', 'Admin'] } },
+      { path: 'categories',   loadComponent: () => import('./admin/categories/categories.component').then(m => m.CategoriesComponent), data: { roles: ['SuperAdmin', 'Admin'] } },
+      { path: 'services',     loadComponent: () => import('./admin/services/services.component').then(m => m.ServicesComponent),       data: { roles: ['SuperAdmin', 'Admin'] } },
+      { path: 'technical',    loadComponent: () => import('./admin/technical/technical.component').then(m => m.TechnicalComponent) },
+      { path: 'blogs',        loadComponent: () => import('./admin/blogs/blogs.component').then(m => m.BlogsComponent),               data: { roles: ['SuperAdmin', 'Admin'] } },
+      { path: 'references',   loadComponent: () => import('./admin/references/references.component').then(m => m.ReferencesComponent), data: { roles: ['SuperAdmin', 'Admin'] } },
+      { path: 'features',     loadComponent: () => import('./admin/features/features.component').then(m => m.FeaturesComponent),       data: { roles: ['SuperAdmin', 'Admin'] } },
+      { path: 'page-content', loadComponent: () => import('./admin/page-content/page-content.component').then(m => m.PageContentComponent), data: { roles: ['SuperAdmin', 'Admin'] } },
+      { path: 'messages',     loadComponent: () => import('./admin/messages/messages.component').then(m => m.MessagesComponent),       data: { roles: ['SuperAdmin', 'Admin'] } },
+      { path: 'settings',     loadComponent: () => import('./admin/settings/settings.component').then(m => m.SettingsComponent),       data: { roles: ['SuperAdmin', 'Admin'] } },
+      { path: 'users',        loadComponent: () => import('./admin/users/users.component').then(m => m.UsersComponent),               data: { roles: ['SuperAdmin'] } },
     ]
   },
 

@@ -20,14 +20,14 @@ public class CategoryController : ControllerBase
         return Ok(items.Select(c => new CategoryDto { Id = c.Id, Name = c.Name, Slug = c.Slug, IsActive = c.IsActive }));
     }
 
-    [HttpGet("admin"), Authorize]
+    [HttpGet("admin"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> GetAllAdmin()
     {
         var items = await _repo.GetAllAsync();
         return Ok(items.Select(c => new CategoryDto { Id = c.Id, Name = c.Name, Slug = c.Slug, IsActive = c.IsActive }));
     }
 
-    [HttpPost, Authorize]
+    [HttpPost, Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Create([FromBody] CreateCategoryDto dto)
     {
         var entity = new Category { Name = dto.Name, Slug = dto.Slug, IsActive = dto.IsActive };
@@ -36,7 +36,7 @@ public class CategoryController : ControllerBase
         return Ok(entity.Id);
     }
 
-    [HttpPut("{id}"), Authorize]
+    [HttpPut("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateCategoryDto dto)
     {
         if (id != dto.Id) return BadRequest();
@@ -48,7 +48,7 @@ public class CategoryController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}"), Authorize]
+    [HttpDelete("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var entity = await _repo.GetByIdAsync(id);

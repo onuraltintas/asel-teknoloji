@@ -7,7 +7,7 @@ namespace AselTeknoloji.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize(Roles = "SuperAdmin,Admin")]
 public class UploadController : ControllerBase
 {
     private static readonly Dictionary<string, (int W, int H)> Sizes = new()

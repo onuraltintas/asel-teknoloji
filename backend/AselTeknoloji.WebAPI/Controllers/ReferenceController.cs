@@ -21,21 +21,21 @@ public class ReferenceController : ControllerBase
         return Ok(items.OrderBy(r => r.DisplayOrder).ThenBy(r => r.Name).Select(ToDto));
     }
 
-    [HttpGet("admin"), Authorize]
+    [HttpGet("admin"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> GetAllAdmin()
     {
         var items = await _repo.GetAllAsync();
         return Ok(items.OrderBy(r => r.DisplayOrder).ThenBy(r => r.Name).Select(ToDto));
     }
 
-    [HttpGet("{id}"), Authorize]
+    [HttpGet("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> GetById(int id)
     {
         var r = await _repo.GetByIdAsync(id);
         return r is null ? NotFound() : Ok(ToDto(r));
     }
 
-    [HttpPost, Authorize]
+    [HttpPost, Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Create([FromBody] CreateReferenceDto dto)
     {
         var entity = Map(dto);
@@ -44,7 +44,7 @@ public class ReferenceController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity.Id);
     }
 
-    [HttpPut("{id}"), Authorize]
+    [HttpPut("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateReferenceDto dto)
     {
         if (id != dto.Id) return BadRequest();
@@ -63,7 +63,7 @@ public class ReferenceController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}"), Authorize]
+    [HttpDelete("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var entity = await _repo.GetByIdAsync(id);

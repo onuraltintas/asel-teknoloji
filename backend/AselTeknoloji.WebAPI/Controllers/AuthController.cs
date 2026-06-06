@@ -29,11 +29,15 @@ public class AuthController : ControllerBase
         if (user is null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             return Unauthorized(new { message = "Kullanıcı adı veya şifre hatalı." });
 
+        if (!user.IsActive)
+            return Unauthorized(new { message = "Bu hesap devre dışı bırakılmıştır." });
+
         var token = GenerateToken(user);
         return Ok(new LoginResponseDto
         {
             Token      = token,
             Username   = user.Username,
+            Role       = user.Role,
             Expiration = DateTime.UtcNow.AddMinutes(
                 _config.GetValue<int>("Jwt:ExpirationMinutes", 480))
         });
@@ -49,6 +53,7 @@ public class AuthController : ControllerBase
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, user.Role),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

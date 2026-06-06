@@ -21,21 +21,21 @@ public class PageContentController : ControllerBase
         return item is null ? NotFound() : Ok(ToDto(item));
     }
 
-    [HttpGet("admin/all"), Authorize]
+    [HttpGet("admin/all"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> GetAllAdmin()
     {
         var items = await _repo.GetAllAsync();
         return Ok(items.OrderBy(p => p.Type).Select(ToDto));
     }
 
-    [HttpGet("admin/{id}"), Authorize]
+    [HttpGet("admin/{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> GetById(int id)
     {
         var item = await _repo.GetByIdAsync(id);
         return item is null ? NotFound() : Ok(ToDto(item));
     }
 
-    [HttpPost, Authorize]
+    [HttpPost, Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Create([FromBody] CreatePageContentDto dto)
     {
         var entity = new PageContent
@@ -48,7 +48,7 @@ public class PageContentController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity.Id);
     }
 
-    [HttpPut("{id}"), Authorize]
+    [HttpPut("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdatePageContentDto dto)
     {
         if (id != dto.Id) return BadRequest();
@@ -61,7 +61,7 @@ public class PageContentController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}"), Authorize]
+    [HttpDelete("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var entity = await _repo.GetByIdAsync(id);

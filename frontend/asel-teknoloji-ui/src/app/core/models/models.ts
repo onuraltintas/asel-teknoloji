@@ -1,5 +1,9 @@
 export interface LoginDto { username: string; password: string; }
-export interface LoginResponse { token: string; username: string; expiration: string; }
+export interface LoginResponse { token: string; username: string; role: string; expiration: string; }
+
+export interface AdminUser { id: string; username: string; email: string; role: string; isActive: boolean; createdAt: string; }
+export interface CreateAdminUserDto { username: string; email: string; password: string; role: string; isActive: boolean; }
+export interface UpdateAdminUserDto { username: string; email: string; password?: string; role: string; isActive: boolean; }
 
 export interface Slider { id: number; title: string; subTitle: string; imageUrl: string; targetUrl?: string; displayOrder: number; isActive: boolean; }
 export interface CreateSliderDto { title: string; subTitle: string; imageUrl: string; targetUrl?: string; displayOrder: number; isActive: boolean; }

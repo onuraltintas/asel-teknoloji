@@ -28,7 +28,7 @@ public class SliderController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("admin"), Authorize]
+    [HttpGet("admin"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> GetAllAdmin()
     {
         var items = await _repo.GetAllAsync();
@@ -42,7 +42,7 @@ public class SliderController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id}"), Authorize]
+    [HttpGet("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> GetById(int id)
     {
         var s = await _repo.GetByIdAsync(id);
@@ -55,7 +55,7 @@ public class SliderController : ControllerBase
         });
     }
 
-    [HttpPost, Authorize]
+    [HttpPost, Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Create([FromBody] CreateSliderDto dto)
     {
         var entity = new Slider
@@ -69,7 +69,7 @@ public class SliderController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity.Id);
     }
 
-    [HttpPut("{id}"), Authorize]
+    [HttpPut("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateSliderDto dto)
     {
         if (id != dto.Id) return BadRequest();
@@ -85,7 +85,7 @@ public class SliderController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}"), Authorize]
+    [HttpDelete("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var entity = await _repo.GetByIdAsync(id);

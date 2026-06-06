@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
@@ -16,7 +16,7 @@ import { ToastComponent } from '../../shared/toast.component';
           <p class="text-blue-300 text-sm mt-1">{{ auth.getUsername() }}</p>
         </div>
         <nav class="flex-1 p-4 space-y-1">
-          @for (item of menuItems; track item.path) {
+          @for (item of visibleMenuItems; track item.path) {
             <a [routerLink]="item.path" routerLinkActive="bg-blue-700"
                class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-800 transition text-sm">
               <span>{{ item.icon }}</span><span>{{ item.label }}</span>
@@ -41,17 +41,24 @@ import { ToastComponent } from '../../shared/toast.component';
 })
 export class AdminLayoutComponent {
   auth = inject(AuthService);
-  menuItems = [
-    { path: '/admin/dashboard',  icon: '📊', label: 'Dashboard' },
-    { path: '/admin/sliders',    icon: '🖼️', label: 'Sliderlar' },
-    { path: '/admin/categories', icon: '📁', label: 'Kategoriler' },
-    { path: '/admin/services',   icon: '🔧', label: 'Hizmetler' },
-    { path: '/admin/technical',  icon: '🛠️', label: 'Teknik Servis' },
-    { path: '/admin/blogs',      icon: '📝', label: 'Blog Yazıları' },
-    { path: '/admin/references', icon: '🏢', label: 'Referanslar' },
-    { path: '/admin/features',     icon: '⭐', label: 'Özellikler' },
-    { path: '/admin/page-content', icon: '📄', label: 'Vizyon & Misyon' },
-    { path: '/admin/messages',   icon: '✉️', label: 'Mesajlar' },
-    { path: '/admin/settings',   icon: '⚙️', label: 'Site Ayarları' },
+
+  private allMenuItems = [
+    { path: '/admin/dashboard',    icon: '📊', label: 'Dashboard',       roles: ['SuperAdmin', 'Admin', 'Technician'] },
+    { path: '/admin/sliders',      icon: '🖼️', label: 'Sliderlar',       roles: ['SuperAdmin', 'Admin'] },
+    { path: '/admin/categories',   icon: '📁', label: 'Kategoriler',     roles: ['SuperAdmin', 'Admin'] },
+    { path: '/admin/services',     icon: '🔧', label: 'Hizmetler',       roles: ['SuperAdmin', 'Admin'] },
+    { path: '/admin/technical',    icon: '🛠️', label: 'Teknik Servis',   roles: ['SuperAdmin', 'Admin', 'Technician'] },
+    { path: '/admin/blogs',        icon: '📝', label: 'Blog Yazıları',   roles: ['SuperAdmin', 'Admin'] },
+    { path: '/admin/references',   icon: '🏢', label: 'Referanslar',     roles: ['SuperAdmin', 'Admin'] },
+    { path: '/admin/features',     icon: '⭐', label: 'Özellikler',      roles: ['SuperAdmin', 'Admin'] },
+    { path: '/admin/page-content', icon: '📄', label: 'Vizyon & Misyon', roles: ['SuperAdmin', 'Admin'] },
+    { path: '/admin/messages',     icon: '✉️', label: 'Mesajlar',        roles: ['SuperAdmin', 'Admin'] },
+    { path: '/admin/settings',     icon: '⚙️', label: 'Site Ayarları',   roles: ['SuperAdmin', 'Admin'] },
+    { path: '/admin/users',        icon: '👥', label: 'Kullanıcılar',    roles: ['SuperAdmin'] },
   ];
+
+  get visibleMenuItems() {
+    const role = this.auth.getRole() ?? '';
+    return this.allMenuItems.filter(item => item.roles.includes(role));
+  }
 }
