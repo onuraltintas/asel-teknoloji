@@ -21,8 +21,9 @@ export class LoginComponent {
     password:   ['', Validators.required],
     rememberMe: [false]
   });
-  loading = false;
-  error   = '';
+  loading     = false;
+  error       = '';
+  showPassword = false;
 
   onSubmit() {
     if (this.form.invalid) return;
