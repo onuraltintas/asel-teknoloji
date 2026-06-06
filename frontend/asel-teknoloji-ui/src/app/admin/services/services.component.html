@@ -108,7 +108,7 @@
               <div class="col-span-2"><label class="label">Başlık</label><input formControlName="title" class="input" (input)="autoSlug()" /></div>
               <div class="col-span-2"><label class="label">Slug <span class="text-gray-400 font-normal text-xs">(otomatik, düzenlenebilir)</span></label><input formControlName="slug" class="input font-mono" /></div>
               <div class="col-span-2"><label class="label">Kısa Açıklama</label><textarea formControlName="shortDescription" class="input" rows="2"></textarea></div>
-              <div class="col-span-2"><label class="label">Açıklama (HTML)</label><textarea formControlName="description" class="input" rows="4"></textarea></div>
+              <div class="col-span-2"><label class="label">Açıklama</label><app-wysiwyg formControlName="description"></app-wysiwyg></div>
               <div class="col-span-2">
                 <label class="label">Görsel <span class="text-gray-400 font-normal text-xs">(1200×630 — otomatik kırpılır)</span></label>
                 <div class="flex gap-2">

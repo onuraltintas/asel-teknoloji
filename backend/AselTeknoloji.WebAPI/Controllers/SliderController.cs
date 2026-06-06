@@ -14,7 +14,7 @@ public class SliderController : ControllerBase
 
     public SliderController(IGenericRepository<Slider> repo) => _repo = repo;
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet, AllowAnonymous, OutputCache(PolicyName = "public5m")]
     public async Task<IActionResult> GetAll()
     {
         var items = await _repo.FindAsync(s => s.IsActive);

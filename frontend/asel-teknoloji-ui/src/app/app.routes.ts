@@ -18,7 +18,9 @@ export const routes: Routes = [
     ]
   },
 
-  { path: 'admin/login', loadComponent: () => import('./admin/login/login.component').then(m => m.LoginComponent) },
+  { path: 'admin/login',          loadComponent: () => import('./admin/login/login.component').then(m => m.LoginComponent) },
+  { path: 'admin/forgot-password', loadComponent: () => import('./admin/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent) },
+  { path: 'admin/reset-password',  loadComponent: () => import('./admin/reset-password/reset-password.component').then(m => m.ResetPasswordComponent) },
 
   {
     path: 'admin',
@@ -42,5 +44,5 @@ export const routes: Routes = [
     ]
   },
 
-  { path: '**', redirectTo: '' }
+  { path: '**', loadComponent: () => import('./public/not-found/not-found.component').then(m => m.NotFoundComponent) }
 ];

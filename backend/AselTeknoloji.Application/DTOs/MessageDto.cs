@@ -21,4 +21,5 @@ public class CreateMessageDto
     [MaxLength(20)] public string? Phone { get; set; }
     [Required, MaxLength(300)] public string Subject { get; set; } = string.Empty;
     [Required] public string Body { get; set; } = string.Empty;
+    public string? RecaptchaToken { get; set; }
 }

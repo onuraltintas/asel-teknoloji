@@ -13,14 +13,14 @@ public class BlogPostController : ControllerBase
     private readonly IGenericRepository<BlogPost> _repo;
     public BlogPostController(IGenericRepository<BlogPost> repo) => _repo = repo;
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet, AllowAnonymous, OutputCache(PolicyName = "public5m")]
     public async Task<IActionResult> GetAll()
     {
         var items = await _repo.FindAsync(b => b.IsActive);
         return Ok(items.OrderByDescending(b => b.CreatedAt).Select(ToDto));
     }
 
-    [HttpGet("{slug}"), AllowAnonymous]
+    [HttpGet("{slug}"), AllowAnonymous, OutputCache(PolicyName = "public5m")]
     public async Task<IActionResult> GetBySlug(string slug)
     {
         var b = await _repo.SingleOrDefaultAsync(x => x.Slug == slug && x.IsActive);

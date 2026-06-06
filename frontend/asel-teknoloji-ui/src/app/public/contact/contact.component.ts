@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Title, Meta, DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -13,14 +14,15 @@ import { environment } from '../../../environments/environment';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './contact.component.html'
 })
-export class ContactComponent implements OnInit {
-  private api       = inject(ApiService);
-  private fb        = inject(FormBuilder);
-  private sanitizer = inject(DomSanitizer);
-  private titleSvc  = inject(Title);
-  private metaSvc   = inject(Meta);
-  private jsonLd    = inject(JsonLdService);
-  private cdr       = inject(ChangeDetectorRef);
+export class ContactComponent implements OnInit, OnDestroy {
+  private api        = inject(ApiService);
+  private fb         = inject(FormBuilder);
+  private sanitizer  = inject(DomSanitizer);
+  private titleSvc   = inject(Title);
+  private metaSvc    = inject(Meta);
+  private jsonLd     = inject(JsonLdService);
+  private cdr        = inject(ChangeDetectorRef);
+  private platformId = inject(PLATFORM_ID);
 
   setting:  Setting | null = null;
   mapUrl:   SafeResourceUrl | null = null;
@@ -40,7 +42,7 @@ export class ContactComponent implements OnInit {
 
   ngOnInit() {
     this.titleSvc.setTitle('İletişim | Asel Teknoloji');
-    this.metaSvc.updateTag({ name: 'description',      content: 'Asel Teknoloji iletişim sayfası. Güvenlik kamera, yangın alarm, teknik servis ve bilişim hizmetleri için teklif alın veya mesaj gönderin.' });
+    this.metaSvc.updateTag({ name: 'description',      content: 'Asel Teknoloji iletişim sayfası.' });
     this.metaSvc.updateTag({ property: 'og:title',     content: 'İletişim | Asel Teknoloji' });
     this.metaSvc.updateTag({ property: 'og:type',      content: 'website' });
 
@@ -66,16 +68,54 @@ export class ContactComponent implements OnInit {
       },
       error: () => {}
     });
+
+    if (isPlatformBrowser(this.platformId) && environment.recaptchaSiteKey) {
+      this.loadRecaptchaScript();
+    }
+  }
+
+  ngOnDestroy() {
+    if (isPlatformBrowser(this.platformId)) {
+      const el = document.getElementById('recaptcha-script');
+      el?.remove();
+      document.querySelector('.grecaptcha-badge')?.parentElement?.remove();
+    }
   }
 
   submit() {
-    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
-    this.sending  = true;
-    this.errorMsg = '';
-    this.api.sendMessage(this.form.value).subscribe({
-      next:  () => { this.sent = true; this.sending = false; this.cdr.markForCheck(); },
-      error: () => { this.errorMsg = 'Mesaj gönderilemedi. Lütfen tekrar deneyin.'; this.sending = false; this.cdr.markForCheck(); }
-    });
+    if (this.form.invalid || this.sending) { this.form.markAllAsTouched(); return; }
+    this.sending = true; this.errorMsg = '';
+
+    const doSubmit = (token?: string) => {
+      const dto = { ...this.form.value, recaptchaToken: token };
+      this.api.sendMessage(dto).subscribe({
+        next:  () => { this.sent = true; this.sending = false; this.cdr.markForCheck(); },
+        error: (err) => {
+          this.errorMsg = err?.error?.error ?? 'Mesaj gönderilemedi. Lütfen tekrar deneyin.';
+          this.sending = false;
+          this.cdr.markForCheck();
+        }
+      });
+    };
+
+    const w = window as any;
+    if (isPlatformBrowser(this.platformId) && environment.recaptchaSiteKey && w.grecaptcha) {
+      w.grecaptcha.ready(() => {
+        w.grecaptcha.execute(environment.recaptchaSiteKey, { action: 'contact' })
+          .then((token: string) => doSubmit(token));
+      });
+    } else {
+      doSubmit();
+    }
+  }
+
+  private loadRecaptchaScript() {
+    if (document.getElementById('recaptcha-script')) return;
+    const script = document.createElement('script');
+    script.id = 'recaptcha-script';
+    script.src = `https://www.google.com/recaptcha/api.js?render=${environment.recaptchaSiteKey}`;
+    script.async = true;
+    document.head.appendChild(script);
   }
 
   private extractMapSrc(embed: string): string | null {

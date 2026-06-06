@@ -1,6 +1,14 @@
+@import 'quill/dist/quill.snow.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Tailwind preflight'ın Quill içeriğini bozmasını önle */
+.ql-editor ol, .ql-editor ul { padding-left: 1.5rem; }
+.ql-editor ol li { list-style-type: decimal; }
+.ql-editor ul li { list-style-type: disc; }
+.ql-editor li:not(.ql-direction-rtl)::before { margin-left: -1.5em; }
 
 @layer components {
   .btn-primary   { @apply bg-blue-700 hover:bg-blue-800 text-white font-medium px-4 py-2 rounded transition-colors; }

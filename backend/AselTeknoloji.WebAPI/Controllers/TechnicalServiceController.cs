@@ -11,8 +11,18 @@ namespace AselTeknoloji.WebAPI.Controllers;
 public class TechnicalServiceController : ControllerBase
 {
     private readonly IGenericRepository<TechnicalService> _repo;
+    private readonly IGenericRepository<Setting>          _settings;
+    private readonly IEmailService                        _email;
 
-    public TechnicalServiceController(IGenericRepository<TechnicalService> repo) => _repo = repo;
+    public TechnicalServiceController(
+        IGenericRepository<TechnicalService> repo,
+        IGenericRepository<Setting>          settings,
+        IEmailService                        email)
+    {
+        _repo     = repo;
+        _settings = settings;
+        _email    = email;
+    }
 
     // ── Müşteri: Arıza kaydı oluştur ─────────────────────────
     [HttpPost, AllowAnonymous]
@@ -31,6 +41,49 @@ public class TechnicalServiceController : ControllerBase
         };
         await _repo.AddAsync(entity);
         await _repo.SaveChangesAsync();
+
+        // Admin bildirimi
+        var setting   = (await _settings.GetAllAsync()).FirstOrDefault();
+        var notifyTo  = setting?.Email;
+        if (!string.IsNullOrWhiteSpace(notifyTo))
+        {
+            await _email.SendAsync(
+                notifyTo,
+                $"[Asel Teknoloji] Yeni Arıza Talebi — {serviceCode}",
+                $"""
+                <h3>Yeni Arıza / Teknik Servis Talebi</h3>
+                <table cellpadding="6" style="border-collapse:collapse;">
+                  <tr><td><b>Servis Kodu</b></td><td><b>{serviceCode}</b></td></tr>
+                  <tr><td><b>Müşteri</b></td><td>{entity.CustomerName}</td></tr>
+                  <tr><td><b>Telefon</b></td><td>{entity.CustomerPhone ?? "-"}</td></tr>
+                  <tr><td><b>E-posta</b></td><td>{entity.CustomerEmail ?? "-"}</td></tr>
+                  <tr><td><b>Cihaz Tipi</b></td><td>{entity.DeviceType}</td></tr>
+                </table>
+                <hr/>
+                <p><b>Arıza Açıklaması:</b></p>
+                <p>{entity.IssueDescription}</p>
+                """);
+        }
+
+        // Müşteri onay e-postası (e-posta adresi varsa)
+        if (!string.IsNullOrWhiteSpace(entity.CustomerEmail))
+        {
+            await _email.SendAsync(
+                entity.CustomerEmail,
+                $"Arıza Talebiniz Alındı — {serviceCode}",
+                $"""
+                <p>Sayın <b>{entity.CustomerName}</b>,</p>
+                <p>Arıza talebiniz başarıyla oluşturuldu.</p>
+                <table cellpadding="6" style="border-collapse:collapse;border:1px solid #e5e7eb;">
+                  <tr><td><b>Servis Kodu</b></td><td><b>{serviceCode}</b></td></tr>
+                  <tr><td><b>Cihaz</b></td><td>{entity.DeviceType}</td></tr>
+                  <tr><td><b>Durum</b></td><td>Beklemede</td></tr>
+                </table>
+                <p>Bu kodu kullanarak <a href="{setting?.Title ?? "Asel Teknoloji"}" style="color:#1d4ed8">servis takip sayfamızdan</a> durumunuzu sorgulayabilirsiniz.</p>
+                <p>En kısa sürede sizinle iletişime geçeceğiz.</p>
+                """);
+        }
+
         return Ok(new { serviceCode, message = "Arıza kaydınız alındı. Kodu not alın." });
     }
 
@@ -83,29 +136,50 @@ public class TechnicalServiceController : ControllerBase
         var entity = await _repo.GetByIdAsync(id);
         if (entity is null) return NotFound();
 
+        var prevStatus = entity.Status;
         entity.Status    = dto.Status;
         entity.AdminNote = dto.AdminNote;
         entity.UpdatedAt = DateTime.UtcNow;
 
         _repo.Update(entity);
         await _repo.SaveChangesAsync();
+
+        // Müşteri bildirimi — durum değiştiyse ve e-posta adresi varsa
+        if (prevStatus != dto.Status && !string.IsNullOrWhiteSpace(entity.CustomerEmail))
+        {
+            var statusLabel = GetStatusLabel(dto.Status);
+            await _email.SendAsync(
+                entity.CustomerEmail,
+                $"Servis Durumu Güncellendi — {entity.ServiceCode}",
+                $"""
+                <p>Sayın <b>{entity.CustomerName}</b>,</p>
+                <p>Servis talebinizin durumu güncellendi:</p>
+                <table cellpadding="6" style="border-collapse:collapse;border:1px solid #e5e7eb;">
+                  <tr><td><b>Servis Kodu</b></td><td>{entity.ServiceCode}</td></tr>
+                  <tr><td><b>Cihaz</b></td><td>{entity.DeviceType}</td></tr>
+                  <tr><td><b>Yeni Durum</b></td><td><b>{statusLabel}</b></td></tr>
+                  {(string.IsNullOrWhiteSpace(entity.AdminNote) ? "" : $"<tr><td><b>Teknisyen Notu</b></td><td>{entity.AdminNote}</td></tr>")}
+                </table>
+                <p>Sorularınız için bize ulaşabilirsiniz.</p>
+                """);
+        }
+
         return NoContent();
     }
 
     private static string GenerateServiceCode()
     {
-        var prefix = "ASL";
         var random = new Random().Next(100000, 999999);
-        return $"{prefix}{random}";
+        return $"ASL{random}";
     }
 
     private static string GetStatusLabel(TechnicalServiceStatus status) => status switch
     {
-        TechnicalServiceStatus.Beklemede      => "Beklemede",
-        TechnicalServiceStatus.Islemde        => "İşlemde",
+        TechnicalServiceStatus.Beklemede       => "Beklemede",
+        TechnicalServiceStatus.Islemde         => "İşlemde",
         TechnicalServiceStatus.ParcaBekleniyor => "Parça Bekleniyor",
-        TechnicalServiceStatus.Tamamlandi     => "Tamamlandı",
-        TechnicalServiceStatus.Iptal          => "İptal",
-        _                                     => "Bilinmiyor"
+        TechnicalServiceStatus.Tamamlandi      => "Tamamlandı",
+        TechnicalServiceStatus.Iptal           => "İptal",
+        _                                      => "Bilinmiyor"
     };
 }

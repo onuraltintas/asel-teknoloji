@@ -65,7 +65,7 @@ export class ApiService {
   updatePageContent(id: number, dto: any)                         { return this.http.put(`${this.url}/pagecontent/${id}`, dto); }
   deletePageContent(id: number)                                   { return this.http.delete(`${this.url}/pagecontent/${id}`); }
 
-  uploadImage(file: File, type: 'slider' | 'service' | 'blog' | 'reference' | 'logo' | 'favicon') {
+  uploadImage(file: File, type: 'slider' | 'service' | 'blog' | 'reference' | 'logo' | 'favicon' | 'page-content') {
     const form = new FormData();
     form.append('file', file);
     return this.http.post<{ url: string }>(`${this.url}/upload/${type}`, form);

@@ -1,12 +1,24 @@
-﻿using System.Text;
+using System.Text;
 using AselTeknoloji.Application.Interfaces;
 using AselTeknoloji.Infrastructure.Data;
 using AselTeknoloji.Infrastructure.Repositories;
+using AselTeknoloji.Infrastructure.Services;
+using AselTeknoloji.WebAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+
+// ─── Serilog ──────────────────────────────────────────────────────────────────
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Warning)
+    .WriteTo.Console()
+    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 30)
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 
 // Veritabani
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -14,6 +26,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Repository
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+// E-posta servisi
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+
+// reCAPTCHA + HTTP istemcisi
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<RecaptchaService>();
+
+// Bellek önbelleği (şifre sıfırlama tokenleri)
+builder.Services.AddMemoryCache();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"]
@@ -45,6 +67,14 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod());
 });
 
+// Output Cache — public endpoint'ler için 5 dakika
+builder.Services.AddOutputCache(opts =>
+{
+    opts.AddPolicy("public5m", p => p
+        .Expire(TimeSpan.FromMinutes(5))
+        .SetVaryByQuery("*"));
+});
+
 // Controllers + .NET 10 built-in OpenAPI
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -58,7 +88,7 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(o =>
 var app = builder.Build();
 
 // OpenAPI / Swagger UI (.NET 10 native)
-app.MapOpenApi();                         // /openapi/v1.json
+app.MapOpenApi();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/openapi/v1.json", "Asel Teknoloji API v1");
@@ -68,6 +98,7 @@ app.UseSwaggerUI(c =>
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseCors("AllowAngular");
+app.UseOutputCache();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
@@ -78,17 +109,12 @@ try
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
-    Console.WriteLine("[OK] Veritabani migration tamamlandi.");
+    Log.Information("Veritabani migration tamamlandi.");
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"[!!] Migration hatasi: {ex.Message}");
+    Log.Error(ex, "Migration hatasi.");
 }
 
-Console.WriteLine("========================================");
-Console.WriteLine(" Asel Teknoloji API hazir");
-Console.WriteLine(" Swagger: /swagger");
-Console.WriteLine(" OpenAPI JSON: /openapi/v1.json");
-Console.WriteLine("========================================");
-
+Log.Information("Asel Teknoloji API hazir. Swagger: /swagger");
 app.Run();

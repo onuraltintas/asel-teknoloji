@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
@@ -21,6 +21,7 @@ export class PageContentComponent implements OnInit {
   items: PageContent[] = [];
   showForm = false;
   editing: PageContent | null = null;
+  uploading = signal(false);
 
   page            = 1;
   pageSize        = 10;
@@ -75,6 +76,17 @@ export class PageContentComponent implements OnInit {
         error: () => { this.load(); this.toast.error('Bazı kayıtlar silinemedi.'); }
       });
     }, 'Sil');
+  }
+
+  onFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file  = input.files?.[0];
+    if (!file) return;
+    this.uploading.set(true);
+    this.api.uploadImage(file, 'page-content').subscribe({
+      next: res => { this.form.patchValue({ imageUrl: res.url }); this.uploading.set(false); input.value = ''; },
+      error: err => { this.toast.error(err?.error?.error ?? 'Görsel yükleme başarısız.'); this.uploading.set(false); input.value = ''; }
+    });
   }
 
   openForm(item?: PageContent) {

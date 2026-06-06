@@ -12,12 +12,13 @@ public class UploadController : ControllerBase
 {
     private static readonly Dictionary<string, (int W, int H)> Sizes = new()
     {
-        ["slider"]    = (1920, 580),
-        ["service"]   = (1200, 630),
-        ["blog"]      = (1200, 630),
-        ["reference"] = (400,  300),
-        ["logo"]      = (400,  200),
-        ["favicon"]   = (64,   64),
+        ["slider"]       = (1920, 580),
+        ["service"]      = (1200, 630),
+        ["blog"]         = (1200, 630),
+        ["reference"]    = (400,  300),
+        ["logo"]         = (400,  200),
+        ["favicon"]      = (64,   64),
+        ["page-content"] = (1200, 630),
     };
 
     private static readonly HashSet<string> AllowedMime = new(StringComparer.OrdinalIgnoreCase)

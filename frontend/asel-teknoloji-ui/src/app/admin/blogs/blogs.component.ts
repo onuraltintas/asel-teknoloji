@@ -5,11 +5,12 @@ import { forkJoin } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { ToastService } from '../../core/services/toast.service';
 import { BlogPost } from '../../core/models/models';
+import { WysiwygComponent } from '../../shared/wysiwyg/wysiwyg.component';
 
 @Component({
   selector: 'app-blogs',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, WysiwygComponent],
   templateUrl: './blogs.component.html'
 })
 export class BlogsComponent implements OnInit {

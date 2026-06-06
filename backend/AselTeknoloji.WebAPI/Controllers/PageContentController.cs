@@ -13,7 +13,7 @@ public class PageContentController : ControllerBase
     private readonly IGenericRepository<PageContent> _repo;
     public PageContentController(IGenericRepository<PageContent> repo) => _repo = repo;
 
-    [HttpGet("{type}"), AllowAnonymous]
+    [HttpGet("{type}"), AllowAnonymous, OutputCache(PolicyName = "public5m")]
     public async Task<IActionResult> GetByType(string type)
     {
         var items = await _repo.FindAsync(p => p.Type == type && p.IsActive);

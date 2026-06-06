@@ -14,7 +14,7 @@ public class ReferenceController : ControllerBase
 
     public ReferenceController(IGenericRepository<Reference> repo) => _repo = repo;
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet, AllowAnonymous, OutputCache(PolicyName = "public5m")]
     public async Task<IActionResult> GetAll()
     {
         var items = await _repo.FindAsync(r => r.IsActive);

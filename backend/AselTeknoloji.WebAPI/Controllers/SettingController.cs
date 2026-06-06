@@ -13,7 +13,7 @@ public class SettingController : ControllerBase
     private readonly IGenericRepository<Setting> _repo;
     public SettingController(IGenericRepository<Setting> repo) => _repo = repo;
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet, AllowAnonymous, OutputCache(PolicyName = "public5m")]
     public async Task<IActionResult> Get()
     {
         var s = await _repo.SingleOrDefaultAsync(_ => true);

@@ -13,7 +13,7 @@ public class FeatureController : ControllerBase
     private readonly IGenericRepository<Feature> _repo;
     public FeatureController(IGenericRepository<Feature> repo) => _repo = repo;
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet, AllowAnonymous, OutputCache(PolicyName = "public5m")]
     public async Task<IActionResult> GetAll()
     {
         var items = await _repo.FindAsync(f => f.IsActive);

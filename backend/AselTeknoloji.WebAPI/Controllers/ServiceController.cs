@@ -19,7 +19,7 @@ public class ServiceController : ControllerBase
         _catRepo = catRepo;
     }
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet, AllowAnonymous, OutputCache(PolicyName = "public5m")]
     public async Task<IActionResult> GetAll()
     {
         var items = await _repo.FindAsync(s => s.IsActive);
@@ -27,7 +27,7 @@ public class ServiceController : ControllerBase
         return Ok(items.Select(s => ToDto(s, catMap)));
     }
 
-    [HttpGet("{slug}"), AllowAnonymous]
+    [HttpGet("{slug}"), AllowAnonymous, OutputCache(PolicyName = "public5m")]
     public async Task<IActionResult> GetBySlug(string slug)
     {
         var s = await _repo.SingleOrDefaultAsync(x => x.Slug == slug && x.IsActive);

@@ -123,9 +123,8 @@
               }
             </div>
             <div class="col-span-2">
-              <label class="label">İçerik (HTML destekli)</label>
-              <textarea formControlName="content" class="input font-mono text-xs" rows="12"
-                        placeholder="<p>Blog içeriği buraya...</p>"></textarea>
+              <label class="label">İçerik</label>
+              <app-wysiwyg formControlName="content"></app-wysiwyg>
               @if (form.get('content')?.invalid && form.get('content')?.touched) {
                 <p class="text-red-500 text-xs mt-1">İçerik zorunludur.</p>
               }

@@ -5,11 +5,12 @@ import { forkJoin } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { ToastService } from '../../core/services/toast.service';
 import { Service, Category } from '../../core/models/models';
+import { WysiwygComponent } from '../../shared/wysiwyg/wysiwyg.component';
 
 @Component({
   selector: 'app-services',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, WysiwygComponent],
   templateUrl: './services.component.html'
 })
 export class ServicesComponent implements OnInit {

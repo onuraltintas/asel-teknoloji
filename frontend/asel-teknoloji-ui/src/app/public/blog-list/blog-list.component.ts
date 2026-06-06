@@ -20,7 +20,24 @@ export class BlogListComponent implements OnInit {
   private cdr      = inject(ChangeDetectorRef);
 
   posts: BlogPost[] = [];
-  loading = true;
+  loading  = true;
+  page     = 1;
+  pageSize = 9;
+
+  get paged()      { return this.posts.slice((this.page - 1) * this.pageSize, this.page * this.pageSize); }
+  get totalPages() { return Math.ceil(this.posts.length / this.pageSize); }
+  get pageEnd()    { return Math.min(this.page * this.pageSize, this.posts.length); }
+  get pageNumbers() {
+    const total = this.totalPages;
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    const pages = new Set([1, total, this.page, this.page - 1, this.page + 1].filter(p => p >= 1 && p <= total));
+    return [...pages].sort((a, b) => a - b);
+  }
+
+  goTo(p: number) {
+    if (p < 1 || p > this.totalPages) return;
+    this.page = p;
+  }
 
   ngOnInit() {
     this.titleSvc.setTitle('Blog | Asel Teknoloji');
@@ -30,13 +47,9 @@ export class BlogListComponent implements OnInit {
       '@context': 'https://schema.org',
       '@type': 'CollectionPage',
       'name': 'Blog | Asel Teknoloji',
-      'description': 'Asel Teknoloji blog yazıları: güvenlik kamera, yangın alarm, teknik servis ve bilişim teknolojileri hakkında haberler ve ipuçları.',
+      'description': 'Asel Teknoloji blog yazıları.',
       'url': 'https://aselteknoloji.com/blog',
-      'publisher': {
-        '@type': 'Organization',
-        'name': 'Asel Teknoloji',
-        'url': 'https://aselteknoloji.com'
-      }
+      'publisher': { '@type': 'Organization', 'name': 'Asel Teknoloji', 'url': 'https://aselteknoloji.com' }
     });
 
     this.api.getBlogPosts().subscribe({
