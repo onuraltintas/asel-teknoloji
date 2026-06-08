@@ -13,7 +13,8 @@ export const routes: Routes = [
       { path: 'blog', loadComponent: () => import('./public/blog-list/blog-list.component').then(m => m.BlogListComponent) },
       { path: 'blog/:slug', loadComponent: () => import('./public/blog-detail/blog-detail.component').then(m => m.BlogDetailComponent) },
       { path: 'referanslar', loadComponent: () => import('./public/references/references.component').then(m => m.ReferencesComponent) },
-      { path: 'projeler',   loadComponent: () => import('./public/portfolio/portfolio.component').then(m => m.PortfolioComponent) },
+      { path: 'projeler',         loadComponent: () => import('./public/portfolio/portfolio.component').then(m => m.PortfolioComponent) },
+      { path: 'projeler/:slug',   loadComponent: () => import('./public/portfolio-detail/portfolio-detail.component').then(m => m.PortfolioDetailComponent) },
       { path: 'vizyon',     loadComponent: () => import('./public/vision/vision.component').then(m => m.VisionComponent) },
       { path: 'misyon',     loadComponent: () => import('./public/mission/mission.component').then(m => m.MissionComponent) },
     ]

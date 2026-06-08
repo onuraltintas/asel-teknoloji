@@ -1,0 +1,102 @@
+@if (loading) {
+  <div class="flex justify-center py-32">
+    <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+} @else if (notFound || !portfolio) {
+  <div class="text-center py-32 text-gray-400">
+    <div class="text-5xl mb-4">🔍</div>
+    <p class="text-xl font-semibold text-gray-600 mb-2">Proje bulunamadı</p>
+    <a routerLink="/projeler" class="text-blue-600 hover:underline text-sm">← Tüm Projelere Dön</a>
+  </div>
+} @else {
+
+  <!-- Hero -->
+  <div class="bg-blue-900 text-white py-14">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <nav class="flex items-center gap-2 text-blue-300 text-sm mb-6 flex-wrap">
+        <a routerLink="/" class="hover:text-white transition-colors">Ana Sayfa</a>
+        <span>/</span>
+        <a routerLink="/projeler" class="hover:text-white transition-colors">Projelerimiz</a>
+        <span>/</span>
+        <span class="text-white font-medium">{{ portfolio.title }}</span>
+      </nav>
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">{{ portfolio.title }}</h1>
+      @if (getTags().length > 0) {
+        <div class="flex flex-wrap gap-2 mt-3">
+          @for (tag of getTags(); track tag) {
+            <span class="bg-blue-800 text-blue-200 text-xs font-medium px-3 py-1.5 rounded-full border border-blue-700">{{ tag }}</span>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- İçerik -->
+  <section class="py-14 bg-gray-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+
+        <!-- Galeri -->
+        @if (getImages().length > 0) {
+          <div>
+            <!-- Ana görsel -->
+            <div class="rounded-2xl overflow-hidden shadow-md mb-3 bg-gray-100 aspect-video">
+              <img [src]="getImages()[activeIndex()]" [alt]="portfolio.title"
+                   class="w-full h-full object-cover transition-opacity duration-300"
+                   onerror="this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center text-5xl\'>🗂️</div>'" />
+            </div>
+            <!-- Thumbnail'lar -->
+            @if (getImages().length > 1) {
+              <div class="flex gap-2 flex-wrap">
+                @for (img of getImages(); track img; let i = $index) {
+                  <button (click)="setActive(i)"
+                          class="w-20 h-14 rounded-lg overflow-hidden border-2 transition-all"
+                          [class.border-blue-600]="activeIndex() === i"
+                          [class.border-transparent]="activeIndex() !== i"
+                          [class.opacity-60]="activeIndex() !== i">
+                    <img [src]="img" [alt]="'Görsel ' + (i + 1)" class="w-full h-full object-cover"
+                         onerror="this.style.display='none'" />
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="rounded-2xl bg-blue-50 aspect-video flex items-center justify-center text-6xl">🗂️</div>
+        }
+
+        <!-- Bilgi -->
+        <div>
+          @if (portfolio.description) {
+            <div class="prose prose-gray max-w-none mb-6">
+              <p class="text-gray-600 text-base leading-relaxed whitespace-pre-line">{{ portfolio.description }}</p>
+            </div>
+          }
+
+          @if (getTags().length > 0) {
+            <div class="mt-6">
+              <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Kullanılan Teknolojiler</h3>
+              <div class="flex flex-wrap gap-2">
+                @for (tag of getTags(); track tag) {
+                  <span class="bg-blue-50 text-blue-700 text-sm font-medium px-3 py-1.5 rounded-full border border-blue-100">{{ tag }}</span>
+                }
+              </div>
+            </div>
+          }
+
+          <div class="mt-8 pt-6 border-t border-gray-200 flex flex-wrap gap-3">
+            <a routerLink="/iletisim"
+               class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-xl transition-colors shadow">
+              Benzer Proje Talep Et
+            </a>
+            <a routerLink="/projeler"
+               class="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 font-medium px-6 py-3 rounded-xl border border-gray-200 transition-colors">
+              ← Tüm Projeler
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+}

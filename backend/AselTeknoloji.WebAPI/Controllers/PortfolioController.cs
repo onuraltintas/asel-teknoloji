@@ -21,6 +21,13 @@ public class PortfolioController : ControllerBase
         return Ok(items.OrderBy(p => p.DisplayOrder).ThenBy(p => p.Title).Select(ToDto));
     }
 
+    [HttpGet("{slug}"), AllowAnonymous, OutputCache(PolicyName = "public5m")]
+    public async Task<IActionResult> GetBySlug(string slug)
+    {
+        var p = await _repo.SingleOrDefaultAsync(x => x.Slug == slug && x.IsActive);
+        return p is null ? NotFound() : Ok(ToDto(p));
+    }
+
     [HttpGet("admin"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> GetAllAdmin()
     {
@@ -28,7 +35,7 @@ public class PortfolioController : ControllerBase
         return Ok(items.OrderBy(p => p.DisplayOrder).ThenBy(p => p.Title).Select(ToDto));
     }
 
-    [HttpGet("{id}"), Authorize(Roles = "SuperAdmin,Admin")]
+    [HttpGet("admin/{id:int}"), Authorize(Roles = "SuperAdmin,Admin")]
     public async Task<IActionResult> GetById(int id)
     {
         var p = await _repo.GetByIdAsync(id);
@@ -52,8 +59,9 @@ public class PortfolioController : ControllerBase
         if (entity is null) return NotFound();
 
         entity.Title = dto.Title;
+        entity.Slug = dto.Slug;
         entity.Description = dto.Description;
-        entity.ImageUrl = dto.ImageUrl;
+        entity.Images = dto.Images;
         entity.Tags = dto.Tags;
         entity.DisplayOrder = dto.DisplayOrder;
         entity.IsActive = dto.IsActive;
@@ -75,15 +83,13 @@ public class PortfolioController : ControllerBase
 
     private static PortfolioDto ToDto(Portfolio p) => new()
     {
-        Id = p.Id, Title = p.Title, Description = p.Description,
-        ImageUrl = p.ImageUrl, Tags = p.Tags,
-        DisplayOrder = p.DisplayOrder, IsActive = p.IsActive
+        Id = p.Id, Title = p.Title, Slug = p.Slug, Description = p.Description,
+        Images = p.Images, Tags = p.Tags, DisplayOrder = p.DisplayOrder, IsActive = p.IsActive
     };
 
     private static Portfolio Map(CreatePortfolioDto dto) => new()
     {
-        Title = dto.Title, Description = dto.Description,
-        ImageUrl = dto.ImageUrl, Tags = dto.Tags,
-        DisplayOrder = dto.DisplayOrder, IsActive = dto.IsActive
+        Title = dto.Title, Slug = dto.Slug, Description = dto.Description,
+        Images = dto.Images, Tags = dto.Tags, DisplayOrder = dto.DisplayOrder, IsActive = dto.IsActive
     };
 }

@@ -138,7 +138,9 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Portfolio>(e =>
         {
             e.HasKey(x => x.Id);
+            e.HasIndex(x => x.Slug).IsUnique();
             e.Property(x => x.Title).HasMaxLength(200).IsRequired();
+            e.Property(x => x.Slug).HasMaxLength(300).IsRequired();
             e.Property(x => x.Tags).HasMaxLength(500);
         });
     }

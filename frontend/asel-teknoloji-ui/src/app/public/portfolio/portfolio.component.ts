@@ -45,4 +45,9 @@ export class PortfolioComponent implements OnInit {
   getTags(tags?: string): string[] {
     return tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [];
   }
+
+  getCoverImage(images?: string): string | null {
+    if (!images) return null;
+    try { const arr = JSON.parse(images); return arr[0] ?? null; } catch { return images || null; }
+  }
 }

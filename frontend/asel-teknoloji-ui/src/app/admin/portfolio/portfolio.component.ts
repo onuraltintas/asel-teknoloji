@@ -22,6 +22,7 @@ export class PortfolioComponent implements OnInit {
   showForm = false;
   editing: Portfolio | null = null;
   uploading = signal(false);
+  imagesList: string[] = [];
 
   page            = 1;
   pageSize        = 10;
@@ -42,8 +43,8 @@ export class PortfolioComponent implements OnInit {
 
   form = this.fb.group({
     title:        ['', Validators.required],
+    slug:         ['', Validators.required],
     description:  [''],
-    imageUrl:     [''],
     tags:         [''],
     displayOrder: [1],
     isActive:     [true]
@@ -80,30 +81,67 @@ export class PortfolioComponent implements OnInit {
   }
 
   openForm(item?: Portfolio) {
-    this.editing = item ?? null; this.showForm = true;
-    this.form.patchValue(item ?? { title: '', description: '', imageUrl: '', tags: '', displayOrder: 1, isActive: true });
+    this.editing = item ?? null;
+    this.showForm = true;
+    this.imagesList = item?.images ? this.parseImages(item.images) : [];
+    this.form.patchValue(item
+      ? { title: item.title, slug: item.slug, description: item.description ?? '', tags: item.tags ?? '', displayOrder: item.displayOrder, isActive: item.isActive }
+      : { title: '', slug: '', description: '', tags: '', displayOrder: 1, isActive: true }
+    );
+  }
+
+  autoSlug() {
+    if (this.editing) return;
+    const title = this.form.get('title')?.value ?? '';
+    const slug = title
+      .toLowerCase()
+      .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+      .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+      .replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
+    this.form.get('slug')?.setValue(slug, { emitEvent: false });
   }
 
   onFileSelect(event: Event) {
     const input = event.target as HTMLInputElement;
-    const file  = input.files?.[0];
-    if (!file) return;
+    const files = input.files;
+    if (!files || files.length === 0) return;
     this.uploading.set(true);
-    this.api.uploadImage(file, 'portfolio').subscribe({
-      next: res => { this.form.patchValue({ imageUrl: res.url }); this.uploading.set(false); input.value = ''; },
+    const uploads = Array.from(files).map(file => this.api.uploadImage(file, 'portfolio'));
+    forkJoin(uploads).subscribe({
+      next: results => {
+        this.imagesList = [...this.imagesList, ...results.map(r => r.url)];
+        this.uploading.set(false);
+        input.value = '';
+      },
       error: err => { this.toast.error(err?.error?.error ?? 'Görsel yükleme başarısız.'); this.uploading.set(false); input.value = ''; }
     });
   }
 
+  removeImage(index: number) {
+    this.imagesList = this.imagesList.filter((_, i) => i !== index);
+  }
+
+  parseImages(json: string): string[] {
+    try { return JSON.parse(json); } catch { return json ? [json] : []; }
+  }
+
+  getCoverImage(item: Portfolio): string | null {
+    const imgs = this.parseImages(item.images ?? '');
+    return imgs[0] ?? null;
+  }
+
   save() {
     if (this.form.invalid || this.uploading()) return;
-    const dto = this.form.value as any;
+    const dto = {
+      ...this.form.value,
+      images: this.imagesList.length ? JSON.stringify(this.imagesList) : null
+    } as any;
     const obs = this.editing
       ? this.api.updatePortfolio(this.editing.id, { ...dto, id: this.editing.id })
       : this.api.createPortfolio(dto);
     obs.subscribe({
       next: () => { this.showForm = false; this.load(); this.toast.success(this.editing ? 'Proje güncellendi.' : 'Proje oluşturuldu.'); },
-      error: () => this.toast.error('Kayıt sırasında hata oluştu.')
+      error: () => this.toast.error('Kayıt başarısız. Slug benzersiz olmalıdır.')
     });
   }
 

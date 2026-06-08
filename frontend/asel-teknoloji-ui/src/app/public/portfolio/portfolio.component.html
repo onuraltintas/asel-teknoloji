@@ -30,10 +30,11 @@
     } @else {
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         @for (item of portfolios; track item.id) {
-          <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col group">
-            @if (item.imageUrl) {
+          <a [routerLink]="['/projeler', item.slug]"
+             class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col group cursor-pointer">
+            @if (getCoverImage(item.images)) {
               <div class="overflow-hidden h-52">
-                <img [src]="item.imageUrl" [alt]="item.title"
+                <img [src]="getCoverImage(item.images)!" [alt]="item.title"
                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                      onerror="this.parentElement.innerHTML='<div class=\'w-full h-full bg-blue-50 flex items-center justify-center text-5xl\'>🗂️</div>'" />
               </div>
@@ -41,9 +42,9 @@
               <div class="h-52 bg-blue-50 flex items-center justify-center text-5xl">🗂️</div>
             }
             <div class="p-6 flex flex-col flex-1">
-              <h3 class="text-lg font-bold text-gray-800 mb-2 leading-tight">{{ item.title }}</h3>
+              <h3 class="text-lg font-bold text-gray-800 mb-2 leading-tight group-hover:text-blue-700 transition-colors">{{ item.title }}</h3>
               @if (item.description) {
-                <p class="text-gray-500 text-sm leading-relaxed flex-1">{{ item.description }}</p>
+                <p class="text-gray-500 text-sm leading-relaxed flex-1 line-clamp-3">{{ item.description }}</p>
               }
               @if (getTags(item.tags).length > 0) {
                 <div class="flex flex-wrap gap-1.5 mt-4">
@@ -54,8 +55,11 @@
                   }
                 </div>
               }
+              <div class="mt-4 text-blue-600 text-sm font-medium flex items-center gap-1">
+                Detayları Gör <span class="group-hover:translate-x-1 transition-transform inline-block">→</span>
+              </div>
             </div>
-          </div>
+          </a>
         }
       </div>
     }

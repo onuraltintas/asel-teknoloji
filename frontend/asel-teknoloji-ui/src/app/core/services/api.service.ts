@@ -66,6 +66,7 @@ export class ApiService {
   deletePageContent(id: number)                                   { return this.http.delete(`${this.url}/pagecontent/${id}`); }
 
   getPortfolios()                                           { return this.http.get<Portfolio[]>(`${this.url}/portfolio`); }
+  getPortfolioBySlug(slug: string)                          { return this.http.get<Portfolio>(`${this.url}/portfolio/${slug}`); }
   getPortfoliosAdmin()                                      { return this.http.get<Portfolio[]>(`${this.url}/portfolio/admin`); }
   createPortfolio(dto: CreatePortfolioDto)                  { return this.http.post<number>(`${this.url}/portfolio`, dto); }
   updatePortfolio(id: number, dto: any)                     { return this.http.put(`${this.url}/portfolio/${id}`, dto); }
