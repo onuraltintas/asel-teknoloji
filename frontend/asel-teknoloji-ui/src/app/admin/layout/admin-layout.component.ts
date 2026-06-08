@@ -21,6 +21,7 @@ export class AdminLayoutComponent {
     { path: '/admin/technical',    icon: '🛠️', label: 'Teknik Servis',   roles: ['SuperAdmin', 'Admin', 'Technician'] },
     { path: '/admin/blogs',        icon: '📝', label: 'Blog Yazıları',   roles: ['SuperAdmin', 'Admin'] },
     { path: '/admin/references',   icon: '🏢', label: 'Referanslar',     roles: ['SuperAdmin', 'Admin'] },
+    { path: '/admin/portfolio',    icon: '🗂️', label: 'Projeler',        roles: ['SuperAdmin', 'Admin'] },
     { path: '/admin/features',     icon: '⭐', label: 'Özellikler',      roles: ['SuperAdmin', 'Admin'] },
     { path: '/admin/page-content', icon: '📄', label: 'Vizyon & Misyon', roles: ['SuperAdmin', 'Admin'] },
     { path: '/admin/messages',     icon: '✉️', label: 'Mesajlar',        roles: ['SuperAdmin', 'Admin'] },

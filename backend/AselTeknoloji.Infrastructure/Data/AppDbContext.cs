@@ -18,6 +18,7 @@ public class AppDbContext : DbContext
     public DbSet<Reference> References => Set<Reference>();
     public DbSet<Feature> Features => Set<Feature>();
     public DbSet<PageContent> PageContents => Set<PageContent>();
+    public DbSet<Portfolio> Portfolios => Set<Portfolio>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -131,6 +132,14 @@ public class AppDbContext : DbContext
             e.Property(x => x.Type).HasMaxLength(20).IsRequired();
             e.Property(x => x.Title).HasMaxLength(200).IsRequired();
             e.Property(x => x.Subtitle).HasMaxLength(300);
+        });
+
+        // Portfolio
+        modelBuilder.Entity<Portfolio>(e =>
+        {
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Title).HasMaxLength(200).IsRequired();
+            e.Property(x => x.Tags).HasMaxLength(500);
         });
     }
 }
