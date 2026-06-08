@@ -3,10 +3,10 @@ import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { ApiService } from '../../core/services/api.service';
 import { JsonLdService } from '../../core/services/json-ld.service';
-import { Slider, Service, BlogPost, Reference, Setting, Feature, PageContent } from '../../core/models/models';
+import { Slider, Service, BlogPost, Reference, Setting, Feature, PageContent, Portfolio } from '../../core/models/models';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -28,10 +28,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   recentBlogs: BlogPost[] = [];
   references: Reference[] = [];
   features: Feature[] = [];
+  portfolios: Portfolio[] = [];
   setting: Setting | null = null;
-  vision:  PageContent | null = null;
-  mission: PageContent | null = null;
-  activeCorpTab: 'vision' | 'mission' = 'vision';
   loading = true;
   get companyName() { return this.setting?.title?.split(' | ')[0] ?? 'Asel Teknoloji'; }
   currentSlide = 0;
@@ -45,8 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       setting:    this.api.getSetting(),
       references: this.api.getReferences(),
       features:   this.api.getFeatures(),
-      vision:     this.api.getPageContent('vision').pipe(catchError(() => of(null))),
-      mission:    this.api.getPageContent('mission').pipe(catchError(() => of(null)))
+      portfolios: this.api.getPortfolios().pipe(catchError(() => of([])))
     }).subscribe({
       next: data => {
         this.sliders     = data.sliders;
@@ -54,10 +51,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.recentBlogs = data.blogs.slice(0, 3);
         this.references  = data.references;
         this.features    = data.features;
+        this.portfolios  = data.portfolios.slice(0, 3);
         this.setting     = data.setting;
-        this.vision      = data.vision;
-        this.mission     = data.mission;
-        this.activeCorpTab = data.vision ? 'vision' : 'mission';
         this.loading     = false;
         if (this.sliders.length > 1 && isPlatformBrowser(this.platformId)) this.startTimer();
         this.cdr.markForCheck();
@@ -104,6 +99,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   private resetTimer() {
     clearInterval(this.timer);
     this.startTimer();
+  }
+
+  getCoverImage(images?: string): string | null {
+    if (!images) return null;
+    try { const arr = JSON.parse(images); return arr[0] ?? null; } catch { return images || null; }
+  }
+
+  getTags(tags?: string): string[] {
+    return tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [];
   }
 
   formatDate(d: string) {
