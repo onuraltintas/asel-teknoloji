@@ -13,14 +13,14 @@ git pull origin main
 
 # ── Backend ────────────────────────────────────────────────
 echo "==> Backend derleniyor..."
+find "$REPO_DIR/backend" -name "obj" -type d -exec rm -rf {} + 2>/dev/null || true
+
 dotnet publish \
     backend/AselTeknoloji.WebAPI/AselTeknoloji.WebAPI.csproj \
     -c Release \
     -o $BACKEND_DIR \
-    --nologo \
-    -q
+    --nologo
 
-# appsettings.Production.json korunuyor (gitignore'da, üzerine yazma)
 echo "  Backend derlendi → $BACKEND_DIR"
 
 # ── Frontend ───────────────────────────────────────────────
