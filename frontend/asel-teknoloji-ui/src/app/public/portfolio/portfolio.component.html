@@ -33,9 +33,9 @@
           <a [routerLink]="['/projeler', item.slug]"
              class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col group cursor-pointer">
             @if (getCoverImage(item.images)) {
-              <div class="overflow-hidden h-52">
+              <div class="h-52 bg-gray-100 flex items-center justify-center overflow-hidden">
                 <img [src]="getCoverImage(item.images)!" [alt]="item.title"
-                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                     class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500"
                      onerror="this.parentElement.innerHTML='<div class=\'w-full h-full bg-blue-50 flex items-center justify-center text-5xl\'>🗂️</div>'" />
               </div>
             } @else {

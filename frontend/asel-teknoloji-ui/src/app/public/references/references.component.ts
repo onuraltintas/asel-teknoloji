@@ -22,6 +22,11 @@ export class ReferencesComponent implements OnInit {
 
   references: Reference[] = [];
   loading = true;
+  expanded = new Set<number>();
+
+  toggle(id: number) {
+    this.expanded.has(id) ? this.expanded.delete(id) : this.expanded.add(id);
+  }
 
   ngOnInit() {
     this.titleSvc.setTitle('Referanslarımız | Asel Teknoloji');

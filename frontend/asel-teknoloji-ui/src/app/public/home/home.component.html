@@ -223,9 +223,9 @@
           <a [routerLink]="['/projeler', item.slug]"
              class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100">
             @if (getCoverImage(item.images)) {
-              <div class="overflow-hidden h-48">
+              <div class="h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
                 <img [src]="getCoverImage(item.images)!" [alt]="item.title"
-                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                     class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500"
                      onerror="this.parentElement.innerHTML='<div class=\'h-48 bg-blue-50 flex items-center justify-center text-5xl\'>🗂️</div>'" />
               </div>
             } @else {
@@ -269,13 +269,15 @@
       </div>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 items-stretch">
         @for (ref of references.slice(0, 8); track ref.id) {
-          <div class="bg-white rounded-2xl p-6 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow group">
+          <div class="bg-white rounded-2xl p-6 flex flex-col items-center text-center shadow-sm hover:shadow-xl hover:-translate-y-1 border border-transparent hover:border-blue-100 transition-all duration-300 group">
             @if (ref.imageUrl) {
-              <img [src]="ref.imageUrl" [alt]="ref.name"
-                   class="h-16 w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
-                   onerror="this.style.display='none'" />
+              <div class="h-24 flex items-center justify-center w-full">
+                <img [src]="ref.imageUrl" [alt]="ref.name"
+                     class="max-h-20 max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                     onerror="this.parentElement.innerHTML='<div class=\'text-4xl\'>🏢</div>'" />
+              </div>
             } @else {
-              <div class="h-16 flex items-center justify-center text-4xl">🏢</div>
+              <div class="h-24 flex items-center justify-center text-4xl">🏢</div>
             }
             <p class="text-sm text-gray-600 mt-3 font-medium leading-tight">{{ ref.name }}</p>
           </div>
