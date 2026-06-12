@@ -15,11 +15,9 @@ backend/**/.vs/
 backend/**/*.user
 backend/**/*.suo
 backend/**/appsettings.Development.json
-backend/**/appsettings.Production.json
-
-# Gerçek şifreler burada — asla commit etme
 backend/**/appsettings.json
 backend/**/appsettings.*.json
+!backend/**/appsettings.Production.json
 
 # ── Genel ─────────────────────────────────────────
 .DS_Store
