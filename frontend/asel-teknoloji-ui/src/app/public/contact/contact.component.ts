@@ -5,6 +5,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Title, Meta, DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ApiService } from '../../core/services/api.service';
 import { JsonLdService } from '../../core/services/json-ld.service';
+import { SeoService } from '../../core/services/seo.service';
 import { Setting } from '../../core/models/models';
 import { environment } from '../../../environments/environment';
 
@@ -21,6 +22,7 @@ export class ContactComponent implements OnInit, OnDestroy {
   private titleSvc   = inject(Title);
   private metaSvc    = inject(Meta);
   private jsonLd     = inject(JsonLdService);
+  private seo        = inject(SeoService);
   private cdr        = inject(ChangeDetectorRef);
   private platformId = inject(PLATFORM_ID);
 
@@ -42,9 +44,10 @@ export class ContactComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.titleSvc.setTitle('İletişim | Asel Teknoloji');
-    this.metaSvc.updateTag({ name: 'description',      content: 'Asel Teknoloji iletişim sayfası.' });
+    this.metaSvc.updateTag({ name: 'description',      content: 'Asel Teknoloji ile iletişime geçin. Güvenlik kamera, yangın alarm, ağ altyapısı ve teknik servis konularında teklif ve destek için bize ulaşın.' });
     this.metaSvc.updateTag({ property: 'og:title',     content: 'İletişim | Asel Teknoloji' });
     this.metaSvc.updateTag({ property: 'og:type',      content: 'website' });
+    this.seo.setCanonical(`${environment.siteUrl}/iletisim`);
 
     this.api.getSetting().subscribe({
       next: s => {

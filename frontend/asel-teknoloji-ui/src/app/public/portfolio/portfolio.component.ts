@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { ApiService } from '../../core/services/api.service';
 import { JsonLdService } from '../../core/services/json-ld.service';
+import { SeoService } from '../../core/services/seo.service';
 import { Portfolio } from '../../core/models/models';
 import { environment } from '../../../environments/environment';
 
@@ -18,6 +19,7 @@ export class PortfolioComponent implements OnInit {
   private titleSvc = inject(Title);
   private metaSvc  = inject(Meta);
   private jsonLd   = inject(JsonLdService);
+  private seo      = inject(SeoService);
   private cdr      = inject(ChangeDetectorRef);
 
   portfolios: Portfolio[] = [];
@@ -27,6 +29,7 @@ export class PortfolioComponent implements OnInit {
     this.titleSvc.setTitle('Projelerimiz | Asel Teknoloji');
     this.metaSvc.updateTag({ name: 'description', content: 'Asel Teknoloji tarafından gerçekleştirilen projeler: güvenlik kamera, yangın alarm, ağ altyapısı ve teknik servis çalışmaları.' });
     this.metaSvc.updateTag({ property: 'og:title', content: 'Projelerimiz | Asel Teknoloji' });
+    this.seo.setCanonical(`${environment.siteUrl}/projeler`);
 
     this.jsonLd.set({
       '@context': 'https://schema.org',

@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { ApiService } from '../../core/services/api.service';
 import { JsonLdService } from '../../core/services/json-ld.service';
+import { SeoService } from '../../core/services/seo.service';
 import { PageContent } from '../../core/models/models';
 import { environment } from '../../../environments/environment';
 
@@ -18,6 +19,7 @@ export class VisionComponent implements OnInit {
   private titleSvc = inject(Title);
   private metaSvc  = inject(Meta);
   private jsonLd   = inject(JsonLdService);
+  private seo      = inject(SeoService);
   private cdr      = inject(ChangeDetectorRef);
 
   page: PageContent | null = null;
@@ -25,8 +27,9 @@ export class VisionComponent implements OnInit {
 
   ngOnInit() {
     this.titleSvc.setTitle('Vizyonumuz | Asel Teknoloji');
-    this.metaSvc.updateTag({ name: 'description', content: 'Asel Teknoloji vizyon sayfası.' });
+    this.metaSvc.updateTag({ name: 'description', content: 'Asel Teknoloji olarak vizyonumuz: teknoloji ile güvenli, bağlantılı ve sürdürülebilir yaşam alanları oluşturmak.' });
     this.metaSvc.updateTag({ property: 'og:title', content: 'Vizyonumuz | Asel Teknoloji' });
+    this.seo.setCanonical(`${environment.siteUrl}/vizyon`);
 
     this.jsonLd.set({
       '@context': 'https://schema.org',

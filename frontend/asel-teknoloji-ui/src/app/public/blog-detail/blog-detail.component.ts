@@ -4,6 +4,7 @@ import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { ApiService } from '../../core/services/api.service';
 import { JsonLdService } from '../../core/services/json-ld.service';
+import { SeoService } from '../../core/services/seo.service';
 import { BlogPost } from '../../core/models/models';
 import { environment } from '../../../environments/environment';
 
@@ -19,6 +20,7 @@ export class BlogDetailComponent implements OnInit {
   private titleSvc = inject(Title);
   private metaSvc  = inject(Meta);
   private jsonLd   = inject(JsonLdService);
+  private seo      = inject(SeoService);
   private cdr      = inject(ChangeDetectorRef);
 
   post: BlogPost | null = null;
@@ -39,6 +41,7 @@ export class BlogDetailComponent implements OnInit {
           this.metaSvc.updateTag({ property: 'og:title',       content: p.title });
           this.metaSvc.updateTag({ property: 'og:description', content: this.excerpt(p.content) });
           if (p.imageUrl) this.metaSvc.updateTag({ property: 'og:image', content: p.imageUrl });
+          this.seo.setCanonical(`${environment.siteUrl}/blog/${p.slug}`);
 
           const pageUrl = `${environment.siteUrl}/blog/${p.slug}`;
           const excerptText = this.excerpt(p.content);

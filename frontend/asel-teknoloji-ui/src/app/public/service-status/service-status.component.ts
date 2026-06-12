@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Title, Meta } from '@angular/platform-browser';
 import { ApiService } from '../../core/services/api.service';
 import { JsonLdService } from '../../core/services/json-ld.service';
+import { SeoService } from '../../core/services/seo.service';
+import { environment } from '../../../environments/environment';
 
 interface StatusResult {
   serviceCode: string;
@@ -25,6 +27,7 @@ export class ServiceStatusComponent implements OnInit {
   private titleSvc = inject(Title);
   private metaSvc  = inject(Meta);
   private jsonLd   = inject(JsonLdService);
+  private seo      = inject(SeoService);
 
   activeTab = signal<'create' | 'track'>('create');
 
@@ -87,6 +90,7 @@ export class ServiceStatusComponent implements OnInit {
     this.metaSvc.updateTag({ name: 'description',  content: 'Teknik servis kaydı oluşturun veya servis takip kodunuzla cihazınızın anlık durumunu sorgulayın.' });
     this.metaSvc.updateTag({ property: 'og:title', content: 'Teknik Servis | Asel Teknoloji' });
     this.metaSvc.updateTag({ property: 'og:type',  content: 'website' });
+    this.seo.setCanonical(`${environment.siteUrl}/servis-takip`);
     this.jsonLd.set({
       '@context': 'https://schema.org', '@type': 'WebPage',
       'name': 'Teknik Servis | Asel Teknoloji',

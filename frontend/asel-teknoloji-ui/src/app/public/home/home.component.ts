@@ -6,6 +6,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ApiService } from '../../core/services/api.service';
 import { JsonLdService } from '../../core/services/json-ld.service';
+import { SeoService } from '../../core/services/seo.service';
 import { Slider, Service, BlogPost, Reference, Setting, Feature, PageContent, Portfolio } from '../../core/models/models';
 import { environment } from '../../../environments/environment';
 
@@ -21,6 +22,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private titleSvc   = inject(Title);
   private metaSvc    = inject(Meta);
   private jsonLd     = inject(JsonLdService);
+  private seo        = inject(SeoService);
   private cdr        = inject(ChangeDetectorRef);
 
   sliders: Slider[] = [];
@@ -66,6 +68,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.metaSvc.updateTag({ property: 'og:title',         content: title });
         this.metaSvc.updateTag({ property: 'og:description',   content: desc });
         this.metaSvc.updateTag({ property: 'og:type',          content: 'website' });
+        this.seo.setCanonical(environment.siteUrl);
 
         this.jsonLd.set({
           '@context': 'https://schema.org',

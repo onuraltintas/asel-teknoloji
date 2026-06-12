@@ -4,6 +4,7 @@ import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { ApiService } from '../../core/services/api.service';
 import { JsonLdService } from '../../core/services/json-ld.service';
+import { SeoService } from '../../core/services/seo.service';
 import { Service } from '../../core/models/models';
 import { environment } from '../../../environments/environment';
 
@@ -19,6 +20,7 @@ export class ServiceDetailComponent implements OnInit {
   private titleSvc = inject(Title);
   private metaSvc  = inject(Meta);
   private jsonLd   = inject(JsonLdService);
+  private seo      = inject(SeoService);
   private cdr      = inject(ChangeDetectorRef);
 
   service: Service | null = null;
@@ -40,6 +42,7 @@ export class ServiceDetailComponent implements OnInit {
           this.metaSvc.updateTag({ property: 'og:description', content: desc });
           this.metaSvc.updateTag({ property: 'og:type',        content: 'website' });
           if (s.imageUrl) this.metaSvc.updateTag({ property: 'og:image', content: s.imageUrl });
+          this.seo.setCanonical(`${environment.siteUrl}/hizmet/${s.slug}`);
 
           const pageUrl = `${environment.siteUrl}/hizmet/${s.slug}`;
           this.jsonLd.set({

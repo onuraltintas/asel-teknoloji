@@ -9,29 +9,33 @@ namespace AselTeknoloji.WebAPI.Controllers;
 [ApiController]
 public class SitemapController : ControllerBase
 {
-    private readonly IGenericRepository<Service>  _serviceRepo;
-    private readonly IGenericRepository<BlogPost> _blogRepo;
-    private readonly IGenericRepository<Setting>  _settingRepo;
+    private readonly IGenericRepository<Service>   _serviceRepo;
+    private readonly IGenericRepository<BlogPost>  _blogRepo;
+    private readonly IGenericRepository<Setting>   _settingRepo;
+    private readonly IGenericRepository<Portfolio> _portfolioRepo;
     private readonly IConfiguration _config;
 
     public SitemapController(
-        IGenericRepository<Service>  serviceRepo,
-        IGenericRepository<BlogPost> blogRepo,
-        IGenericRepository<Setting>  settingRepo,
+        IGenericRepository<Service>   serviceRepo,
+        IGenericRepository<BlogPost>  blogRepo,
+        IGenericRepository<Setting>   settingRepo,
+        IGenericRepository<Portfolio> portfolioRepo,
         IConfiguration config)
     {
-        _serviceRepo = serviceRepo;
-        _blogRepo    = blogRepo;
-        _settingRepo = settingRepo;
-        _config      = config;
+        _serviceRepo   = serviceRepo;
+        _blogRepo      = blogRepo;
+        _settingRepo   = settingRepo;
+        _portfolioRepo = portfolioRepo;
+        _config        = config;
     }
 
     [HttpGet("/sitemap.xml")]
     public async Task<IActionResult> Sitemap()
     {
-        var baseUrl  = _config["SiteUrl"] ?? "https://aseltekno.com";
-        var services = await _serviceRepo.FindAsync(s => s.IsActive);
-        var blogs    = await _blogRepo.FindAsync(b => b.IsActive);
+        var baseUrl    = _config["SiteUrl"] ?? "https://aselteknoloji.net";
+        var services   = await _serviceRepo.FindAsync(s => s.IsActive);
+        var blogs      = await _blogRepo.FindAsync(b => b.IsActive);
+        var portfolios = await _portfolioRepo.FindAsync(p => p.IsActive);
 
         var sb = new StringBuilder();
         sb.AppendLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -49,16 +53,22 @@ public class SitemapController : ControllerBase
         }
 
         AddUrl("/",               "weekly",  "1.0");
-        AddUrl("/hizmetler",      "weekly",  "0.9");
-        AddUrl("/blog",           "weekly",  "0.8");
+        AddUrl("/referanslar",    "monthly", "0.8");
+        AddUrl("/projeler",       "weekly",  "0.9");
+        AddUrl("/blog",           "daily",   "0.9");
+        AddUrl("/vizyon",         "monthly", "0.5");
+        AddUrl("/misyon",         "monthly", "0.5");
         AddUrl("/iletisim",       "monthly", "0.7");
-        AddUrl("/servis-takip",   "monthly", "0.7");
+        AddUrl("/servis-takip",   "monthly", "0.5");
 
         foreach (var s in services)
-            AddUrl($"/hizmet/{s.Slug}", "monthly", "0.8");
+            AddUrl($"/hizmet/{s.Slug}", "monthly", "0.8", s.CreatedAt);
 
-        foreach (var b in blogs)
-            AddUrl($"/blog/{b.Slug}", "weekly", "0.7", b.UpdatedAt ?? b.CreatedAt);
+        foreach (var b in blogs.OrderByDescending(b => b.CreatedAt))
+            AddUrl($"/blog/{b.Slug}", "monthly", "0.7", b.UpdatedAt ?? b.CreatedAt);
+
+        foreach (var p in portfolios.OrderBy(p => p.DisplayOrder))
+            AddUrl($"/projeler/{p.Slug}", "monthly", "0.8", p.CreatedAt);
 
         sb.AppendLine("</urlset>");
         return Content(sb.ToString(), "application/xml", Encoding.UTF8);
@@ -67,7 +77,7 @@ public class SitemapController : ControllerBase
     [HttpGet("/robots.txt")]
     public IActionResult Robots()
     {
-        var baseUrl = _config["SiteUrl"] ?? "https://aseltekno.com";
+        var baseUrl = _config["SiteUrl"] ?? "https://aselteknoloji.net";
         var content = $"""
             User-agent: *
             Disallow: /admin
@@ -81,7 +91,7 @@ public class SitemapController : ControllerBase
     [HttpGet("/llms.txt")]
     public async Task<IActionResult> LlmsTxt()
     {
-        var baseUrl  = _config["SiteUrl"] ?? "https://aseltekno.com";
+        var baseUrl  = _config["SiteUrl"] ?? "https://aselteknoloji.net";
         var services = await _serviceRepo.FindAsync(s => s.IsActive);
         var blogs    = await _blogRepo.FindAsync(b => b.IsActive);
         var setting  = (await _settingRepo.GetAllAsync()).FirstOrDefault();
@@ -122,7 +132,7 @@ public class SitemapController : ControllerBase
     [HttpGet("/llms-full.txt")]
     public async Task<IActionResult> LlmsFullTxt()
     {
-        var baseUrl  = _config["SiteUrl"] ?? "https://aseltekno.com";
+        var baseUrl  = _config["SiteUrl"] ?? "https://aselteknoloji.net";
         var services = await _serviceRepo.FindAsync(s => s.IsActive);
         var blogs    = await _blogRepo.FindAsync(b => b.IsActive);
         var setting  = (await _settingRepo.GetAllAsync()).FirstOrDefault();

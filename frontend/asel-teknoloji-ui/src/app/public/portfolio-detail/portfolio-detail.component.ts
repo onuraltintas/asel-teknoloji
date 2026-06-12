@@ -4,6 +4,7 @@ import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { ApiService } from '../../core/services/api.service';
 import { JsonLdService } from '../../core/services/json-ld.service';
+import { SeoService } from '../../core/services/seo.service';
 import { Portfolio } from '../../core/models/models';
 import { environment } from '../../../environments/environment';
 
@@ -19,6 +20,7 @@ export class PortfolioDetailComponent implements OnInit {
   private titleSvc = inject(Title);
   private metaSvc  = inject(Meta);
   private jsonLd   = inject(JsonLdService);
+  private seo      = inject(SeoService);
   private cdr      = inject(ChangeDetectorRef);
 
   portfolio: Portfolio | null = null;
@@ -37,6 +39,7 @@ export class PortfolioDetailComponent implements OnInit {
         this.metaSvc.updateTag({ property: 'og:title', content: `${item.title} | Asel Teknoloji` });
         const cover = this.getImages()[0];
         if (cover) this.metaSvc.updateTag({ property: 'og:image', content: cover });
+        this.seo.setCanonical(`${environment.siteUrl}/projeler/${item.slug}`);
         this.jsonLd.set({
           '@context': 'https://schema.org',
           '@type': 'WebPage',

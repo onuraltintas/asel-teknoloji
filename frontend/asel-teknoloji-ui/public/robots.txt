@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /admin
 Disallow: /api/
 
-Sitemap: https://aseltekno.com/sitemap.xml
+Sitemap: https://aselteknoloji.net/sitemap.xml

@@ -4,7 +4,9 @@ import { RouterLink } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { ApiService } from '../../core/services/api.service';
 import { JsonLdService } from '../../core/services/json-ld.service';
+import { SeoService } from '../../core/services/seo.service';
 import { BlogPost } from '../../core/models/models';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-blog-list',
@@ -17,6 +19,7 @@ export class BlogListComponent implements OnInit {
   private titleSvc = inject(Title);
   private metaSvc  = inject(Meta);
   private jsonLd   = inject(JsonLdService);
+  private seo      = inject(SeoService);
   private cdr      = inject(ChangeDetectorRef);
 
   posts: BlogPost[] = [];
@@ -42,14 +45,16 @@ export class BlogListComponent implements OnInit {
   ngOnInit() {
     this.titleSvc.setTitle('Blog | Asel Teknoloji');
     this.metaSvc.updateTag({ name: 'description', content: 'Asel Teknoloji blog yazıları: güvenlik kamera, yangın alarm, teknik servis ve bilişim teknolojileri hakkında haberler ve ipuçları.' });
+    this.metaSvc.updateTag({ property: 'og:title', content: 'Blog | Asel Teknoloji' });
+    this.seo.setCanonical(`${environment.siteUrl}/blog`);
 
     this.jsonLd.set({
       '@context': 'https://schema.org',
       '@type': 'CollectionPage',
       'name': 'Blog | Asel Teknoloji',
       'description': 'Asel Teknoloji blog yazıları.',
-      'url': 'https://aselteknoloji.com/blog',
-      'publisher': { '@type': 'Organization', 'name': 'Asel Teknoloji', 'url': 'https://aselteknoloji.com' }
+      'url': `${environment.siteUrl}/blog`,
+      'publisher': { '@type': 'Organization', 'name': 'Asel Teknoloji', 'url': environment.siteUrl }
     });
 
     this.api.getBlogPosts().subscribe({
