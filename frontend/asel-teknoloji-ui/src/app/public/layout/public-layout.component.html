@@ -33,15 +33,21 @@
               </svg>
             </button>
             @if (kurumsalOpen) {
-              <div class="absolute top-full left-0 mt-1 w-44 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50">
-                <a routerLink="/vizyon" (click)="kurumsalOpen=false"
-                   class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors text-sm">
-                  🔭 Vizyonumuz
-                </a>
-                <a routerLink="/misyon" (click)="kurumsalOpen=false"
-                   class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors text-sm">
-                  🎯 Misyonumuz
-                </a>
+              <div class="absolute top-full left-0 pt-1 z-50">
+                <div class="w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-1">
+                  <a routerLink="/vizyon" (click)="kurumsalOpen=false"
+                     class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors text-sm">
+                    🔭 Vizyonumuz
+                  </a>
+                  <a routerLink="/misyon" (click)="kurumsalOpen=false"
+                     class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors text-sm">
+                    🎯 Misyonumuz
+                  </a>
+                  <a routerLink="/is-ortaklarimiz" (click)="kurumsalOpen=false"
+                     class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors text-sm">
+                    🤝 İş Ortaklarımız
+                  </a>
+                </div>
               </div>
             }
           </div>
@@ -97,6 +103,8 @@
                    class="block px-3 py-2 rounded-lg hover:bg-blue-800 text-blue-200 hover:text-white transition-colors">🔭 Vizyonumuz</a>
                 <a routerLink="/misyon" (click)="menuOpen=false; kurumsalOpen=false"
                    class="block px-3 py-2 rounded-lg hover:bg-blue-800 text-blue-200 hover:text-white transition-colors">🎯 Misyonumuz</a>
+                <a routerLink="/is-ortaklarimiz" (click)="menuOpen=false; kurumsalOpen=false"
+                   class="block px-3 py-2 rounded-lg hover:bg-blue-800 text-blue-200 hover:text-white transition-colors">🤝 İş Ortaklarımız</a>
               </div>
             }
           </div>
@@ -163,6 +171,7 @@
           <li><a routerLink="/" class="hover:text-white transition-colors">Ana Sayfa</a></li>
           <li><a routerLink="/blog" class="hover:text-white transition-colors">Blog</a></li>
           <li><a routerLink="/referanslar" class="hover:text-white transition-colors">Referanslar</a></li>
+          <li><a routerLink="/is-ortaklarimiz" class="hover:text-white transition-colors">İş Ortakları</a></li>
           <li><a routerLink="/projeler" class="hover:text-white transition-colors">Projeler</a></li>
           <li><a routerLink="/vizyon" class="hover:text-white transition-colors">Vizyon</a></li>
           <li><a routerLink="/misyon" class="hover:text-white transition-colors">Misyon</a></li>
