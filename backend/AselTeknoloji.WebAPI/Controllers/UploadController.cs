@@ -23,6 +23,11 @@ public class UploadController : ControllerBase
         ["partner"]      = (400,  200),
     };
 
+    private static readonly HashSet<string> MaxFitTypes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "partner", "logo", "reference",
+    };
+
     private static readonly HashSet<string> AllowedMime = new(StringComparer.OrdinalIgnoreCase)
     {
         "image/jpeg", "image/png", "image/webp", "image/gif"
@@ -64,7 +69,7 @@ public class UploadController : ControllerBase
         image.Mutate(x => x.Resize(new ResizeOptions
         {
             Size = new Size(w, h),
-            Mode = ResizeMode.Crop
+            Mode = MaxFitTypes.Contains(type) ? ResizeMode.Max : ResizeMode.Crop
         }));
         await image.SaveAsWebpAsync(filePath);
 
