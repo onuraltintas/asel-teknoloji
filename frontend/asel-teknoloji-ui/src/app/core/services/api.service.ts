@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Slider, CreateSliderDto, Category, CreateCategoryDto, Service, CreateServiceDto, TechnicalService, CreateTechnicalServiceDto, UpdateTechnicalServiceDto, Message, Setting, BlogPost, CreateBlogPostDto, Reference, CreateReferenceDto, Feature, CreateFeatureDto, PageContent, CreatePageContentDto, Portfolio, CreatePortfolioDto, AdminUser, CreateAdminUserDto, UpdateAdminUserDto } from '../models/models';
+import { Slider, CreateSliderDto, Category, CreateCategoryDto, Service, CreateServiceDto, TechnicalService, CreateTechnicalServiceDto, UpdateTechnicalServiceDto, Message, Setting, BlogPost, CreateBlogPostDto, Reference, CreateReferenceDto, Feature, CreateFeatureDto, PageContent, CreatePageContentDto, Portfolio, CreatePortfolioDto, BusinessPartner, CreateBusinessPartnerDto, AdminUser, CreateAdminUserDto, UpdateAdminUserDto } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -72,7 +72,13 @@ export class ApiService {
   updatePortfolio(id: number, dto: any)                     { return this.http.put(`${this.url}/portfolio/${id}`, dto); }
   deletePortfolio(id: number)                               { return this.http.delete(`${this.url}/portfolio/${id}`); }
 
-  uploadImage(file: File, type: 'slider' | 'service' | 'blog' | 'reference' | 'logo' | 'favicon' | 'page-content' | 'portfolio') {
+  getBusinessPartners()                                       { return this.http.get<BusinessPartner[]>(`${this.url}/business-partner`); }
+  getBusinessPartnersAdmin()                                  { return this.http.get<BusinessPartner[]>(`${this.url}/business-partner/admin`); }
+  createBusinessPartner(dto: CreateBusinessPartnerDto)        { return this.http.post<number>(`${this.url}/business-partner`, dto); }
+  updateBusinessPartner(id: number, dto: any)                 { return this.http.put(`${this.url}/business-partner/${id}`, dto); }
+  deleteBusinessPartner(id: number)                           { return this.http.delete(`${this.url}/business-partner/${id}`); }
+
+  uploadImage(file: File, type: 'slider' | 'service' | 'blog' | 'reference' | 'logo' | 'favicon' | 'page-content' | 'portfolio' | 'partner') {
     const form = new FormData();
     form.append('file', file);
     return this.http.post<{ url: string }>(`${this.url}/upload/${type}`, form);

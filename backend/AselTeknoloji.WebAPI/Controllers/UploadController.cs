@@ -20,6 +20,7 @@ public class UploadController : ControllerBase
         ["favicon"]      = (64,   64),
         ["page-content"] = (1200, 630),
         ["portfolio"]    = (1200, 630),
+        ["partner"]      = (400,  200),
     };
 
     private static readonly HashSet<string> AllowedMime = new(StringComparer.OrdinalIgnoreCase)

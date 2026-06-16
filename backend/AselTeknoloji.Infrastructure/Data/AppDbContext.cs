@@ -19,6 +19,7 @@ public class AppDbContext : DbContext
     public DbSet<Feature> Features => Set<Feature>();
     public DbSet<PageContent> PageContents => Set<PageContent>();
     public DbSet<Portfolio> Portfolios => Set<Portfolio>();
+    public DbSet<BusinessPartner> BusinessPartners => Set<BusinessPartner>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -142,6 +143,16 @@ public class AppDbContext : DbContext
             e.Property(x => x.Title).HasMaxLength(200).IsRequired();
             e.Property(x => x.Slug).HasMaxLength(300).IsRequired();
             e.Property(x => x.Tags).HasMaxLength(500);
+        });
+
+        // BusinessPartner
+        modelBuilder.Entity<BusinessPartner>(e =>
+        {
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Name).HasMaxLength(200).IsRequired();
+            e.Property(x => x.Description).HasMaxLength(500);
+            e.Property(x => x.Website).HasMaxLength(300);
+            e.Property(x => x.PartnerType).HasMaxLength(100);
         });
     }
 }

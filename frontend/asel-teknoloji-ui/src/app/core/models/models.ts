@@ -51,6 +51,9 @@ export interface CreatePageContentDto { type: string; title: string; subtitle: s
 export interface Portfolio { id: number; title: string; slug: string; description?: string; images?: string; tags?: string; displayOrder: number; isActive: boolean; }
 export interface CreatePortfolioDto { title: string; slug: string; description?: string; images?: string; tags?: string; displayOrder: number; isActive: boolean; }
 
+export interface BusinessPartner { id: number; name: string; description?: string; logoUrl?: string; website?: string; partnerType?: string; displayOrder: number; isActive: boolean; }
+export interface CreateBusinessPartnerDto { name: string; description?: string; logoUrl?: string; website?: string; partnerType?: string; displayOrder: number; isActive: boolean; }
+
 export const SERVICE_STATUS_LABELS: Record<number, string> = {
   0: 'Beklemede', 1: 'İşlemde', 2: 'Parça Bekleniyor', 3: 'Tamamlandı', 4: 'İptal'
 };

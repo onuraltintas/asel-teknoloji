@@ -7,7 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 import { ApiService } from '../../core/services/api.service';
 import { JsonLdService } from '../../core/services/json-ld.service';
 import { SeoService } from '../../core/services/seo.service';
-import { Slider, Service, BlogPost, Reference, Setting, Feature, PageContent, Portfolio } from '../../core/models/models';
+import { Slider, Service, BlogPost, Reference, Setting, Feature, PageContent, Portfolio, BusinessPartner } from '../../core/models/models';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -31,6 +31,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   references: Reference[] = [];
   features: Feature[] = [];
   portfolios: Portfolio[] = [];
+  businessPartners: BusinessPartner[] = [];
   setting: Setting | null = null;
   loading = true;
   get companyName() { return this.setting?.title?.split(' | ')[0] ?? 'Asel Teknoloji'; }
@@ -39,22 +40,24 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     forkJoin({
-      sliders:    this.api.getSliders(),
-      services:   this.api.getServices(),
-      blogs:      this.api.getBlogPosts(),
-      setting:    this.api.getSetting(),
-      references: this.api.getReferences(),
-      features:   this.api.getFeatures(),
-      portfolios: this.api.getPortfolios().pipe(catchError(() => of([])))
+      sliders:          this.api.getSliders(),
+      services:         this.api.getServices(),
+      blogs:            this.api.getBlogPosts(),
+      setting:          this.api.getSetting(),
+      references:       this.api.getReferences(),
+      features:         this.api.getFeatures(),
+      portfolios:       this.api.getPortfolios().pipe(catchError(() => of([]))),
+      businessPartners: this.api.getBusinessPartners().pipe(catchError(() => of([])))
     }).subscribe({
       next: data => {
-        this.sliders     = data.sliders;
-        this.services    = data.services;
-        this.recentBlogs = data.blogs.slice(0, 3);
-        this.references  = data.references;
-        this.features    = data.features;
-        this.portfolios  = data.portfolios.slice(0, 3);
-        this.setting     = data.setting;
+        this.sliders          = data.sliders;
+        this.services         = data.services;
+        this.recentBlogs      = data.blogs.slice(0, 3);
+        this.references       = data.references;
+        this.features         = data.features;
+        this.portfolios       = data.portfolios.slice(0, 3);
+        this.businessPartners = data.businessPartners;
+        this.setting          = data.setting;
         this.loading     = false;
         if (this.sliders.length > 1 && isPlatformBrowser(this.platformId)) this.startTimer();
         this.cdr.markForCheck();
@@ -115,5 +118,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   formatDate(d: string) {
     return new Date(d).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' });
+  }
+
+  initials(name: string): string {
+    return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
   }
 }
