@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { ApiService } from '../../core/services/api.service';
 import { Setting, Service } from '../../core/models/models';
 
@@ -14,18 +14,19 @@ import { Setting, Service } from '../../core/models/models';
 export class PublicLayoutComponent implements OnInit {
   private api      = inject(ApiService);
   private document = inject(DOCUMENT);
+  private router   = inject(Router);
   setting: Setting | null = null;
   footerServices: Service[] = [];
   get companyName() { return this.setting?.title?.split(' | ')[0] ?? 'Asel Teknoloji'; }
   menuOpen     = false;
   kurumsalOpen = false;
   year = new Date().getFullYear();
-  private _closeTimer: any;
-
-  openKurumsal()  { clearTimeout(this._closeTimer); this.kurumsalOpen = true; }
-  closeKurumsal() { this._closeTimer = setTimeout(() => this.kurumsalOpen = false, 150); }
 
   ngOnInit() {
+    this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
+      this.document.documentElement.scrollTop = 0;
+      this.menuOpen = false;
+    });
     this.api.getSetting().subscribe({
       next: s => {
         this.setting = s;

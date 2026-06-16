@@ -23,33 +23,35 @@
              [routerLinkActiveOptions]="{exact:true}"
              class="px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-orange-400 transition-colors">Ana Sayfa</a>
 
-          <!-- Kurumsal dropdown -->
-          <div class="relative" (mouseenter)="openKurumsal()" (mouseleave)="closeKurumsal()">
-            <button class="flex items-center gap-1 px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-orange-400 transition-colors"
-                    [class.bg-blue-800]="kurumsalOpen" [class.text-orange-400]="kurumsalOpen">
+          <!-- Kurumsal dropdown (CSS-only hover) -->
+          <div class="group relative">
+            <button class="flex items-center gap-1 px-4 py-2 rounded-lg
+                           hover:bg-blue-800 hover:text-orange-400
+                           group-hover:bg-blue-800 group-hover:text-orange-400 transition-colors">
               Kurumsal
-              <svg class="w-3.5 h-3.5 transition-transform" [class.rotate-180]="kurumsalOpen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180"
+                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
               </svg>
             </button>
-            @if (kurumsalOpen) {
-              <div class="absolute top-full left-0 pt-1 z-50">
-                <div class="w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-1">
-                  <a routerLink="/vizyon" (click)="kurumsalOpen=false"
-                     class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors text-sm">
-                    🔭 Vizyonumuz
-                  </a>
-                  <a routerLink="/misyon" (click)="kurumsalOpen=false"
-                     class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors text-sm">
-                    🎯 Misyonumuz
-                  </a>
-                  <a routerLink="/is-ortaklarimiz" (click)="kurumsalOpen=false"
-                     class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors text-sm">
-                    🤝 İş Ortaklarımız
-                  </a>
-                </div>
+            <div class="absolute top-full left-0 z-50 pt-1
+                        invisible opacity-0 group-hover:visible group-hover:opacity-100
+                        transition-all duration-150">
+              <div class="w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-1">
+                <a routerLink="/vizyon"
+                   class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors text-sm">
+                  🔭 Vizyonumuz
+                </a>
+                <a routerLink="/misyon"
+                   class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors text-sm">
+                  🎯 Misyonumuz
+                </a>
+                <a routerLink="/is-ortaklarimiz"
+                   class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors text-sm">
+                  🤝 İş Ortaklarımız
+                </a>
               </div>
-            }
+            </div>
           </div>
 
           <a routerLink="/referanslar" routerLinkActive="bg-blue-800 text-orange-400"
