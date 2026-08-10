@@ -15,6 +15,7 @@ TimeoutStopSec=30
 
 Environment=NODE_ENV=production
 Environment=PORT=4000
+Environment=NG_ALLOWED_HOSTS=aselteknoloji.net,www.aselteknoloji.net,localhost,127.0.0.1
 
 StandardOutput=journal
 StandardError=journal
