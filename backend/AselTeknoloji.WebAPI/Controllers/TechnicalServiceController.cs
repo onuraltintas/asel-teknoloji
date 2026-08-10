@@ -1,8 +1,11 @@
+using System.Net;
 using AselTeknoloji.Application.DTOs;
 using AselTeknoloji.Application.Interfaces;
 using AselTeknoloji.Domain.Entities;
+using AselTeknoloji.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace AselTeknoloji.WebAPI.Controllers;
 
@@ -13,21 +16,27 @@ public class TechnicalServiceController : ControllerBase
     private readonly IGenericRepository<TechnicalService> _repo;
     private readonly IGenericRepository<Setting>          _settings;
     private readonly IEmailService                        _email;
+    private readonly RecaptchaService                     _recaptcha;
 
     public TechnicalServiceController(
         IGenericRepository<TechnicalService> repo,
         IGenericRepository<Setting>          settings,
-        IEmailService                        email)
+        IEmailService                        email,
+        RecaptchaService                     recaptcha)
     {
-        _repo     = repo;
-        _settings = settings;
-        _email    = email;
+        _repo      = repo;
+        _settings  = settings;
+        _email     = email;
+        _recaptcha = recaptcha;
     }
 
     // ── Müşteri: Arıza kaydı oluştur ─────────────────────────
-    [HttpPost, AllowAnonymous]
+    [HttpPost, AllowAnonymous, EnableRateLimiting("public-forms")]
     public async Task<IActionResult> Create([FromBody] CreateTechnicalServiceDto dto)
     {
+        if (!await _recaptcha.VerifyAsync(dto.RecaptchaToken))
+            return BadRequest(new { error = "Bot doğrulaması başarısız. Lütfen tekrar deneyin." });
+
         var serviceCode = GenerateServiceCode();
         var entity = new TechnicalService
         {
@@ -54,14 +63,14 @@ public class TechnicalServiceController : ControllerBase
                 <h3>Yeni Arıza / Teknik Servis Talebi</h3>
                 <table cellpadding="6" style="border-collapse:collapse;">
                   <tr><td><b>Servis Kodu</b></td><td><b>{serviceCode}</b></td></tr>
-                  <tr><td><b>Müşteri</b></td><td>{entity.CustomerName}</td></tr>
-                  <tr><td><b>Telefon</b></td><td>{entity.CustomerPhone ?? "-"}</td></tr>
-                  <tr><td><b>E-posta</b></td><td>{entity.CustomerEmail ?? "-"}</td></tr>
-                  <tr><td><b>Cihaz Tipi</b></td><td>{entity.DeviceType}</td></tr>
+                  <tr><td><b>Müşteri</b></td><td>{WebUtility.HtmlEncode(entity.CustomerName)}</td></tr>
+                  <tr><td><b>Telefon</b></td><td>{WebUtility.HtmlEncode(entity.CustomerPhone) ?? "-"}</td></tr>
+                  <tr><td><b>E-posta</b></td><td>{WebUtility.HtmlEncode(entity.CustomerEmail) ?? "-"}</td></tr>
+                  <tr><td><b>Cihaz Tipi</b></td><td>{WebUtility.HtmlEncode(entity.DeviceType)}</td></tr>
                 </table>
                 <hr/>
                 <p><b>Arıza Açıklaması:</b></p>
-                <p>{entity.IssueDescription}</p>
+                <p>{WebUtility.HtmlEncode(entity.IssueDescription)}</p>
                 """);
         }
 
@@ -72,11 +81,11 @@ public class TechnicalServiceController : ControllerBase
                 entity.CustomerEmail,
                 $"Arıza Talebiniz Alındı — {serviceCode}",
                 $"""
-                <p>Sayın <b>{entity.CustomerName}</b>,</p>
+                <p>Sayın <b>{WebUtility.HtmlEncode(entity.CustomerName)}</b>,</p>
                 <p>Arıza talebiniz başarıyla oluşturuldu.</p>
                 <table cellpadding="6" style="border-collapse:collapse;border:1px solid #e5e7eb;">
                   <tr><td><b>Servis Kodu</b></td><td><b>{serviceCode}</b></td></tr>
-                  <tr><td><b>Cihaz</b></td><td>{entity.DeviceType}</td></tr>
+                  <tr><td><b>Cihaz</b></td><td>{WebUtility.HtmlEncode(entity.DeviceType)}</td></tr>
                   <tr><td><b>Durum</b></td><td>Beklemede</td></tr>
                 </table>
                 <p>Bu kodu kullanarak <a href="{setting?.Title ?? "Asel Teknoloji"}" style="color:#1d4ed8">servis takip sayfamızdan</a> durumunuzu sorgulayabilirsiniz.</p>
@@ -88,7 +97,7 @@ public class TechnicalServiceController : ControllerBase
     }
 
     // ── Müşteri: Kod ile durum sorgula ───────────────────────
-    [HttpGet("status/{code}"), AllowAnonymous]
+    [HttpGet("status/{code}"), AllowAnonymous, EnableRateLimiting("public-forms")]
     public async Task<IActionResult> QueryStatus(string code)
     {
         var entity = await _repo.SingleOrDefaultAsync(t => t.ServiceCode == code);
@@ -152,13 +161,13 @@ public class TechnicalServiceController : ControllerBase
                 entity.CustomerEmail,
                 $"Servis Durumu Güncellendi — {entity.ServiceCode}",
                 $"""
-                <p>Sayın <b>{entity.CustomerName}</b>,</p>
+                <p>Sayın <b>{WebUtility.HtmlEncode(entity.CustomerName)}</b>,</p>
                 <p>Servis talebinizin durumu güncellendi:</p>
                 <table cellpadding="6" style="border-collapse:collapse;border:1px solid #e5e7eb;">
                   <tr><td><b>Servis Kodu</b></td><td>{entity.ServiceCode}</td></tr>
-                  <tr><td><b>Cihaz</b></td><td>{entity.DeviceType}</td></tr>
+                  <tr><td><b>Cihaz</b></td><td>{WebUtility.HtmlEncode(entity.DeviceType)}</td></tr>
                   <tr><td><b>Yeni Durum</b></td><td><b>{statusLabel}</b></td></tr>
-                  {(string.IsNullOrWhiteSpace(entity.AdminNote) ? "" : $"<tr><td><b>Teknisyen Notu</b></td><td>{entity.AdminNote}</td></tr>")}
+                  {(string.IsNullOrWhiteSpace(entity.AdminNote) ? "" : $"<tr><td><b>Teknisyen Notu</b></td><td>{WebUtility.HtmlEncode(entity.AdminNote)}</td></tr>")}
                 </table>
                 <p>Sorularınız için bize ulaşabilirsiniz.</p>
                 """);

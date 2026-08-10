@@ -55,7 +55,7 @@
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {
-              "allowedHosts": []
+              "allowedHosts": ["aselteknoloji.net", "www.aselteknoloji.net"]
             },
             "ssr": {
               "entry": "src/server.ts"

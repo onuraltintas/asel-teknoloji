@@ -1,10 +1,13 @@
 using System.Text;
+using System.Threading.RateLimiting;
 using AselTeknoloji.Application.Interfaces;
 using AselTeknoloji.Infrastructure.Data;
 using AselTeknoloji.Infrastructure.Repositories;
 using AselTeknoloji.Infrastructure.Services;
 using AselTeknoloji.WebAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -33,6 +36,21 @@ builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 // reCAPTCHA + HTTP istemcisi
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<RecaptchaService>();
+
+// Rate limiting — e-posta tetikleyen public formlar için IP başına sınır
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("public-forms", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window      = TimeSpan.FromMinutes(10),
+                QueueLimit  = 0
+            }));
+});
 
 // Bellek önbelleği (şifre sıfırlama tokenleri)
 builder.Services.AddMemoryCache();
@@ -87,6 +105,14 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(o =>
 
 var app = builder.Build();
 
+// Nginx reverse proxy arkasında gerçek istemci IP'sini ve şemasını çözümle
+// (rate limiting IP başına doğru çalışsın diye — aksi halde tüm istekler nginx'in
+// loopback adresinden geliyormuş gibi görünür ve limit tüm kullanıcılar arasında paylaşılır).
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
 // OpenAPI / Swagger UI (.NET 10 native)
 app.MapOpenApi();
 app.UseSwaggerUI(c =>
@@ -101,6 +127,7 @@ app.UseCors("AllowAngular");
 app.UseOutputCache();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 app.MapControllers();
 
 // Otomatik migration

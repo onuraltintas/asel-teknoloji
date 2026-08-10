@@ -27,6 +27,7 @@ public class CreateTechnicalServiceDto
     [EmailAddress, MaxLength(200)] public string? CustomerEmail { get; set; }
     [Required, MaxLength(100)] public string DeviceType { get; set; } = string.Empty;
     [Required] public string IssueDescription { get; set; } = string.Empty;
+    public string? RecaptchaToken { get; set; }
 }
 
 /// <summary>Admin panelinden durum ve not güncelleme (Authorize)</summary>

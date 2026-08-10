@@ -1,9 +1,11 @@
+using System.Net;
 using AselTeknoloji.Application.DTOs;
 using AselTeknoloji.Application.Interfaces;
 using AselTeknoloji.Domain.Entities;
 using AselTeknoloji.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace AselTeknoloji.WebAPI.Controllers;
 
@@ -28,7 +30,7 @@ public class MessageController : ControllerBase
         _recaptcha = recaptcha;
     }
 
-    [HttpPost, AllowAnonymous]
+    [HttpPost, AllowAnonymous, EnableRateLimiting("public-forms")]
     public async Task<IActionResult> Send([FromBody] CreateMessageDto dto)
     {
         if (!await _recaptcha.VerifyAsync(dto.RecaptchaToken))
@@ -50,13 +52,13 @@ public class MessageController : ControllerBase
             var body    = $"""
                 <h3>Yeni İletişim Formu Mesajı</h3>
                 <table cellpadding="6" style="border-collapse:collapse;">
-                  <tr><td><b>Ad Soyad</b></td><td>{entity.FullName}</td></tr>
-                  <tr><td><b>E-posta</b></td><td>{entity.Email}</td></tr>
-                  <tr><td><b>Telefon</b></td><td>{entity.Phone ?? "-"}</td></tr>
-                  <tr><td><b>Konu</b></td><td>{entity.Subject}</td></tr>
+                  <tr><td><b>Ad Soyad</b></td><td>{WebUtility.HtmlEncode(entity.FullName)}</td></tr>
+                  <tr><td><b>E-posta</b></td><td>{WebUtility.HtmlEncode(entity.Email)}</td></tr>
+                  <tr><td><b>Telefon</b></td><td>{WebUtility.HtmlEncode(entity.Phone) ?? "-"}</td></tr>
+                  <tr><td><b>Konu</b></td><td>{WebUtility.HtmlEncode(entity.Subject)}</td></tr>
                 </table>
                 <hr/>
-                <p>{entity.Body}</p>
+                <p>{WebUtility.HtmlEncode(entity.Body)}</p>
                 """;
             await _email.SendAsync(notifyTo, subject, body);
         }

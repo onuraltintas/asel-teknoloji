@@ -5,6 +5,7 @@ using AselTeknoloji.Application.DTOs.Auth;
 using AselTeknoloji.Application.Interfaces;
 using AselTeknoloji.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 
@@ -31,7 +32,7 @@ public class AuthController : ControllerBase
         _cache    = cache;
     }
 
-    [HttpPost("login")]
+    [HttpPost("login"), EnableRateLimiting("public-forms")]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
         var user = await _userRepo.SingleOrDefaultAsync(u => u.Username == dto.Username);
@@ -52,7 +53,7 @@ public class AuthController : ControllerBase
         });
     }
 
-    [HttpPost("forgot-password")]
+    [HttpPost("forgot-password"), EnableRateLimiting("public-forms")]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
     {
         // Güvenlik: kullanıcı var mı yok mu belli etme
@@ -81,7 +82,7 @@ public class AuthController : ControllerBase
         return Ok(new { message = "E-posta adresinizde kayıtlı bir hesap varsa sıfırlama bağlantısı gönderildi." });
     }
 
-    [HttpPost("reset-password")]
+    [HttpPost("reset-password"), EnableRateLimiting("public-forms")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
     {
         var cacheKey = $"reset:{dto.Token}";
