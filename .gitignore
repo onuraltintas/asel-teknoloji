@@ -24,3 +24,6 @@ Thumbs.db
 *.log
 *.tmp
 .vscode/settings.json
+backend-log.txt
+frontend-log.txt
+.ruff_cache/
