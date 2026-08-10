@@ -1,0 +1,29 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=asel_teknoloji;Username=CHANGE_ME;Password=CHANGE_ME"
+  },
+  "Jwt": {
+    "Key": "CHANGE_ME_generate_a_new_random_64_byte_key",
+    "Issuer": "AselTeknoloji",
+    "Audience": "AselTeknoloji",
+    "ExpirationMinutes": 480
+  },
+  "AllowedOrigins": "https://aselteknoloji.net",
+  "SiteUrl": "https://aselteknoloji.net",
+  "Recaptcha": {
+    "SecretKey": "CHANGE_ME"
+  },
+  "Smtp": {
+    "Host": "smtp.gmail.com",
+    "Port": "587",
+    "Username": "CHANGE_ME",
+    "Password": "CHANGE_ME",
+    "From": "CHANGE_ME"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}

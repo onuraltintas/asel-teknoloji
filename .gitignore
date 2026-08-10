@@ -17,7 +17,6 @@ backend/**/*.suo
 backend/**/appsettings.Development.json
 backend/**/appsettings.json
 backend/**/appsettings.*.json
-!backend/**/appsettings.Production.json
 
 # ── Genel ─────────────────────────────────────────
 .DS_Store
