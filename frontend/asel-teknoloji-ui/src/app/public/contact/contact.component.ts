@@ -47,6 +47,9 @@ export class ContactComponent implements OnInit, OnDestroy {
     this.metaSvc.updateTag({ name: 'description',      content: 'Asel Teknoloji ile iletişime geçin. Güvenlik kamera, yangın alarm, ağ altyapısı ve teknik servis konularında teklif ve destek için bize ulaşın.' });
     this.metaSvc.updateTag({ property: 'og:title',     content: 'İletişim | Asel Teknoloji' });
     this.metaSvc.updateTag({ property: 'og:type',      content: 'website' });
+    this.metaSvc.updateTag({ property: 'og:description', content: 'Asel Teknoloji ile iletişime geçin. Güvenlik kamera, yangın alarm, ağ altyapısı ve teknik servis konularında teklif ve destek için bize ulaşın.' });
+    this.metaSvc.updateTag({ name: 'twitter:title', content: 'İletişim | Asel Teknoloji' });
+    this.metaSvc.updateTag({ name: 'twitter:description', content: 'Asel Teknoloji ile iletişime geçin. Güvenlik kamera, yangın alarm, ağ altyapısı ve teknik servis konularında teklif ve destek için bize ulaşın.' });
     this.seo.setCanonical(`${environment.siteUrl}/iletisim`);
 
     this.api.getSetting().subscribe({
@@ -65,7 +68,7 @@ export class ContactComponent implements OnInit, OnDestroy {
           ...(s.phone   && { 'telephone': s.phone }),
           ...(s.email   && { 'email':     s.email }),
           ...(s.address && { 'address': { '@type': 'PostalAddress', 'streetAddress': s.address, 'addressCountry': 'TR' } }),
-          ...(s.logoUrl && { 'logo': s.logoUrl }),
+          ...(s.logoUrl && { 'logo': s.logoUrl, 'image': s.logoUrl }),
           'sameAs': [s.facebook, s.instagram, s.linkedin].filter(Boolean)
         });
       },

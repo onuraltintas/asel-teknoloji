@@ -142,6 +142,9 @@ export class ServiceStatusComponent implements OnInit, OnDestroy {
     });
     this.metaSvc.updateTag({ property: 'og:title', content: 'Teknik Servis | Asel Teknoloji' });
     this.metaSvc.updateTag({ property: 'og:type', content: 'website' });
+    this.metaSvc.updateTag({ property: 'og:description', content: 'Teknik servis kaydı oluşturun veya servis takip kodunuzla cihazınızın anlık durumunu sorgulayın.' });
+    this.metaSvc.updateTag({ name: 'twitter:title', content: 'Teknik Servis | Asel Teknoloji' });
+    this.metaSvc.updateTag({ name: 'twitter:description', content: 'Teknik servis kaydı oluşturun veya servis takip kodunuzla cihazınızın anlık durumunu sorgulayın.' });
     this.seo.setCanonical(`${environment.siteUrl}/servis-takip`);
     this.jsonLd.set({
       '@context': 'https://schema.org',
@@ -149,11 +152,11 @@ export class ServiceStatusComponent implements OnInit, OnDestroy {
       name: 'Teknik Servis | Asel Teknoloji',
       description:
         'Teknik servis kaydı oluşturun veya servis takip kodunuzla cihazınızın anlık durumunu sorgulayın.',
-      url: 'https://aselteknoloji.com/servis-takip',
+      url: `${environment.siteUrl}/servis-takip`,
       publisher: {
         '@type': 'Organization',
         name: 'Asel Teknoloji',
-        url: 'https://aselteknoloji.com',
+        url: environment.siteUrl,
       },
     });
 

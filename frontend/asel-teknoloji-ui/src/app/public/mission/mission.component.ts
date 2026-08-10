@@ -29,6 +29,9 @@ export class MissionComponent implements OnInit {
     this.titleSvc.setTitle('Misyonumuz | Asel Teknoloji');
     this.metaSvc.updateTag({ name: 'description', content: 'Asel Teknoloji misyonu: güvenlik kamera, yangın alarm ve bilişim çözümlerinde kaliteli hizmet sunarak müşteri memnuniyetini en üst düzeyde tutmak.' });
     this.metaSvc.updateTag({ property: 'og:title', content: 'Misyonumuz | Asel Teknoloji' });
+    this.metaSvc.updateTag({ property: 'og:description', content: 'Asel Teknoloji misyonu: güvenlik kamera, yangın alarm ve bilişim çözümlerinde kaliteli hizmet sunarak müşteri memnuniyetini en üst düzeyde tutmak.' });
+    this.metaSvc.updateTag({ name: 'twitter:title', content: 'Misyonumuz | Asel Teknoloji' });
+    this.metaSvc.updateTag({ name: 'twitter:description', content: 'Asel Teknoloji misyonu: güvenlik kamera, yangın alarm ve bilişim çözümlerinde kaliteli hizmet sunarak müşteri memnuniyetini en üst düzeyde tutmak.' });
     this.seo.setCanonical(`${environment.siteUrl}/misyon`);
 
     this.jsonLd.set({

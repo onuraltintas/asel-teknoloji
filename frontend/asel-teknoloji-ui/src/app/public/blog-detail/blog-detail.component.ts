@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, RESPONSE_INIT } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
@@ -22,6 +22,7 @@ export class BlogDetailComponent implements OnInit {
   private jsonLd   = inject(JsonLdService);
   private seo      = inject(SeoService);
   private cdr      = inject(ChangeDetectorRef);
+  private responseInit = inject(RESPONSE_INIT, { optional: true });
 
   post: BlogPost | null = null;
   recentPosts: BlogPost[] = [];
@@ -38,9 +39,15 @@ export class BlogDetailComponent implements OnInit {
           this.loading = false;
           this.titleSvc.setTitle(`${p.title} | Asel Teknoloji`);
           this.metaSvc.updateTag({ name: 'description', content: this.excerpt(p.content) });
-          this.metaSvc.updateTag({ property: 'og:title',       content: p.title });
+          this.metaSvc.updateTag({ property: 'og:title',       content: `${p.title} | Asel Teknoloji` });
           this.metaSvc.updateTag({ property: 'og:description', content: this.excerpt(p.content) });
-          if (p.imageUrl) this.metaSvc.updateTag({ property: 'og:image', content: p.imageUrl });
+          this.metaSvc.updateTag({ property: 'og:type',        content: 'article' });
+          this.metaSvc.updateTag({ name: 'twitter:title',       content: `${p.title} | Asel Teknoloji` });
+          this.metaSvc.updateTag({ name: 'twitter:description', content: this.excerpt(p.content) });
+          if (p.imageUrl) {
+            this.metaSvc.updateTag({ property: 'og:image', content: p.imageUrl });
+            this.metaSvc.updateTag({ name: 'twitter:image', content: p.imageUrl });
+          }
           this.seo.setCanonical(`${environment.siteUrl}/blog/${p.slug}`);
 
           const pageUrl = `${environment.siteUrl}/blog/${p.slug}`;
@@ -57,7 +64,12 @@ export class BlogDetailComponent implements OnInit {
                 ...(p.updatedAt  && { 'dateModified': p.updatedAt }),
                 ...(p.imageUrl   && { 'image': p.imageUrl }),
                 'author':    { '@type': 'Organization', 'name': 'Asel Teknoloji', 'url': environment.siteUrl },
-                'publisher': { '@type': 'Organization', 'name': 'Asel Teknoloji', 'url': environment.siteUrl }
+                'publisher': {
+                  '@type': 'Organization',
+                  'name': 'Asel Teknoloji',
+                  'url': environment.siteUrl,
+                  'logo': { '@type': 'ImageObject', 'url': `${environment.siteUrl}/apple-touch-icon.png` }
+                }
               },
               {
                 '@type': 'BreadcrumbList',
@@ -71,7 +83,12 @@ export class BlogDetailComponent implements OnInit {
           });
           this.cdr.markForCheck();
         },
-        error: () => { this.post = null; this.loading = false; this.cdr.markForCheck(); }
+        error: () => {
+          this.post = null; this.loading = false;
+          this.metaSvc.updateTag({ name: 'robots', content: 'noindex, follow' });
+          if (this.responseInit) this.responseInit.status = 404;
+          this.cdr.markForCheck();
+        }
       });
 
       this.api.getBlogPosts().subscribe({

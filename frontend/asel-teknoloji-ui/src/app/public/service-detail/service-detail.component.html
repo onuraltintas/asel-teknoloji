@@ -16,7 +16,7 @@
   <!-- ─── Hero ─── -->
   <div class="relative bg-blue-900 text-white overflow-hidden" style="min-height:320px">
     @if (service.imageUrl) {
-      <img [src]="service.imageUrl" [alt]="service.title"
+      <img [src]="service.imageUrl" [alt]="service.title" width="1200" height="630" fetchpriority="high"
            class="absolute inset-0 w-full h-full object-cover opacity-30"
            onerror="this.style.display='none'" />
     }

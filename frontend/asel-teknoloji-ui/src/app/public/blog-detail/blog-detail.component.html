@@ -17,7 +17,7 @@
   <!-- Hero -->
   <div class="relative bg-blue-900 text-white overflow-hidden" style="min-height:300px">
     @if (post.imageUrl) {
-      <img [src]="post.imageUrl" [alt]="post.title"
+      <img [src]="post.imageUrl" [alt]="post.title" width="1200" height="630" fetchpriority="high"
            class="absolute inset-0 w-full h-full object-cover opacity-25"
            onerror="this.style.display='none'" />
     }
@@ -45,7 +45,7 @@
       <!-- Content -->
       <article class="lg:col-span-2">
         @if (post.imageUrl) {
-          <img [src]="post.imageUrl" [alt]="post.title"
+          <img [src]="post.imageUrl" [alt]="post.title" width="1200" height="630" loading="lazy"
                class="w-full rounded-2xl object-cover mb-8 shadow-md"
                style="max-height:420px"
                onerror="this.style.display='none'" />

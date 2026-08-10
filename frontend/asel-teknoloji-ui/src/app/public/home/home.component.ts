@@ -71,6 +71,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.metaSvc.updateTag({ property: 'og:title',         content: title });
         this.metaSvc.updateTag({ property: 'og:description',   content: desc });
         this.metaSvc.updateTag({ property: 'og:type',          content: 'website' });
+        this.metaSvc.updateTag({ name: 'twitter:title',        content: title });
+        this.metaSvc.updateTag({ name: 'twitter:description',  content: desc });
+        const ogImage = this.sliders[0]?.imageUrl || s?.logoUrl;
+        if (ogImage) {
+          this.metaSvc.updateTag({ property: 'og:image', content: ogImage });
+          this.metaSvc.updateTag({ name: 'twitter:image', content: ogImage });
+        }
         this.seo.setCanonical(environment.siteUrl);
 
         this.jsonLd.set({
@@ -82,7 +89,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           ...(s?.phone    && { 'telephone': s.phone }),
           ...(s?.email    && { 'email':     s.email }),
           ...(s?.address  && { 'address': { '@type': 'PostalAddress', 'streetAddress': s.address, 'addressCountry': 'TR' } }),
-          ...(s?.logoUrl  && { 'logo': s.logoUrl }),
+          ...(s?.logoUrl  && { 'logo': s.logoUrl, 'image': s.logoUrl }),
           'sameAs': [s?.facebook, s?.instagram, s?.linkedin].filter(Boolean)
         });
       },

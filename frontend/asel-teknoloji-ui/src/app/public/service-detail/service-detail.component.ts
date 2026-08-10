@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, RESPONSE_INIT } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
@@ -22,6 +22,7 @@ export class ServiceDetailComponent implements OnInit {
   private jsonLd   = inject(JsonLdService);
   private seo      = inject(SeoService);
   private cdr      = inject(ChangeDetectorRef);
+  private responseInit = inject(RESPONSE_INIT, { optional: true });
 
   service: Service | null = null;
   loading = true;
@@ -68,7 +69,12 @@ export class ServiceDetailComponent implements OnInit {
           });
           this.cdr.markForCheck();
         },
-        error: () => { this.service = null; this.loading = false; this.cdr.markForCheck(); }
+        error: () => {
+          this.service = null; this.loading = false;
+          this.metaSvc.updateTag({ name: 'robots', content: 'noindex, follow' });
+          if (this.responseInit) this.responseInit.status = 404;
+          this.cdr.markForCheck();
+        }
       });
     });
   }

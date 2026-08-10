@@ -29,6 +29,9 @@ export class VisionComponent implements OnInit {
     this.titleSvc.setTitle('Vizyonumuz | Asel Teknoloji');
     this.metaSvc.updateTag({ name: 'description', content: 'Asel Teknoloji olarak vizyonumuz: teknoloji ile güvenli, bağlantılı ve sürdürülebilir yaşam alanları oluşturmak.' });
     this.metaSvc.updateTag({ property: 'og:title', content: 'Vizyonumuz | Asel Teknoloji' });
+    this.metaSvc.updateTag({ property: 'og:description', content: 'Asel Teknoloji olarak vizyonumuz: teknoloji ile güvenli, bağlantılı ve sürdürülebilir yaşam alanları oluşturmak.' });
+    this.metaSvc.updateTag({ name: 'twitter:title', content: 'Vizyonumuz | Asel Teknoloji' });
+    this.metaSvc.updateTag({ name: 'twitter:description', content: 'Asel Teknoloji olarak vizyonumuz: teknoloji ile güvenli, bağlantılı ve sürdürülebilir yaşam alanları oluşturmak.' });
     this.seo.setCanonical(`${environment.siteUrl}/vizyon`);
 
     this.jsonLd.set({

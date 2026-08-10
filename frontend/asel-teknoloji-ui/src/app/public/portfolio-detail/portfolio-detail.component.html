@@ -40,7 +40,7 @@
         <div>
           <!-- Ana görsel -->
           <div class="rounded-2xl overflow-hidden shadow-lg bg-gray-100 w-full" style="max-height: 600px;">
-            <img [src]="getImages()[activeIndex()]" [alt]="portfolio.title"
+            <img [src]="getImages()[activeIndex()]" [alt]="portfolio.title" width="1200" height="630" fetchpriority="high"
                  class="w-full h-full object-cover transition-opacity duration-300"
                  style="max-height: 600px;"
                  onerror="this.parentElement.innerHTML='<div class=\'w-full h-96 flex items-center justify-center text-7xl\'>🗂️</div>'" />
@@ -54,7 +54,7 @@
                         [class.border-blue-600]="activeIndex() === i"
                         [class.border-transparent]="activeIndex() !== i"
                         [class.opacity-50]="activeIndex() !== i">
-                  <img [src]="img" [alt]="'Görsel ' + (i + 1)" class="w-full h-full object-cover"
+                  <img [src]="img" [alt]="'Görsel ' + (i + 1)" class="w-full h-full object-cover" loading="lazy"
                        onerror="this.style.display='none'" />
                 </button>
               }

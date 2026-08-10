@@ -29,6 +29,9 @@ export class PortfolioComponent implements OnInit {
     this.titleSvc.setTitle('Projelerimiz | Asel Teknoloji');
     this.metaSvc.updateTag({ name: 'description', content: 'Asel Teknoloji tarafından gerçekleştirilen projeler: güvenlik kamera, yangın alarm, ağ altyapısı ve teknik servis çalışmaları.' });
     this.metaSvc.updateTag({ property: 'og:title', content: 'Projelerimiz | Asel Teknoloji' });
+    this.metaSvc.updateTag({ property: 'og:description', content: 'Asel Teknoloji tarafından gerçekleştirilen projeler: güvenlik kamera, yangın alarm, ağ altyapısı ve teknik servis çalışmaları.' });
+    this.metaSvc.updateTag({ name: 'twitter:title', content: 'Projelerimiz | Asel Teknoloji' });
+    this.metaSvc.updateTag({ name: 'twitter:description', content: 'Asel Teknoloji tarafından gerçekleştirilen projeler: güvenlik kamera, yangın alarm, ağ altyapısı ve teknik servis çalışmaları.' });
     this.seo.setCanonical(`${environment.siteUrl}/projeler`);
 
     this.jsonLd.set({

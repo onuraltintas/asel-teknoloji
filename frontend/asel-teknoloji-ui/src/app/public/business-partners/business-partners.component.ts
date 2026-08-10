@@ -38,6 +38,9 @@ export class BusinessPartnersComponent implements OnInit {
     this.titleSvc.setTitle('İş Ortaklarımız | Asel Teknoloji');
     this.metaSvc.updateTag({ name: 'description', content: 'Asel Teknoloji iş ortakları: güvenlik sistemleri, ağ altyapısı ve teknik servis alanlarında birlikte çalıştığımız tedarikçi ve distribütörler.' });
     this.metaSvc.updateTag({ property: 'og:title', content: 'İş Ortaklarımız | Asel Teknoloji' });
+    this.metaSvc.updateTag({ property: 'og:description', content: 'Asel Teknoloji iş ortakları: güvenlik sistemleri, ağ altyapısı ve teknik servis alanlarında birlikte çalıştığımız tedarikçi ve distribütörler.' });
+    this.metaSvc.updateTag({ name: 'twitter:title', content: 'İş Ortaklarımız | Asel Teknoloji' });
+    this.metaSvc.updateTag({ name: 'twitter:description', content: 'Asel Teknoloji iş ortakları: güvenlik sistemleri, ağ altyapısı ve teknik servis alanlarında birlikte çalıştığımız tedarikçi ve distribütörler.' });
     this.seo.setCanonical(`${environment.siteUrl}/is-ortaklarimiz`);
 
     this.jsonLd.set({

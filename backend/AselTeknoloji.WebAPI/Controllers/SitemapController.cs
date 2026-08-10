@@ -60,6 +60,7 @@ public class SitemapController : ControllerBase
         AddUrl("/misyon",         "monthly", "0.5");
         AddUrl("/iletisim",       "monthly", "0.7");
         AddUrl("/servis-takip",   "monthly", "0.5");
+        AddUrl("/is-ortaklarimiz","monthly", "0.6");
 
         foreach (var s in services)
             AddUrl($"/hizmet/{s.Slug}", "monthly", "0.8", s.CreatedAt);

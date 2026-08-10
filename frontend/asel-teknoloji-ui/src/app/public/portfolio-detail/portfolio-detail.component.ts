@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal, RESPONSE_INIT } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
@@ -22,6 +22,7 @@ export class PortfolioDetailComponent implements OnInit {
   private jsonLd   = inject(JsonLdService);
   private seo      = inject(SeoService);
   private cdr      = inject(ChangeDetectorRef);
+  private responseInit = inject(RESPONSE_INIT, { optional: true });
 
   portfolio: Portfolio | null = null;
   loading = true;
@@ -49,7 +50,12 @@ export class PortfolioDetailComponent implements OnInit {
         });
         this.cdr.markForCheck();
       },
-      error: () => { this.loading = false; this.notFound = true; this.cdr.markForCheck(); }
+      error: () => {
+        this.loading = false; this.notFound = true;
+        this.metaSvc.updateTag({ name: 'robots', content: 'noindex, follow' });
+        if (this.responseInit) this.responseInit.status = 404;
+        this.cdr.markForCheck();
+      }
     });
   }
 

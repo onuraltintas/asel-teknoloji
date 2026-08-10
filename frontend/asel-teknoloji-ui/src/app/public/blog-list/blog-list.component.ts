@@ -46,6 +46,9 @@ export class BlogListComponent implements OnInit {
     this.titleSvc.setTitle('Blog | Asel Teknoloji');
     this.metaSvc.updateTag({ name: 'description', content: 'Asel Teknoloji blog yazıları: güvenlik kamera, yangın alarm, teknik servis ve bilişim teknolojileri hakkında haberler ve ipuçları.' });
     this.metaSvc.updateTag({ property: 'og:title', content: 'Blog | Asel Teknoloji' });
+    this.metaSvc.updateTag({ property: 'og:description', content: 'Asel Teknoloji blog yazıları: güvenlik kamera, yangın alarm, teknik servis ve bilişim teknolojileri hakkında haberler ve ipuçları.' });
+    this.metaSvc.updateTag({ name: 'twitter:title', content: 'Blog | Asel Teknoloji' });
+    this.metaSvc.updateTag({ name: 'twitter:description', content: 'Asel Teknoloji blog yazıları: güvenlik kamera, yangın alarm, teknik servis ve bilişim teknolojileri hakkında haberler ve ipuçları.' });
     this.seo.setCanonical(`${environment.siteUrl}/blog`);
 
     this.jsonLd.set({

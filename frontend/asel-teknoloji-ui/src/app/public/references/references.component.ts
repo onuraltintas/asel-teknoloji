@@ -34,6 +34,9 @@ export class ReferencesComponent implements OnInit {
     this.titleSvc.setTitle('Referanslarımız | Asel Teknoloji');
     this.metaSvc.updateTag({ name: 'description', content: 'Asel Teknoloji referansları: güvenlik kamera, yangın alarm, ağ altyapısı ve teknik servis hizmetleri verdiğimiz firmalar ve kurumlar.' });
     this.metaSvc.updateTag({ property: 'og:title', content: 'Referanslarımız | Asel Teknoloji' });
+    this.metaSvc.updateTag({ property: 'og:description', content: 'Asel Teknoloji referansları: güvenlik kamera, yangın alarm, ağ altyapısı ve teknik servis hizmetleri verdiğimiz firmalar ve kurumlar.' });
+    this.metaSvc.updateTag({ name: 'twitter:title', content: 'Referanslarımız | Asel Teknoloji' });
+    this.metaSvc.updateTag({ name: 'twitter:description', content: 'Asel Teknoloji referansları: güvenlik kamera, yangın alarm, ağ altyapısı ve teknik servis hizmetleri verdiğimiz firmalar ve kurumlar.' });
     this.seo.setCanonical(`${environment.siteUrl}/referanslar`);
 
     this.jsonLd.set({
