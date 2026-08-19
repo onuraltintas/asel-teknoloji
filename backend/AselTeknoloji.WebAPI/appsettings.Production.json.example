@@ -11,7 +11,7 @@
   "AllowedOrigins": "https://aselteknoloji.net",
   "SiteUrl": "https://aselteknoloji.net",
   "Recaptcha": {
-    "SecretKey": "CHANGE_ME"
+    "SecretKey": "RECAPTCHA_V3_SECRET_KEY_BURAYA"
   },
   "Smtp": {
     "Host": "smtp.gmail.com",
