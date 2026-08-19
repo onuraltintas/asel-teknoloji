@@ -33,7 +33,7 @@ public class MessageController : ControllerBase
     [HttpPost, AllowAnonymous, EnableRateLimiting("public-forms")]
     public async Task<IActionResult> Send([FromBody] CreateMessageDto dto)
     {
-        if (!await _recaptcha.VerifyAsync(dto.RecaptchaToken))
+        if (!await _recaptcha.VerifyAsync(dto.RecaptchaToken, "contact"))
             return BadRequest(new { error = "Bot doğrulaması başarısız. Lütfen tekrar deneyin." });
 
         var entity = new Message

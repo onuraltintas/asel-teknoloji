@@ -34,7 +34,7 @@ public class TechnicalServiceController : ControllerBase
     [HttpPost, AllowAnonymous, EnableRateLimiting("public-forms")]
     public async Task<IActionResult> Create([FromBody] CreateTechnicalServiceDto dto)
     {
-        if (!await _recaptcha.VerifyAsync(dto.RecaptchaToken))
+        if (!await _recaptcha.VerifyAsync(dto.RecaptchaToken, "technical_service"))
             return BadRequest(new { error = "Bot doğrulaması başarısız. Lütfen tekrar deneyin." });
 
         var serviceCode = GenerateServiceCode();

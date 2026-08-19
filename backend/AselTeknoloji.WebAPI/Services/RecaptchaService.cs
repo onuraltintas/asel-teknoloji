@@ -15,11 +15,14 @@ public class RecaptchaService
         _logger  = logger;
     }
 
-    public async Task<bool> VerifyAsync(string? token)
+    public async Task<bool> VerifyAsync(string? token, string expectedAction)
     {
         var secret = _config["Recaptcha:SecretKey"];
         if (string.IsNullOrWhiteSpace(secret) || string.IsNullOrWhiteSpace(token))
-            return true; // yapılandırılmamışsa atla
+        {
+            _logger.LogWarning("reCAPTCHA secret veya token eksik; istek reddedildi.");
+            return false;
+        }
 
         try
         {
@@ -35,12 +38,14 @@ public class RecaptchaService
             if (!resp.IsSuccessStatusCode) return false;
 
             var result = await resp.Content.ReadFromJsonAsync<RecaptchaResponse>();
-            return result?.Success == true && result.Score >= 0.5f;
+            return result?.Success == true &&
+                   result.Score >= 0.5f &&
+                   string.Equals(result.Action, expectedAction, StringComparison.Ordinal);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "reCAPTCHA doğrulama hatası.");
-            return true; // hata durumunda formu engelleme
+            return false;
         }
     }
 

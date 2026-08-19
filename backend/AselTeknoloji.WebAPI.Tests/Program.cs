@@ -9,26 +9,41 @@ var tests = new (string Name, Func<Task> Run)[]
     ("Secret yoksa reddeder", async () =>
     {
         var service = CreateService(new Dictionary<string, string?>(), SuccessResponse("contact"));
-        AssertFalse(await service.VerifyAsync("token"));
+        AssertFalse(await service.VerifyAsync("token", "contact"));
     }),
     ("Token yoksa reddeder", async () =>
     {
         var service = CreateService(Configuration(), SuccessResponse("contact"));
-        AssertFalse(await service.VerifyAsync(null));
+        AssertFalse(await service.VerifyAsync(null, "contact"));
     }),
     ("Google isteği hata verirse reddeder", async () =>
     {
         var service = CreateService(Configuration(), exception: new HttpRequestException("unavailable"));
-        AssertFalse(await service.VerifyAsync("token"));
+        AssertFalse(await service.VerifyAsync("token", "contact"));
+    }),
+    ("Google HTTP hata yanıtı verirse reddeder", async () =>
+    {
+        var service = CreateService(Configuration(), new HttpResponseMessage(HttpStatusCode.ServiceUnavailable));
+        AssertFalse(await service.VerifyAsync("token", "contact"));
+    }),
+    ("Google doğrulamayı başarısız sayarsa reddeder", async () =>
+    {
+        var service = CreateService(Configuration(), RecaptchaResponse(false, 0.9f, "contact"));
+        AssertFalse(await service.VerifyAsync("token", "contact"));
+    }),
+    ("Skor düşükse reddeder", async () =>
+    {
+        var service = CreateService(Configuration(), RecaptchaResponse(true, 0.49f, "contact"));
+        AssertFalse(await service.VerifyAsync("token", "contact"));
     }),
     ("Action eşleşmezse reddeder", async () =>
     {
-        dynamic service = CreateService(Configuration(), SuccessResponse("technical_service"));
+        var service = CreateService(Configuration(), SuccessResponse("technical_service"));
         AssertFalse(await service.VerifyAsync("token", "contact"));
     }),
     ("Skor ve action geçerliyse kabul eder", async () =>
     {
-        dynamic service = CreateService(Configuration(), SuccessResponse("contact"));
+        var service = CreateService(Configuration(), SuccessResponse("contact"));
         AssertTrue(await service.VerifyAsync("token", "contact"));
     })
 };
@@ -79,6 +94,11 @@ static Dictionary<string, string?> Configuration() => new()
 static HttpResponseMessage SuccessResponse(string action) => new(HttpStatusCode.OK)
 {
     Content = JsonContent.Create(new { success = true, score = 0.9f, action })
+};
+
+static HttpResponseMessage RecaptchaResponse(bool success, float score, string action) => new(HttpStatusCode.OK)
+{
+    Content = JsonContent.Create(new { success, score, action })
 };
 
 internal sealed class StubHttpClientFactory(HttpClient client) : IHttpClientFactory
