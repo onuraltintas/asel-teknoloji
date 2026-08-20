@@ -43,6 +43,7 @@ export class ServiceStatusComponent implements OnInit, OnDestroy {
   creating = signal(false);
   createdCode = signal('');
   createError = signal('');
+  private recaptchaReady: Promise<void> | null = null;
 
   submitCreate(form: any) {
     if (
@@ -68,13 +69,13 @@ export class ServiceStatusComponent implements OnInit, OnDestroy {
       });
     };
 
-    const w = window as any;
-    if (isPlatformBrowser(this.platformId) && environment.recaptchaSiteKey && w.grecaptcha) {
-      w.grecaptcha.ready(() => {
-        w.grecaptcha
-          .execute(environment.recaptchaSiteKey, { action: 'technical_service' })
-          .then((token: string) => doSubmit(token));
-      });
+    if (isPlatformBrowser(this.platformId) && environment.recaptchaSiteKey) {
+      this.executeRecaptcha('technical_service')
+        .then((token) => doSubmit(token))
+        .catch(() => {
+          this.createError.set('Bot doğrulaması yüklenemedi. Lütfen sayfayı yenileyip tekrar deneyin.');
+          this.creating.set(false);
+        });
     } else {
       doSubmit();
     }
@@ -142,9 +143,17 @@ export class ServiceStatusComponent implements OnInit, OnDestroy {
     });
     this.metaSvc.updateTag({ property: 'og:title', content: 'Teknik Servis | Asel Teknoloji' });
     this.metaSvc.updateTag({ property: 'og:type', content: 'website' });
-    this.metaSvc.updateTag({ property: 'og:description', content: 'Teknik servis kaydı oluşturun veya servis takip kodunuzla cihazınızın anlık durumunu sorgulayın.' });
+    this.metaSvc.updateTag({
+      property: 'og:description',
+      content:
+        'Teknik servis kaydı oluşturun veya servis takip kodunuzla cihazınızın anlık durumunu sorgulayın.',
+    });
     this.metaSvc.updateTag({ name: 'twitter:title', content: 'Teknik Servis | Asel Teknoloji' });
-    this.metaSvc.updateTag({ name: 'twitter:description', content: 'Teknik servis kaydı oluşturun veya servis takip kodunuzla cihazınızın anlık durumunu sorgulayın.' });
+    this.metaSvc.updateTag({
+      name: 'twitter:description',
+      content:
+        'Teknik servis kaydı oluşturun veya servis takip kodunuzla cihazınızın anlık durumunu sorgulayın.',
+    });
     this.seo.setCanonical(`${environment.siteUrl}/servis-takip`);
     this.jsonLd.set({
       '@context': 'https://schema.org',
@@ -161,7 +170,8 @@ export class ServiceStatusComponent implements OnInit, OnDestroy {
     });
 
     if (isPlatformBrowser(this.platformId) && environment.recaptchaSiteKey) {
-      this.loadRecaptchaScript();
+      this.recaptchaReady = this.loadRecaptchaScript();
+      this.recaptchaReady.catch(() => undefined);
     }
   }
 
@@ -173,13 +183,46 @@ export class ServiceStatusComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadRecaptchaScript() {
-    if (document.getElementById('recaptcha-script')) return;
-    const script = document.createElement('script');
-    script.id = 'recaptcha-script';
-    script.src = `https://www.google.com/recaptcha/api.js?render=${environment.recaptchaSiteKey}`;
-    script.async = true;
-    document.head.appendChild(script);
+  private executeRecaptcha(action: string): Promise<string> {
+    const ready = this.recaptchaReady ?? Promise.resolve();
+    return ready.then(
+      () =>
+        new Promise<string>((resolve, reject) => {
+          const grecaptcha = (window as any).grecaptcha;
+          if (!grecaptcha) {
+            reject(new Error('reCAPTCHA script yüklenemedi.'));
+            return;
+          }
+          grecaptcha.ready(() => {
+            grecaptcha
+              .execute(environment.recaptchaSiteKey, { action })
+              .then(resolve)
+              .catch(reject);
+          });
+        }),
+    );
+  }
+
+  private loadRecaptchaScript(): Promise<void> {
+    const existing = document.getElementById('recaptcha-script') as HTMLScriptElement | null;
+    if (existing) {
+      return (window as any).grecaptcha
+        ? Promise.resolve()
+        : new Promise((resolve, reject) => {
+            existing.addEventListener('load', () => resolve(), { once: true });
+            existing.addEventListener('error', () => reject(new Error('reCAPTCHA script yüklenemedi.')), { once: true });
+          });
+    }
+
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.id = 'recaptcha-script';
+      script.src = `https://www.google.com/recaptcha/api.js?render=${environment.recaptchaSiteKey}`;
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('reCAPTCHA script yüklenemedi.'));
+      document.head.appendChild(script);
+    });
   }
 
   // ── Stepper ──────────────────────────────────────────────────

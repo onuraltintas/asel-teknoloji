@@ -35,12 +35,44 @@ public class RecaptchaService
                     ["response"] = token
                 }));
 
-            if (!resp.IsSuccessStatusCode) return false;
+            if (!resp.IsSuccessStatusCode)
+            {
+                _logger.LogWarning("reCAPTCHA Google yanıtı başarısız: HTTP {StatusCode}.", resp.StatusCode);
+                return false;
+            }
 
             var result = await resp.Content.ReadFromJsonAsync<RecaptchaResponse>();
-            return result?.Success == true &&
-                   result.Score >= 0.5f &&
-                   string.Equals(result.Action, expectedAction, StringComparison.Ordinal);
+            if (result is null)
+            {
+                _logger.LogWarning("reCAPTCHA Google yanıtı boş döndü.");
+                return false;
+            }
+
+            if (!result.Success)
+            {
+                _logger.LogWarning(
+                    "reCAPTCHA reddedildi: errorCodes={ErrorCodes}.",
+                    result.ErrorCodes is { Length: > 0 } errors ? string.Join(',', errors) : "none");
+                return false;
+            }
+
+            if (result.Score < 0.5f)
+            {
+                _logger.LogWarning(
+                    "reCAPTCHA skoru düşük: score={Score}, expectedAction={ExpectedAction}, action={Action}.",
+                    result.Score, expectedAction, result.Action ?? "none");
+                return false;
+            }
+
+            if (!string.Equals(result.Action, expectedAction, StringComparison.Ordinal))
+            {
+                _logger.LogWarning(
+                    "reCAPTCHA action eşleşmedi: expectedAction={ExpectedAction}, action={Action}.",
+                    expectedAction, result.Action ?? "none");
+                return false;
+            }
+
+            return true;
         }
         catch (Exception ex)
         {
